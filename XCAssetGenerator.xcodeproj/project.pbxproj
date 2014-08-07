@@ -13,6 +13,8 @@
 		DD09CBEE1989A46C002DD2FB /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DD09CBED1989A46C002DD2FB /* Images.xcassets */; };
 		DD09CBF11989A46C002DD2FB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DD09CBEF1989A46C002DD2FB /* Main.storyboard */; };
 		DD09CBFD1989A46C002DD2FB /* XCAssetGeneratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD09CBFC1989A46C002DD2FB /* XCAssetGeneratorTests.swift */; };
+		DD09CC071989A68D002DD2FB /* XCasset Generator.sh in Resources */ = {isa = PBXBuildFile; fileRef = DD09CC061989A68D002DD2FB /* XCasset Generator.sh */; };
+		DD09CC091989A99D002DD2FB /* FileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD09CC081989A99D002DD2FB /* FileView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +38,8 @@
 		DD09CBF61989A46C002DD2FB /* XCAssetGeneratorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = XCAssetGeneratorTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD09CBFB1989A46C002DD2FB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DD09CBFC1989A46C002DD2FB /* XCAssetGeneratorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XCAssetGeneratorTests.swift; sourceTree = "<group>"; };
+		DD09CC061989A68D002DD2FB /* XCasset Generator.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = "XCasset Generator.sh"; sourceTree = "<group>"; };
+		DD09CC081989A99D002DD2FB /* FileView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,6 +86,7 @@
 				DD09CBED1989A46C002DD2FB /* Images.xcassets */,
 				DD09CBEF1989A46C002DD2FB /* Main.storyboard */,
 				DD09CBE51989A46C002DD2FB /* Supporting Files */,
+				DD09CC081989A99D002DD2FB /* FileView.swift */,
 			);
 			path = XCAssetGenerator;
 			sourceTree = "<group>";
@@ -89,6 +94,7 @@
 		DD09CBE51989A46C002DD2FB /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				DD09CC061989A68D002DD2FB /* XCasset Generator.sh */,
 				DD09CBE61989A46C002DD2FB /* Info.plist */,
 				DD09CBE71989A46C002DD2FB /* main.swift */,
 			);
@@ -193,6 +199,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DD09CBEE1989A46C002DD2FB /* Images.xcassets in Resources */,
+				DD09CC071989A68D002DD2FB /* XCasset Generator.sh in Resources */,
 				DD09CBF11989A46C002DD2FB /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -211,6 +218,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DD09CC091989A99D002DD2FB /* FileView.swift in Sources */,
 				DD09CBEC1989A46C002DD2FB /* AppDelegate.swift in Sources */,
 				DD09CBEA1989A46C002DD2FB /* ViewController.swift in Sources */,
 				DD09CBE81989A46C002DD2FB /* main.swift in Sources */,
@@ -401,6 +409,7 @@
 				DD09CC021989A46C002DD2FB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		DD09CC031989A46C002DD2FB /* Build configuration list for PBXNativeTarget "XCAssetGeneratorTests" */ = {
 			isa = XCConfigurationList;
@@ -409,6 +418,7 @@
 				DD09CC051989A46C002DD2FB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
