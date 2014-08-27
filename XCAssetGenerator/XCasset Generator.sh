@@ -41,7 +41,7 @@ setupTempDirectory() {
 			if [[ ! -d "$TEMPFULLPATH"/"$folderName" ]] ; then
 				mkdir -p -m 777 "$TEMPFULLPATH"/"$folderName";
 			fi
-			cp -r "$folderPath" "$TEMPFULLPATH"/"$folderName"; 
+			cp -rf "$folderPath" "$TEMPFULLPATH"/"$folderName"; 
 		else
 			cp "$i" "$TEMPFULLPATH";
 		fi
@@ -167,23 +167,22 @@ createImagesets() {
 }
 
 
-generate1x() {
+# generate1x() {
 
-	d="$1";	
-	# Make a copy of the file.
-	a=${d/@2x/};
-	cp "$d" "$a";
+# 	d="$1";	
+# 	# Make a copy of the file.
+# 	a=${d/@2x/};
+# 	cp "$d" "$a";
 
-	# Get the images' dimensions, half them, then create new image with new dimensions.
-	width=`sips -g pixelWidth "$a" | tail -n1 | cut -d' ' -f4`;
-    height=`sips -g pixelHeight "$a" | tail -n1 | cut -d' ' -f4`;
-    width=$(expr $width / 2);
-    height=$(expr $height / 2);
-    #name=`basename "$d"`;
+# 	# Get the images' dimensions, half them, then create new image with new dimensions.
+# 	width=`sips -g pixelWidth "$a" | tail -n1 | cut -d' ' -f4`;
+#     height=`sips -g pixelHeight "$a" | tail -n1 | cut -d' ' -f4`;
+#     width=$(expr $width / 2);
+#     height=$(expr $height / 2);
+#     #name=`basename "$d"`;
     
-    sips -z $height $width "$a";
-}
-
+#     sips -z $height $width "$a";
+# }
 
 # Takes file (basename) as argument. 
 create_json_content() {
