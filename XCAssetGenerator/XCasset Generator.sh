@@ -201,7 +201,8 @@ create_json_content() {
  
  		imageName=`basename "$imagePath"`;
 		orientation="invalid";
-
+		subtype="invalid";
+		
 		# Calculate size
 		width=`sips -g pixelWidth "$imagePath" | tail -n1 | cut -d' ' -f4`;
 		height=`sips -g pixelHeight "$imagePath" | tail -n1 | cut -d' ' -f4`;
@@ -246,6 +247,7 @@ create_json_content() {
 			fi
 		fi
 
+		# 640 x 1136 pixels = sub-type = "R4"
 		if [[ "$imageName" == LaunchImage*.png ]] ; then
 			
 			if [[ $width == "320" ]] ; then
@@ -253,12 +255,13 @@ create_json_content() {
 				scale="1x";
 				orientation="portrait";
 			else if [[ $width == "640" ]] ; then
-				idiom="iphone";
-				scale="2x";
-				orientation="portrait";
-				if [[ $height == "1136" ]] ; then
-					size="320x568";
-				fi
+				 idiom="iphone";
+				 scale="2x";
+				 orientation="portrait";
+				 if [[ $height == "1136" ]] ; then
+					# 640 x 1136 pixels = sub-type: R4
+					subtype="retina4";
+				 fi
 				fi
 			fi 
 
@@ -288,7 +291,6 @@ create_json_content() {
 		fi
 
 		# Calculate minimum-system-version
-		# Calculate subtype
 		
 		echo "    {
       \"idiom\" : \"$idiom\",
@@ -298,6 +300,11 @@ create_json_content() {
 	      echo "      \"orientation\" : \"$orientation\",
 	  \"extent\" : \"full-screen\",
       \"minimum-system-version\" : \"7.0\"," >> "$JSONFile"; 
+
+      	if [[ "$subtype" != invalid ]] ; then
+      		echo "      \"subtype\" : \"$subtype\"," >> "$JSONFile";
+      	fi
+
 	  fi
 	  if [[ "$imageName" != LaunchImage*.png ]] ; then
 		  echo "      \"size\" : \"$size\"," >> "$JSONFile"; 
@@ -337,6 +344,9 @@ integrateToDestination() {
 }
 
 
+## Entry Point. ##
+##################
+
 #TODO: Add all the proper flow control here.
 setupTempDirectory;
 createAppIcon;
@@ -353,5 +363,5 @@ done
 integrateToDestination;
 
 # Cull the temp directory after finishing.
-#deleteTempDirectory;
+deleteTempDirectory;
 
