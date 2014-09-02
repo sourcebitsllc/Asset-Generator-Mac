@@ -186,7 +186,7 @@ create_json_content() {
 					subtype="retina4";
 				 fi
 				fi
-			fi 
+			fi
 
 			if [[ $width == "768" ]] ; then
 				idiom="ipad";
@@ -210,7 +210,7 @@ create_json_content() {
 				orientation="landscape";
 				fi
 			fi
-		
+
 		fi
 
 		# Calculate minimum-system-version
