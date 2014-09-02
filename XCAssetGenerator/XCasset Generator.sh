@@ -28,7 +28,7 @@ setupTempDirectory() {
 	
 	# Find all PNGs in directory and copy them into temp.
 	find "$sourcePath" -name "*.png" -print0 | while read -d $'\0' -r i ; do
-		
+	
 		name=`basename "$i"`;
 		relativePath=${i#$sourcePath/};
 
@@ -41,7 +41,7 @@ setupTempDirectory() {
 			if [[ ! -d "$TEMPFULLPATH"/"$folderName" ]] ; then
 				mkdir -p -m 777 "$TEMPFULLPATH"/"$folderName";
 			fi
-			cp -rf "$folderPath" "$TEMPFULLPATH"/"$folderName"; 
+			cp -rf "$i" "$TEMPFULLPATH"/"$folderName"; 
 		else
 			cp "$i" "$TEMPFULLPATH";
 		fi
@@ -51,119 +51,181 @@ setupTempDirectory() {
 
 createAppIcon() {
 	
-	# First, find all non-@2x AppIcon pngs. Keep in mind AppIcon~*.png cases.
-	find "$TEMPFULLPATH" -name "AppIcon*.png" ! -name "AppIcon*@2x*.png" -print0 | while read -d $'\0' -r i ; do
+	find "$TEMPFULLPATH" -name "AppIcon*.png" -print0 | while read -d $'\0' -r i ; do 
+
+		# a=`basename "$i"`;
+		# imagePath=${i%$a};
 		
-		a=`basename "$i"`;
-		imagePath=${i%$a};
-		dirname="AppIcon.appiconset";
-
-		if [[ ! -d "$imagePath/$dirname" ]] ; then
-			mkdir "$imagePath/$dirname";
-		fi
-        mv "$i" "$imagePath/$dirname";
-	done
-	
-	find "$TEMPFULLPATH" -name "AppIcon*@2x*.png" -print0 | while read -d $'\0' -r i ; do
-	
-		a=`basename "$i"`;
-		imagePath=${i%$a};		
-		dirname="AppIcon.appiconset";
-
-		if [[ ! -d "$imagePath/$dirname" ]] ; then
-			
-			mkdir "$imagePath/$dirname";
-			mv "$i" "$imagePath/$dirname";
-			# if [[ $shouldGenerate1x == 1 ]] ; then
-			# 	generate1x "$TEMPFULLPATH/$dirname/$a";
-			# fi
+		imagePath=`dirname "$i"`;
+        if [[ ! -d "$imagePath/AppIcon.appiconset" ]] ; then
+			mkdir "$imagePath/AppIcon.appiconset";
+			mv "$i" "$imagePath/AppIcon.appiconset";
 		else
-			mv "$i" "$imagePath/$dirname";
+			mv "$i" "$imagePath/AppIcon.appiconset";
 		fi
-		
+        
 	done
+
+
+	# First, find all non-@2x AppIcon pngs. Keep in mind AppIcon~*.png cases.
+	# find "$TEMPFULLPATH" -name "AppIcon*.png" ! -name "AppIcon*@2x*.png" -print0 | while read -d $'\0' -r i ; do
+		
+	# 	a=`basename "$i"`;
+	# 	imagePath=${i%$a};
+	# 	dirname="AppIcon.appiconset";
+
+	# 	if [[ ! -d "$imagePath/$dirname" ]] ; then
+	# 		mkdir "$imagePath/$dirname";
+	# 	fi
+ #        mv "$i" "$imagePath/$dirname";
+	# done
+	
+	# find "$TEMPFULLPATH" -name "AppIcon*@2x*.png" -print0 | while read -d $'\0' -r i ; do
+	
+	# 	a=`basename "$i"`;
+	# 	imagePath=${i%$a};		
+	# 	dirname="AppIcon.appiconset";
+
+	# 	if [[ ! -d "$imagePath/$dirname" ]] ; then
+			
+	# 		mkdir "$imagePath/$dirname";
+	# 		mv "$i" "$imagePath/$dirname";
+	# 		# if [[ $shouldGenerate1x == 1 ]] ; then
+	# 		# 	generate1x "$TEMPFULLPATH/$dirname/$a";
+	# 		# fi
+	# 	else
+	# 		mv "$i" "$imagePath/$dirname";
+	# 	fi
+		
+	# done
 }
 
 createLaunchImage() {
 	
-	# First, find all non-@2x LaunchImages 
-	find "$TEMPFULLPATH" -name "LaunchImage*.png" ! -name "LaunchImage*@2x*.png" -print0 | while read -d $'\0' -r i ; do
+
+	find "$TEMPFULLPATH" -name "LaunchImage*.png" -print0 | while read -d $'\0' -r i ; do 
 
 		a=`basename "$i"`;
 		imagePath=${i%$a};
-		dirname=$"LaunchImage.launchimage";
-		
-		if [[ ! -d "$imagePath/$dirname" ]] ; then
-			mkdir "$imagePath/$dirname";
+		# dirname=$"LaunchImage.launchimage";
+			
+        if [[ ! -d "$imagePath/LaunchImage.launchimage" ]] ; then
+			mkdir "$imagePath/LaunchImage.launchimage";
+			mv "$i" "$imagePath/LaunchImage.launchimage";
+		else
+			mv "$i" "$imagePath/LaunchImage.launchimage";
 		fi
-        mv "$i" "$imagePath/$dirname";
         
 	done
+
+
+
+	# First, find all non-@2x LaunchImages 
+
+	# find "$TEMPFULLPATH" -name "LaunchImage*.png" ! -name "LaunchImage*@2x*.png" -print0 | while read -d $'\0' -r i ; do
+
+	# 	a=`basename "$i"`;
+	# 	imagePath=${i%$a};
+	# 	dirname=$"LaunchImage.launchimage";
+		
+	# 	if [[ ! -d "$imagePath/$dirname" ]] ; then
+	# 		mkdir "$imagePath/$dirname";
+	# 	fi
+ #        mv "$i" "$imagePath/$dirname";
+        
+	# done
 	
-	# Next, look for the @2x launch image
-	find "$TEMPFULLPATH" -name "LaunchImage*@2x*.png" -print0 | while read -d $'\0' -r i ; do	
+	# # Next, look for the @2x launch image
+	# find "$TEMPFULLPATH" -name "LaunchImage*@2x*.png" -print0 | while read -d $'\0' -r i ; do	
+		
+	# 	a=`basename "$i"`;
+	# 	imagePath=${i%$a};
+	# 	dirname="LaunchImage.launchimage";
+
+	# 	if [[ ! -d "$imagePath/$dirname" ]] ; then
+	# 		mkdir "$imagePath/$dirname";
+	# 		mv "$i" "$imagePath/$dirname";
+			
+	# 		# if [[ $shouldGenerate1x == 1 ]] ; then
+	# 		# 	generate1x "$TEMPFULLPATH/$dirname/$a";
+	# 		# fi
+	# 	else
+	# 		mv "$i" "$imagePath/$dirname";
+	# 	fi
+        
+	# done
+}
+
+
+createImagesets() {
+	
+	find "$TEMPFULLPATH" -name "*.png" ! -name "LaunchImage*" ! -name "AppIcon*" -print0 | while read -d $'\0' -r i ; do 
 		
 		a=`basename "$i"`;
 		imagePath=${i%$a};
-		dirname="LaunchImage.launchimage";
-
-		if [[ ! -d "$imagePath/$dirname" ]] ; then
+		
+		if [[ "$a" != *@2x*.png ]]  ; then
+			dirname=${a%~ip*};	# remove the idiom identifier (~iphone + ~ipad) for the dirname
+			dirname=${dirname%.png}".imageset";
+		else ## [[ "$a" == *@2x*.png ]]
+			dirname=${a%@2x*.png};
+			dirname=${dirname%~ip*}".imageset"; # remove the idiom identifier (~iphone + ~ipad) for the dirname 
+		fi
+		
+        if [[ ! -d "$imagePath/$dirname" ]] ; then
 			mkdir "$imagePath/$dirname";
 			mv "$i" "$imagePath/$dirname";
-			
-			# if [[ $shouldGenerate1x == 1 ]] ; then
-			# 	generate1x "$TEMPFULLPATH/$dirname/$a";
-			# fi
 		else
 			mv "$i" "$imagePath/$dirname";
 		fi
         
 	done
-}
 
+	# First, find all non-@2x pngs which aren't Appicons or LaunchImages. TODO: Filter out @2x.
+	# find "$TEMPFULLPATH" -name "*.png" ! -name "LaunchImage*" ! -name "AppIcon*" -print0 | while read -d $'\0' -r i ; do 
 
-createImagesets() {
-	## First, find all non-@2x pngs which aren't Appicons or LaunchImages. TODO: Filter out @2x.
-	find "$TEMPFULLPATH" -name "*.png" ! -name "LaunchImage*" ! -name "AppIcon*" -print0 | while read -d $'\0' -r i ; do 
+	# 	a=`basename "$i"`;
+	# 	imagePath=${i%$a};
 
-		a=`basename "$i"`;
-		imagePath=${i%$a};
-
-        if [[ "$a" == *.png ]] && [[ "$a" != *@2x*.png ]]  ; then
-			dirname=${a%~ip*};	# remove the idiom identifier (~iphone + ~ipad) for the dirname
-			dirname=${dirname%.png}".imageset";
+ #        if [[ "$a" == *.png ]] && [[ "$a" != *@2x*.png ]]  ; then
+	# 		dirname=${a%~ip*};	# remove the idiom identifier (~iphone + ~ipad) for the dirname
+	# 		dirname=${dirname%.png}".imageset";
  			
- 			if [[ ! -d "$imagePath/$dirname" ]] ; then
-				mkdir "$imagePath/$dirname";
-			fi
+ # 			if [[ ! -d "$imagePath/$dirname" ]] ; then
+	# 			mkdir "$imagePath/$dirname";
+	# 		fi
 
-            mv "$i" "$imagePath/$dirname";
-        fi
-	done
+ #            mv "$i" "$imagePath/$dirname";
+ #        fi
+	# done
 	
-	## Next, look for @2x, and if the imageset directory doesnt exist, that means this png doesnt have an accompanying 1x.
-	find "$TEMPFULLPATH" -name "*.png" ! -name "LaunchImage*" ! -name "AppIcon*" -print0 | while read -d $'\0' -r i ; do 	## search only the root directory (dont traverse)
-		
-		a=`basename "$i"`;
-		imagePath=${i%$a};
 
-		if [[ "$a" == *@2x*.png ]] ; then
-			dirname=${a%@2x*.png};
-			dirname=${dirname%~ip*}".imageset"; # remove the idiom identifier (~iphone + ~ipad) for the dirname
 
-			if [[ ! -d "$imagePath/$dirname" ]] ; then
-				mkdir "$imagePath/$dirname";
-				mv "$i" "$imagePath/$dirname";
+
+	# ## Next, look for @2x, and if the imageset directory doesnt exist, that means this png doesnt have an accompanying 1x.
+	# find "$TEMPFULLPATH" -name "*@2x*.png" ! -name "LaunchImage*" ! -name "AppIcon*" -print0 | while read -d $'\0' -r i ; do 	## search only the root directory (dont traverse)
+
+	# 	a=`basename "$i"`;
+	# 	imagePath=${i%$a};
+
+	# 	# if [[ "$a" == *@2x*.png ]] ; then
+	# 		dirname=${a%@2x*.png};
+	# 		dirname=${dirname%~ip*}".imageset"; # remove the idiom identifier (~iphone + ~ipad) for the dirname
+
+	# 		if [[ ! -d "$imagePath/$dirname" ]] ; then
+	# 			mkdir "$imagePath/$dirname";
+	# 			mv "$i" "$imagePath/$dirname";
 				
-				# if [[ $shouldGenerate1x == 1 ]] ; then
-				# 	generate1x "$TEMPFULLPATH/$dirname/$a";
-				# fi
-			else
-				mv "$i" "$imagePath/$dirname";
-			fi
+	# 			# if [[ $shouldGenerate1x == 1 ]] ; then
+	# 			# 	generate1x "$TEMPFULLPATH/$dirname/$a";
+	# 			# fi
+	# 		else
+	# 			mv "$i" "$imagePath/$dirname";
+	# 		fi
 		
-	    fi
-    done
+	#     # fi
+ #    done
+
 }
 
 
@@ -187,25 +249,17 @@ createImagesets() {
 # Takes file (basename) as argument. 
 create_json_content() {
 
-	i="$1";		# full path.imageset
-	a=`basename "$i"`;
-	fullImagePath=${i%/$a};
-	JSONFile="$fullImagePath"/"$a"/Contents.json; 
-	
+	JSONFile="$1"/Contents.json; 
+
 	# Initialize the JSON with the proper "stuffing".
 	echo "{
   \"images\" : [" >> "$JSONFile";
 
-	find "$fullImagePath"/"$a"/* -name "*.png" -prune -print0 | while read -d $'\0' -r imagePath ; do
- 
+	find "$1"/* -name "*.png" -prune -print0 | while read -d $'\0' -r imagePath ; do
+ 	
  		imageName=`basename "$imagePath"`;
 		orientation="invalid";
 		subtype="invalid";
-		
-		# Calculate size
-		width=`sips -g pixelWidth "$imagePath" | tail -n1 | cut -d' ' -f4`;
-		height=`sips -g pixelHeight "$imagePath" | tail -n1 | cut -d' ' -f4`;
-		size=$width"x"$height;
 
 		# Determine scale
 		scale="1x";
@@ -224,10 +278,11 @@ create_json_content() {
 		fi
 
 		if [[ "$imageName" == AppIcon*.png ]] ; then
-
+			width=`sips -g pixelWidth "$imagePath" | tail -n1 | cut -d' ' -f4`;
 			if [[ $width == "60" ]] ; then   # invalid size for iOS7. Heads up.
 				idiom="iphone";
 				scale="1x";
+				size="60x60";
 			else if [[ $width == "120" ]] ; then
 				idiom="iphone";
 				scale="2x";
@@ -238,6 +293,7 @@ create_json_content() {
 			if [[ $width == "76" ]] ; then
 				idiom="ipad";
 				scale="1x";
+				size="76x76";
 			else if [[ $width == "152" ]] ; then
 				idiom="ipad";
 				scale="2x";
@@ -245,10 +301,12 @@ create_json_content() {
 				fi
 			fi
 		fi
+		
 
 		# 640 x 1136 pixels = sub-type = "R4"
 		if [[ "$imageName" == LaunchImage*.png ]] ; then
-			
+			width=`sips -g pixelWidth "$imagePath" | tail -n1 | cut -d' ' -f4`;
+
 			if [[ $width == "320" ]] ; then
 				idiom="iphone";
 				scale="1x";
@@ -257,6 +315,8 @@ create_json_content() {
 				 idiom="iphone";
 				 scale="2x";
 				 orientation="portrait";
+
+	 			 height=`sips -g pixelHeight "$imagePath" | tail -n1 | cut -d' ' -f4`;
 				 if [[ $height == "1136" ]] ; then
 					# 640 x 1136 pixels = sub-type: R4
 					subtype="retina4";
@@ -268,7 +328,7 @@ create_json_content() {
 				idiom="ipad";
 				scale="1x";
 				orientation="portrait";
-			else if [[ $width == "1536" && $height == "2048" ]] ; then
+			else if [[ $width == "1536" ]] ; then
 				idiom="ipad";
 				scale="2x";
 				orientation="portrait";
@@ -276,11 +336,11 @@ create_json_content() {
 				fi
 			fi
 
-			if [[ $width == "1024" && $height == "768" ]] ; then
+			if [[ $width == "1024" ]] ; then
 				idiom="ipad";
 				scale="1x";
 				orientation="landscape";
-			else if [[ $width == "2048" && $height == "1536" ]] ; then
+			else if [[ $width == "2048" ]] ; then
 				idiom="ipad";
 				scale="2x";
 				orientation="landscape";
@@ -290,36 +350,34 @@ create_json_content() {
 		fi
 
 		# Calculate minimum-system-version
-		
 		echo "    {
       \"idiom\" : \"$idiom\",
-      \"scale\" : \"$scale\"," >> "$JSONFile"; 
-      
+      \"scale\" : \"$scale\",";
+
       if [[ "$imageName" == LaunchImage*.png ]] ; then
 	      echo "      \"orientation\" : \"$orientation\",
 	  \"extent\" : \"full-screen\",
-      \"minimum-system-version\" : \"7.0\"," >> "$JSONFile"; 
+      \"minimum-system-version\" : \"7.0\",";
 
       	if [[ "$subtype" != invalid ]] ; then
-      		echo "      \"subtype\" : \"$subtype\"," >> "$JSONFile";
+      		echo "      \"subtype\" : \"$subtype\",";
       	fi
 
 	  fi
-	  if [[ "$imageName" != LaunchImage*.png ]] ; then
-		  echo "      \"size\" : \"$size\"," >> "$JSONFile"; 
+	  if [[ "$imageName" == AppIcon*.png ]] ; then
+		 echo "      \"size\" : \"$size\",";
 	  fi
       
       echo "      \"filename\" : \"$imageName\"
-    }," >> "$JSONFile";
-	
-	done
+    },";
+
+	done >> "$JSONFile";
 	
 	# Delete the last line of the file to remove the trailing ",".
-	sed -i '' '$!P;$!D;$d' "$JSONFile";
-	
+	# sed -i '' '$!P;$!D;$d' "$JSONFile";
+
 	# Add the final chunk to the JSON 
- 	echo "    }
-  ],
+ 	echo "  ],
   \"info\" : {
     \"version\" : 1,
     \"author\" : \"xcode\"
@@ -328,18 +386,73 @@ create_json_content() {
 
 }
 
-integrateToDestination() {
-	find "$TEMPFULLPATH" \( -name "*.imageset" -o -name "*.appiconset" -o -name "*.launchimage" \) -print0 | while read -d $'\0' -r i ; do
+# -c, Compare files by Checksum.
+# --size-only, Compare files by size. (lulwut)
+# -z, Compress during tranfser.
+# -a, archive mode.
+# -v, Verbose mode.
+# -h, Human-readable.
+# -u, skip files that are newer on the receiver.
+# --inplace,
+# --sparse,
+# -W, copy files whole (w/o delta-xfer algorithm)
+# rsync -czvhra "$a" "$destinationPath"/"$folderName";
 
-		name=`basename "$i"`;
-		folderPath=${i%$name};
+
+integrateToDestination() {
+
+	find "$TEMPFULLPATH" \( -name "*.png" \) -print0 | while read -d $'\0' -r a ; do
+		name=`basename "$a"`;
+		folderPath=${a%$name};
 		folderName=${folderPath#$TEMPFULLPATH/};
-		
+
 		if [[ ! -d "$destinationPath"/"$folderName" ]] ; then
 			mkdir -p -m 777 "$destinationPath"/"$folderName";
 		fi
-		cp -rf "$i" "$destinationPath"/"$folderName";  # TODO: -r or -rf? double check
+		cp -rf "$a" "$destinationPath"/"$folderName";  # TODO: -r or -rf? double check
 	done
+
+	find "$TEMPFULLPATH" \( -name "*.json" \) -print0 | while read -d $'\0' -r a ; do
+		name=`basename "$a"`;
+		folderPath=${a%$name};
+		folderName=${folderPath#$TEMPFULLPATH/};
+
+		if [[ ! -d "$destinationPath"/"$folderName" ]] ; then
+			mkdir -p -m 777 "$destinationPath"/"$folderName";
+		fi
+
+		if cmp "$destinationPath"/"$folderName"/"$name" "$a" ; then
+			echo "same";
+		else
+			echo "not"
+			if [[ -f "$destinationPath"/"$folderName"/"$name" ]] ; then
+				echo "But exists";
+				rsync -ca --append "$a" "$destinationPath"/"$folderName";
+			else
+				echo "doesnt even exist";
+				cp -rf "$a" "$destinationPath"/"$folderName";
+			fi
+			
+		fi
+	done
+
+
+	# find "$TEMPFULLPATH" \( -name "*.imageset" -o -name "*.appiconset" -o -name "*.launchimage" \) -print0 | while read -d $'\0' -r i ; do
+
+	# 	name=`basename "$i"`;
+	# 	folderPath=${i%$name};
+	# 	folderName=${folderPath#$TEMPFULLPATH/};
+		
+	# 	if [[ ! -d "$destinationPath"/"$folderName" ]] ; then
+	# 		mkdir -p -m 777 "$destinationPath"/"$folderName";
+	# 	fi
+	# 	# cp -rf "$i" "$destinationPath"/"$folderName";  # TODO: -r or -rf? double check
+	# 	# echo "****** Send"
+	# 	# rsync -cvhra "$i" "$destinationPath"/"$folderName";
+	# 	# echo "****** End"
+	# 	rsync -cru "$i" "$destinationPath"/"$folderName";
+
+	# done
 }
 
 
@@ -347,20 +460,43 @@ integrateToDestination() {
 ##################
 
 #TODO: Add all the proper flow control here.
-setupTempDirectory;
-createAppIcon;
-createLaunchImage;
-createImagesets;
+echo "1: Setting Up Temp";
+time { 
+setupTempDirectory 
+};
 
-# At this point, every file in the directory should be processed.
+echo "2: Creating AppIcon";
+time {
+createAppIcon;
+}
+
+echo "3: Creating LaunchImages";
+time { 
+createLaunchImage 
+};
+
+echo "4: Creating Imagesets";
+time { 
+createImagesets 
+};
+
+# At this point, every file in the directory should've been processed.
+echo "5: Creating JSON";
+time {
 find "$TEMPFULLPATH" \( -name "*.imageset" -o -name "*.appiconset" -o -name "*.launchimage" \) -print0 | while read -d $'\0' -r i ; do
-	imageSet=`basename "$i"`;
 	create_json_content "$i";
 done
+};
 
+echo "6: Integrate to Destination";
 # Move the final files to the proper destination.
-integrateToDestination;
+time {
+	integrateToDestination;
+};
 
 # Cull the temp directory after finishing.
+echo "7: Delete Temp";
+time {
 deleteTempDirectory;
+}
 
