@@ -1,2 +1,19 @@
+# Xcode #
+#########
+*.xcuserdata
+*.pbxuser
+DerivedData
+build/
+*.ipa
+*.moved-aside
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+.Spotlight-V100
+.Trashes
+thumbs.db
+Thumbs.db
 
 .com.apple.timemachine.supported
