@@ -81,14 +81,21 @@ createImagesets() {
 		a=`basename "$i"`;
 		imagePath=${i%$a};
 		
-		if [[ "$a" != *@2x*.png ]]  ; then
-			dirname=${a%~ip*};	# remove the idiom identifier (~iphone + ~ipad) for the dirname
-			dirname=${dirname%.png}".imageset";
-		else ## [[ "$a" == *@2x*.png ]]
-			dirname=${a%@2x*.png};
-			dirname=${dirname%~ip*}".imageset"; # remove the idiom identifier (~iphone + ~ipad) for the dirname 
-		fi
-		
+		case "$a" in
+			*@2x*.png )
+				dirname=${a%@2x*.png};
+				dirname=${dirname%~ip*}".imageset";
+				;;
+			*@3x*.png )
+				dirname=${a%@3x*.png};
+				dirname=${dirname%~ip*}".imageset";
+				;;
+			* )	## 1x
+				dirname=${a%~ip*};			
+				dirname=${dirname%.png}".imageset";
+				;;
+		esac
+
         if [[ ! -d "$imagePath/$dirname" ]] ; then
 			mkdir "$imagePath/$dirname";
 		fi
@@ -128,10 +135,16 @@ create_json_content() {
 		subtype="invalid";
 		idiom=$"universal";
 		scale="1x";
+		minimumVersion="7.0";
+		extent="full-screen";
 
-		
+
 		if [[ "$imageName" == *@2x* ]] ; then
 			scale="2x";
+		else if [[ "$imageName" == *@3x* ]] ; then
+				scale="3x";
+				idiom="iphone";
+			 fi
 		fi
 
 		if [[ "$imageName" == *~iphone* ]] ; then
@@ -143,85 +156,124 @@ create_json_content() {
 
 		if [[ "$imageName" == AppIcon*.png ]] ; then
 			width=`sips -g pixelWidth "$imagePath" | tail -n1 | cut -d' ' -f4`;
-			if [[ $width == "60" ]] ; then   # invalid size for iOS7. Heads up.
-				idiom="iphone";
-				scale="1x";
-				size="60x60";
-			else if [[ $width == "120" ]] ; then
-				idiom="iphone";
-				scale="2x";
-				size="60x60";
-				fi
-			fi 
 
-			if [[ $width == "76" ]] ; then
-				idiom="ipad";
-				scale="1x";
-				size="76x76";
-			else if [[ $width == "152" ]] ; then
-				idiom="ipad";
-				scale="2x";
-				size="76x76";
-				fi
-			fi
+			case "$width" in
+				"60" )
+					idiom="iphone";
+					scale="1x";
+					size="60x60";
+					;;
+
+				"120" )
+					idiom="iphone";
+					scale="2x";
+					size="60x60";
+					;;
+
+				"180" )
+					idiom="iphone";
+					scale="3x";
+					size="60x60";
+					;;
+
+				"76" )
+					idiom="ipad";
+					scale="1x";
+					size="76x76";
+					;;
+
+				"152" )
+					idiom="ipad";
+					scale="2x";
+					size="76x76";
+					;;
+			esac
 		fi
 		
-
-		# 640 x 1136 pixels = sub-type = "R4"
 		if [[ "$imageName" == LaunchImage*.png ]] ; then
 			width=`sips -g pixelWidth "$imagePath" | tail -n1 | cut -d' ' -f4`;
 
-			if [[ $width == "320" ]] ; then
-				idiom="iphone";
-				scale="1x";
-				orientation="portrait";
-			else if [[ $width == "640" ]] ; then
-				 idiom="iphone";
-				 scale="2x";
-				 orientation="portrait";
+			case "$width" in
+				"320" )
+					idiom="iphone";
+					scale="1x";
+					orientation="portrait";
+					;;
 
-	 			 height=`sips -g pixelHeight "$imagePath" | tail -n1 | cut -d' ' -f4`;
-				 if [[ $height == "1136" ]] ; then
-					# 640 x 1136 pixels = sub-type: R4
-					subtype="retina4";
-				 fi
-				fi
-			fi
+				"640" ) 
+					idiom="iphone";
+					scale="2x";
+					orientation="portrait";
 
-			if [[ $width == "768" ]] ; then
-				idiom="ipad";
-				scale="1x";
-				orientation="portrait";
-			else if [[ $width == "1536" ]] ; then
-				idiom="ipad";
-				scale="2x";
-				orientation="portrait";
-				size="768x1024";
-				fi
-			fi
+		 			height=`sips -g pixelHeight "$imagePath" | tail -n1 | cut -d' ' -f4`;
+					if [[ $height == "1136" ]] ; then
+						subtype="retina4";	# 640 x 1136 pixels = sub-type: R4
+					fi
+					;;
 
-			if [[ $width == "1024" ]] ; then
-				idiom="ipad";
-				scale="1x";
-				orientation="landscape";
-			else if [[ $width == "2048" ]] ; then
-				idiom="ipad";
-				scale="2x";
-				orientation="landscape";
-				fi
-			fi
+				"1242" )
+					idiom="iphone";
+					scale="3x";
+					orientation="portrait";
+					subtype="736h";
+					minimumVersion="8.0";
+					extent="full-screen";
+					;;
 
+				"750" )
+					idiom="iphone";
+					scale="2x";
+					orientation="portrait";
+					subtype="667h";
+					minimumVersion="8.0";
+					extent="full-screen";
+					;;
+
+				"2208" )
+					idiom="iphone";
+					scale="3x";
+					orientation="landscape";
+					subtype="736h";
+					minimumVersion="8.0";
+					extent="full-screen";
+					;;
+
+				"768" )
+					idiom="ipad";
+					scale="1x";
+					orientation="portrait";
+					;;
+
+				"1536" )
+					idiom="ipad";
+					scale="2x";
+					orientation="portrait";
+					size="768x1024";
+					;;
+
+				"1024" )
+					idiom="ipad";
+					scale="1x";
+					orientation="landscape";
+					;;
+
+				"2048" )
+					idiom="ipad";
+					scale="2x";
+					orientation="landscape";
+					;;
+			esac
 		fi
 
-		# Calculate minimum-system-version
+
 		echo "    {
       \"idiom\" : \"$idiom\",
       \"scale\" : \"$scale\",";
 
       if [[ "$imageName" == LaunchImage*.png ]] ; then
 	      echo "      \"orientation\" : \"$orientation\",
-	  \"extent\" : \"full-screen\",
-      \"minimum-system-version\" : \"7.0\",";
+	  \"extent\" : \"$extent\",
+      \"minimum-system-version\" : \"$minimumVersion\",";
 
       	if [[ "$subtype" != invalid ]] ; then
       		echo "      \"subtype\" : \"$subtype\",";
