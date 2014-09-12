@@ -1,6 +1,7 @@
 # Xcode #
 #########
 *.xcuserdata
+*.xcuserdatad/
 *.pbxuser
 DerivedData
 build/
