@@ -7,14 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1E4EA5AA19C22DBD00B23001 /* DropView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4EA5A919C22DBD00B23001 /* DropView.swift */; };
+		1E4EA5AC19C2343300B23001 /* FileDropViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4EA5AB19C2343300B23001 /* FileDropViewController.swift */; };
+		1E959F3019C251EC00B2759D /* AssetGeneratorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E959F2F19C251EC00B2759D /* AssetGeneratorViewController.swift */; };
 		DD09CBE81989A46C002DD2FB /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD09CBE71989A46C002DD2FB /* main.swift */; };
-		DD09CBEA1989A46C002DD2FB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD09CBE91989A46C002DD2FB /* ViewController.swift */; };
 		DD09CBEC1989A46C002DD2FB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD09CBEB1989A46C002DD2FB /* AppDelegate.swift */; };
 		DD09CBEE1989A46C002DD2FB /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DD09CBED1989A46C002DD2FB /* Images.xcassets */; };
 		DD09CBF11989A46C002DD2FB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DD09CBEF1989A46C002DD2FB /* Main.storyboard */; };
 		DD09CBFD1989A46C002DD2FB /* XCAssetGeneratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD09CBFC1989A46C002DD2FB /* XCAssetGeneratorTests.swift */; };
 		DD09CC071989A68D002DD2FB /* XCasset Generator.sh in Resources */ = {isa = PBXBuildFile; fileRef = DD09CC061989A68D002DD2FB /* XCasset Generator.sh */; };
-		DD09CC091989A99D002DD2FB /* FileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD09CC081989A99D002DD2FB /* FileView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -28,10 +29,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1E4EA5A919C22DBD00B23001 /* DropView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DropView.swift; sourceTree = "<group>"; };
+		1E4EA5AB19C2343300B23001 /* FileDropViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileDropViewController.swift; sourceTree = "<group>"; };
+		1E959F2F19C251EC00B2759D /* AssetGeneratorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AssetGeneratorViewController.swift; path = ../AssetGeneratorViewController.swift; sourceTree = "<group>"; };
 		DD09CBE21989A46C002DD2FB /* XCAssetGenerator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XCAssetGenerator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD09CBE61989A46C002DD2FB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DD09CBE71989A46C002DD2FB /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
-		DD09CBE91989A46C002DD2FB /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		DD09CBEB1989A46C002DD2FB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DD09CBED1989A46C002DD2FB /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		DD09CBF01989A46C002DD2FB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -39,7 +42,6 @@
 		DD09CBFB1989A46C002DD2FB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DD09CBFC1989A46C002DD2FB /* XCAssetGeneratorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XCAssetGeneratorTests.swift; sourceTree = "<group>"; };
 		DD09CC061989A68D002DD2FB /* XCasset Generator.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = "XCasset Generator.sh"; sourceTree = "<group>"; };
-		DD09CC081989A99D002DD2FB /* FileView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,12 +83,13 @@
 		DD09CBE41989A46C002DD2FB /* XCAssetGenerator */ = {
 			isa = PBXGroup;
 			children = (
-				DD09CBE91989A46C002DD2FB /* ViewController.swift */,
 				DD09CBEB1989A46C002DD2FB /* AppDelegate.swift */,
-				DD09CBED1989A46C002DD2FB /* Images.xcassets */,
+				1E4EA5A919C22DBD00B23001 /* DropView.swift */,
+				1E959F2F19C251EC00B2759D /* AssetGeneratorViewController.swift */,
+				1E4EA5AB19C2343300B23001 /* FileDropViewController.swift */,
 				DD09CBEF1989A46C002DD2FB /* Main.storyboard */,
+				DD09CBED1989A46C002DD2FB /* Images.xcassets */,
 				DD09CBE51989A46C002DD2FB /* Supporting Files */,
-				DD09CC081989A99D002DD2FB /* FileView.swift */,
 			);
 			path = XCAssetGenerator;
 			sourceTree = "<group>";
@@ -218,10 +221,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DD09CC091989A99D002DD2FB /* FileView.swift in Sources */,
 				DD09CBEC1989A46C002DD2FB /* AppDelegate.swift in Sources */,
-				DD09CBEA1989A46C002DD2FB /* ViewController.swift in Sources */,
+				1E959F3019C251EC00B2759D /* AssetGeneratorViewController.swift in Sources */,
 				DD09CBE81989A46C002DD2FB /* main.swift in Sources */,
+				1E4EA5AA19C22DBD00B23001 /* DropView.swift in Sources */,
+				1E4EA5AC19C2343300B23001 /* FileDropViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
