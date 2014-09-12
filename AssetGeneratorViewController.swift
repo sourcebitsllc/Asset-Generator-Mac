@@ -41,9 +41,9 @@ class AssetGeneratorViewController: NSViewController, NSToolbarDelegate {
         
         var panel: NSOpenPanel = NSOpenPanel()
         
-        panel.canChooseFiles = false
-        panel.canChooseDirectories = true
+        panel.canChooseDirectories = false
         panel.allowsMultipleSelection = false
+        panel.allowedFileTypes = ["xcassets"]
         
         panel.beginWithCompletionHandler() { (handler: Int) -> Void in
             if handler == NSFileHandlingPanelOKButton {
