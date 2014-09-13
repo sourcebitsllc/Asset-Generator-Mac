@@ -102,16 +102,26 @@
         <scene sceneID="aCi-cJ-A5z">
             <objects>
                 <viewController id="jIf-Ib-41m" customClass="AssetGeneratorViewController" customModule="XCAssetGenerator" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" id="BYb-n2-Lia">
+                    <view key="view" wantsLayer="YES" id="BYb-n2-Lia">
                         <rect key="frame" x="0.0" y="0.0" width="458" height="300"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <containerView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9F3-Cu-4mC">
-                                <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
+                                <rect key="frame" x="0.0" y="0.0" width="458" height="300"/>
                                 <connections>
                                     <segue destination="PAg-JE-4JN" kind="embed" identifier="embeddedContainer" id="cZX-D2-olz"/>
                                 </connections>
                             </containerView>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zwm-O5-9fw">
+                                <rect key="frame" x="352" y="13" width="97" height="32"/>
+                                <buttonCell key="cell" type="push" title="Generate" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="I80-Oy-jI9">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="generateButtonPressed:" target="jIf-Ib-41m" id="cRq-BH-0Fa"/>
+                                </connections>
+                            </button>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3Qf-aw-mCy">
                                 <rect key="frame" x="362" y="263" width="87" height="32"/>
                                 <buttonCell key="cell" type="push" title="Browse" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="tDh-yF-h6J">
@@ -122,15 +132,28 @@
                                     <action selector="browseButtonPressed:" target="jIf-Ib-41m" id="GBE-6n-bub"/>
                                 </connections>
                             </button>
+                            <popUpButton fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Qw3-m5-n1B" userLabel="Project List">
+                                <rect key="frame" x="128" y="266" width="202" height="27"/>
+                                <popUpButtonCell key="cell" type="bevel" bezelStyle="regularSquare" alignment="left" lineBreakMode="truncatingTail" borderStyle="border" inset="2" autoenablesItems="NO" id="KbY-rL-DmO">
+                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                    <font key="font" metaFont="menu"/>
+                                    <menu key="menu" title="No" autoenablesItems="NO" id="2u4-eG-cvO"/>
+                                </popUpButtonCell>
+                                <connections>
+                                    <action selector="recentlyUsedProjectsDropdownListChanged:" target="jIf-Ib-41m" id="b9s-cb-R0J"/>
+                                </connections>
+                            </popUpButton>
                         </subviews>
                     </view>
                     <connections>
                         <outlet property="browseButton" destination="3Qf-aw-mCy" id="ffg-Nd-R9H"/>
+                        <outlet property="generateButton" destination="zwm-O5-9fw" id="c22-pS-xLu"/>
+                        <outlet property="recentlyUsedProjectsDropdownList" destination="Qw3-m5-n1B" id="UPM-iS-xSh"/>
                     </connections>
                 </viewController>
                 <customObject id="XeI-LI-jIZ" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="632" y="497"/>
+            <point key="canvasLocation" x="660" y="496"/>
         </scene>
         <!--File Drop View Controller-->
         <scene sceneID="drA-8E-bVf">

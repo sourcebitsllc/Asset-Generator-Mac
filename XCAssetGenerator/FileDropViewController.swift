@@ -3,15 +3,25 @@
 //  XCAssetGenerator
 //
 //  Created by Bader on 9/11/14.
-//  Copyright (c) 2014 Pranav Shah. All rights reserved.
+//  Copyright (c) 2014 Bader. All rights reserved.
 //
 
 import Cocoa
 
+protocol FileDropControllerDelegate {
+    func fileDropControllerDidSetSourcePath(controller: FileDropViewController)
+    func fileDropControllerDidRemoveSourcePath(controller: FileDropViewController)
+    
+    // shoudl it be did change sourcepath? and have an enum with Add-Remove-Update
+}
+
 class FileDropViewController: NSViewController, DropViewDelegate {
 
     @IBOutlet var dropView: DropView!
+    var delegate: FileDropControllerDelegate?
+    
     private var folderPath : String?
+    
     
     required init(coder: NSCoder!) {
         super.init(coder: coder)
@@ -25,16 +35,19 @@ class FileDropViewController: NSViewController, DropViewDelegate {
     override func loadView() {
         super.loadView()
     }
-    
-    func sourcePath(Void) -> String? {
+    func hasValidPath() -> Bool {
+        // TODO: Path validation logic can go here
+        return (self.folderPath? != nil) ? true : false
+    }
+    func sourcePath() -> String? {
         let sourcePath = self.folderPath
         return sourcePath
     }
     
     // MARK: - DropViewDelegate required functions.
     func dropViewDidDropFileToView(dropView: DropView, filePath: String) {
-        NSLog("File dropped with path %@", filePath);
         self.folderPath = filePath
+        delegate?.fileDropControllerDidSetSourcePath(self)
     }
     
     func dropViewDidDragFileIntoView(dropView: DropView) {
