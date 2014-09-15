@@ -15,7 +15,7 @@ protocol FileDropControllerDelegate {
     // shoudl it be did change sourcepath? and have an enum with Add-Remove-Update
 }
 
-class FileDropViewController: NSViewController, DropViewDelegate {
+class FileDropViewController: NSViewController, DropViewDelegate, ScriptSourcePathDelegate {
 
     @IBOutlet var dropView: DropView!
     var delegate: FileDropControllerDelegate?
@@ -35,13 +35,19 @@ class FileDropViewController: NSViewController, DropViewDelegate {
     override func loadView() {
         super.loadView()
     }
-    func hasValidPath() -> Bool {
-        // TODO: Path validation logic can go here
-        return (self.folderPath? != nil) ? true : false
-    }
+//    
+//    func hasValidPath() -> Bool {
+//        // TODO: Path validation logic can go here
+//        return (self.folderPath? != nil) ? true : false
+//    }
+    
+    // MARK:- ScriptSourcePath Delegate
     func sourcePath() -> String? {
         let sourcePath = self.folderPath
         return sourcePath
+    }
+    func hasValidSourceProject() -> Bool {
+        return (self.folderPath? != nil) ? true : false
     }
     
     // MARK: - DropViewDelegate required functions.

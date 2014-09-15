@@ -27,7 +27,8 @@ class RecentlySelectedProjectManager : NSObject {
     required override init() {
         super.init()
         recentProjects = NSUserDefaults.standardUserDefaults().arrayForKey(RecentProjectsKey) as? [String]
-        recentProjects = ["Home", "User", "Bader", "Downloads"]
+//        recentProjects = ["Home", "User", "Bader", "Downloads"]
+//        recentProjects = []
     }
     
     
@@ -46,21 +47,22 @@ class RecentlySelectedProjectManager : NSObject {
         return list
     }
     
-    // TODO: Too much state manipulation. fix it buddy.
+    // TODO: Too much state manipulation. fix it buddy yea? HEY? fix it.
     func addProject(path: String) {
         if let projectsList = recentProjects {
             if contains(projectsList, path) {
                 let index: Int = find(projectsList, path)!
-                recentProjects?.removeAtIndex(index)
+                recentProjects!.removeAtIndex(index)
             }
-            if recentProjects!.count == self.MaximumCacheCapacity {
-                recentProjects?.removeLast()
+            if projectsList.count == self.MaximumCacheCapacity {
+                recentProjects!.removeLast()
             }
-            recentProjects?.insert(path, atIndex: 0)
+            recentProjects!.insert(path, atIndex: 0)
             
         } else {
-            recentProjects?.append(path)
+            recentProjects = [path]
         }
+        println("Project list: \(recentProjects?.count)")
     }
     
     

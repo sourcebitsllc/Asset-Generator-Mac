@@ -80,21 +80,69 @@
         <!--Window Controller-->
         <scene sceneID="R2V-B0-nI4">
             <objects>
-                <windowController id="B8D-0N-5wS" sceneMemberID="viewController">
+                <customObject id="Oky-zY-oP4" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+                <windowController id="B8D-0N-5wS" customClass="AssetGeneratorWindowController" customModule="XCAssetGenerator" customModuleProvider="target" sceneMemberID="viewController">
                     <window key="window" title="Asset Generator" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" hasShadow="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" animationBehavior="default" id="IQv-IB-iLA">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
                         <rect key="contentRect" x="196" y="240" width="480" height="270"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
-                        <view key="contentView" id="O92-4t-NeX">
+                        <view key="contentView" wantsLayer="YES" id="O92-4t-NeX">
                             <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </view>
+                        <toolbar key="toolbar" implicitIdentifier="AC9014E2-B976-4BCE-809E-319016E2D8C4" autosavesConfiguration="NO" displayMode="iconOnly" sizeMode="regular" id="Pbd-CO-gaH">
+                            <allowedToolbarItems>
+                                <toolbarItem implicitItemIdentifier="946E4DB2-AEBD-489B-AF37-1D5E8BE83E41" label="Custom View" paletteLabel="Custom View" id="HgH-Zl-FKL">
+                                    <nil key="toolTip"/>
+                                    <size key="minSize" width="87" height="32"/>
+                                    <size key="maxSize" width="87" height="32"/>
+                                    <button key="view" verticalHuggingPriority="750" id="3Qf-aw-mCy">
+                                        <rect key="frame" x="353" y="243" width="87" height="32"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <buttonCell key="cell" type="push" title="Browse" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="tDh-yF-h6J">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="browseButtonPressed:" target="B8D-0N-5wS" id="Dtu-Q0-h1A"/>
+                                        </connections>
+                                    </button>
+                                </toolbarItem>
+                                <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="WGn-J6-yo9"/>
+                                <toolbarItem implicitItemIdentifier="00973EC9-52B5-4C1A-8421-4F5056D8942E" label="Custom View" paletteLabel="Custom View" id="Nqa-qT-3TG">
+                                    <nil key="toolTip"/>
+                                    <size key="minSize" width="202" height="27"/>
+                                    <size key="maxSize" width="382" height="42"/>
+                                    <popUpButton key="view" id="Qw3-m5-n1B" userLabel="Project List">
+                                        <rect key="frame" x="0.0" y="14" width="322" height="42"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <popUpButtonCell key="cell" type="bevel" bezelStyle="regularSquare" imagePosition="left" alignment="left" lineBreakMode="truncatingTail" borderStyle="border" inset="2" autoenablesItems="NO" id="KbY-rL-DmO">
+                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                            <font key="font" metaFont="menu"/>
+                                            <menu key="menu" title="No" autoenablesItems="NO" id="2u4-eG-cvO"/>
+                                        </popUpButtonCell>
+                                        <connections>
+                                            <action selector="recentlyUsedProjectsDropdownListChanged:" target="B8D-0N-5wS" id="EWK-W0-d99"/>
+                                        </connections>
+                                    </popUpButton>
+                                </toolbarItem>
+                                <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="z2n-Kt-bNs"/>
+                            </allowedToolbarItems>
+                            <defaultToolbarItems>
+                                <toolbarItem reference="WGn-J6-yo9"/>
+                                <toolbarItem reference="WGn-J6-yo9"/>
+                                <toolbarItem reference="Nqa-qT-3TG"/>
+                                <toolbarItem reference="HgH-Zl-FKL"/>
+                            </defaultToolbarItems>
+                        </toolbar>
+                        <contentBorderThickness minY="32"/>
                     </window>
                     <connections>
+                        <outlet property="browseButton" destination="3Qf-aw-mCy" id="5aM-W3-ffT"/>
+                        <outlet property="recentlyUsedProjectsDropdownList" destination="Qw3-m5-n1B" id="ZW3-K8-NR6"/>
                         <segue destination="jIf-Ib-41m" kind="relationship" relationship="window.shadowedContentViewController" id="qhY-Hb-Tlu"/>
                     </connections>
                 </windowController>
-                <customObject id="Oky-zY-oP4" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="75" y="250"/>
         </scene>
@@ -102,18 +150,18 @@
         <scene sceneID="aCi-cJ-A5z">
             <objects>
                 <viewController id="jIf-Ib-41m" customClass="AssetGeneratorViewController" customModule="XCAssetGenerator" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" wantsLayer="YES" id="BYb-n2-Lia">
-                        <rect key="frame" x="0.0" y="0.0" width="458" height="300"/>
+                    <view key="view" autoresizesSubviews="NO" wantsLayer="YES" id="BYb-n2-Lia">
+                        <rect key="frame" x="0.0" y="0.0" width="449" height="284"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <containerView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9F3-Cu-4mC">
-                                <rect key="frame" x="0.0" y="0.0" width="458" height="300"/>
+                            <containerView autoresizesSubviews="NO" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9F3-Cu-4mC">
+                                <rect key="frame" x="0.0" y="0.0" width="480" height="284"/>
                                 <connections>
                                     <segue destination="PAg-JE-4JN" kind="embed" identifier="embeddedContainer" id="cZX-D2-olz"/>
                                 </connections>
                             </containerView>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zwm-O5-9fw">
-                                <rect key="frame" x="352" y="13" width="97" height="32"/>
+                                <rect key="frame" x="343" y="4" width="97" height="32"/>
                                 <buttonCell key="cell" type="push" title="Generate" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="I80-Oy-jI9">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -122,49 +170,27 @@
                                     <action selector="generateButtonPressed:" target="jIf-Ib-41m" id="cRq-BH-0Fa"/>
                                 </connections>
                             </button>
-                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3Qf-aw-mCy">
-                                <rect key="frame" x="362" y="263" width="87" height="32"/>
-                                <buttonCell key="cell" type="push" title="Browse" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="tDh-yF-h6J">
-                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="system"/>
-                                </buttonCell>
-                                <connections>
-                                    <action selector="browseButtonPressed:" target="jIf-Ib-41m" id="GBE-6n-bub"/>
-                                </connections>
-                            </button>
-                            <popUpButton fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Qw3-m5-n1B" userLabel="Project List">
-                                <rect key="frame" x="128" y="266" width="202" height="27"/>
-                                <popUpButtonCell key="cell" type="bevel" bezelStyle="regularSquare" alignment="left" lineBreakMode="truncatingTail" borderStyle="border" inset="2" autoenablesItems="NO" id="KbY-rL-DmO">
-                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                    <font key="font" metaFont="menu"/>
-                                    <menu key="menu" title="No" autoenablesItems="NO" id="2u4-eG-cvO"/>
-                                </popUpButtonCell>
-                                <connections>
-                                    <action selector="recentlyUsedProjectsDropdownListChanged:" target="jIf-Ib-41m" id="b9s-cb-R0J"/>
-                                </connections>
-                            </popUpButton>
                         </subviews>
                     </view>
                     <connections>
-                        <outlet property="browseButton" destination="3Qf-aw-mCy" id="ffg-Nd-R9H"/>
                         <outlet property="generateButton" destination="zwm-O5-9fw" id="c22-pS-xLu"/>
                         <outlet property="recentlyUsedProjectsDropdownList" destination="Qw3-m5-n1B" id="UPM-iS-xSh"/>
                     </connections>
                 </viewController>
                 <customObject id="XeI-LI-jIZ" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="660" y="496"/>
+            <point key="canvasLocation" x="661.5" y="488"/>
         </scene>
         <!--File Drop View Controller-->
         <scene sceneID="drA-8E-bVf">
             <objects>
                 <viewController id="PAg-JE-4JN" customClass="FileDropViewController" customModule="XCAssetGenerator" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="p1N-nd-hFw">
-                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
+                        <rect key="frame" x="0.0" y="0.0" width="450" height="278"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="alU-uq-lqS" customClass="DropView" customModule="XCAssetGenerator" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
+                            <customView autoresizesSubviews="NO" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="alU-uq-lqS" customClass="DropView" customModule="XCAssetGenerator" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="450" height="278"/>
                             </customView>
                         </subviews>
                     </view>
@@ -174,7 +200,7 @@
                 </viewController>
                 <customObject id="dXT-s7-aE9" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="75" y="877"/>
+            <point key="canvasLocation" x="75" y="866"/>
         </scene>
     </scenes>
 </document>

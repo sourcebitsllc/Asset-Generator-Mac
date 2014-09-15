@@ -1,5 +1,5 @@
 //
-//  ScriptManager.swift
+//  ScriptExecutor.swift
 //  XCAssetGenerator
 //
 //  Created by Bader on 9/12/14.
@@ -12,7 +12,7 @@ protocol ScriptProgessDelegate {
     var percentageProgress: Int { get set }
 }
 
-class ScriptManager: NSObject {
+class ScriptExecutor: NSObject {
     //let path: String
     let scriptPath: String
     var delegate: ScriptProgessDelegate?
@@ -28,20 +28,20 @@ class ScriptManager: NSObject {
     }
     
     // TODO: maybe we should return error in here?
-    func executeScript(source src: String, destination dst: String, generate1x g1x: Bool, extraArgs args: [AnyObject?]?) {
-        
-//        let path: String? = NSBundle.mainBundle().pathForResource("XCasset Generator", ofType: "sh")
-//        if let url = path {
-//            println(url)
-//        }
-        
+    func executeScript(source src: String, destination dst: String, generate1x g1x: Bool, extraArgs args: [String]?) {
+
         var task: NSTask = NSTask()
         
         task.launchPath = self.scriptPath
         task.arguments = [src, dst]
         
         task.launch()
-        
         task.waitUntilExit()
+    }
+    
+    // TODO:
+    func executing() -> Bool {
+//        return task.running
+        return true
     }
 }
