@@ -11,8 +11,6 @@ import Cocoa
 protocol FileDropControllerDelegate {
     func fileDropControllerDidSetSourcePath(controller: FileDropViewController)
     func fileDropControllerDidRemoveSourcePath(controller: FileDropViewController)
-    
-    // shoudl it be did change sourcepath? and have an enum with Add-Remove-Update
 }
 
 class FileDropViewController: NSViewController, DropViewDelegate, ScriptSourcePathDelegate {

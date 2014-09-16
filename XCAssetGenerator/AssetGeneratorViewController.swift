@@ -8,16 +8,6 @@
 
 import Cocoa
 
-// TODO: hmm to functionally-identical protocols.... You know what to do.
-protocol ScriptSourcePathDelegate {
-    func sourcePath() -> String?
-    func hasValidSourceProject() -> Bool
-}
-
-protocol ScriptDestinationPathDelegate {
-    func destinationPath() -> String?
-    func hasValidDestinationProject() -> Bool
-}
 
 class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate, AssetGeneratorDestinationProjectDelegate {
 
@@ -25,12 +15,11 @@ class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate
   
     var fileDropController: FileDropViewController! // Force unwrap since it doesnt make sense it this doesnt exist.
     let recentListManager: RecentlySelectedProjectManager
-    var sourceDelegate: ScriptSourcePathDelegate?
-    var destinationDelegate: ScriptDestinationPathDelegate?
+    let scriptManager: ScriptExecutor
     
     required init(coder: NSCoder!) {
-//        panel = NSOpenPanel()
         recentListManager = RecentlySelectedProjectManager()
+        scriptManager = ScriptExecutor()
         super.init(coder: coder)
     }
 
@@ -43,30 +32,20 @@ class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate
     override func viewDidAppear() {
         super.viewDidAppear()
         self.updateGenerateButton()
+        self.scriptManager.destinationDelegate = self.view.window?.windowController() as AssetGeneratorWindowController // TODO: HAX!
     }
 
     // MARK:- Convenience Functions.
     func updateGenerateButton() -> Void {
-        // verbose much?
-        switch (self.sourceDelegate, self.destinationDelegate) {
-        case (.Some(let source), .Some(let destination)):
-            self.generateButton.enabled = source.hasValidSourceProject() && destination.hasValidDestinationProject()
-        case (_,_):
-            self.generateButton.enabled = false
-        }
-       // self.generateButton.enabled = self.sourceDelegate?.hasValidSourceProject()
+        self.generateButton.enabled = self.scriptManager.canExecuteScript()
     }
 
     // MARK: - IBActions
     @IBAction func generateButtonPressed(sender: AnyObject!) {
 
-        // We _CANNOT_ be in this function if our delegates are not set or if we dont have valid paths.
-        var scriptManager: ScriptExecutor = ScriptExecutor()
-        
-        scriptManager.executeScript(source: self.sourceDelegate!.sourcePath()!,
-            destination: self.destinationDelegate!.destinationPath()!,
-            generate1x: false,
-            extraArgs: nil)
+        // We _CANNOT_ be in this function if our delegates are not set or if we dont have valid paths
+        self.scriptManager.executeScript()
+//        self.scriptManager.executeScript(generate1x: false, extraArgs: nil)
     }
     
     // Is this better?
@@ -77,10 +56,9 @@ class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate
             self.fileDropController.delegate = self
             
             // fileDrop is the source, so set it as delegate
-            self.sourceDelegate = self.fileDropController
+            self.scriptManager.sourceDelegate = self.fileDropController
         }
     }
-    
     
     // MARK: - FileDropController Delegate
     func fileDropControllerDidSetSourcePath(controller: FileDropViewController) {

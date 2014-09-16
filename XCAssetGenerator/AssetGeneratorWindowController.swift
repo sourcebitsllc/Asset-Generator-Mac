@@ -8,6 +8,7 @@
 
 import Cocoa
 
+// TODO: I still dont like how much resposibility the Window controller is carrying. Maybe i can move all the destination Protocol logic to its own container while maintaining Toolbar in window logic somehow?
 protocol AssetGeneratorDestinationProjectDelegate {
     func destinationProjectDidChange(path: String?) // Can it be nil? (well maybe we'll add delete operator)
 }
@@ -31,7 +32,6 @@ class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, Scr
         
         let viewController = self.contentViewController as AssetGeneratorViewController
         self.assetsToolbarDelegate = viewController
-        viewController.destinationDelegate = self
         
         self.dropdownListSetup()
     }
@@ -41,8 +41,9 @@ class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, Scr
         self.recentlyUsedProjectsDropdownList.preferredEdge = NSMaxYEdge
     }
     
-    // TODO: Why do we remove all items? its the recentUsedProjectsManager to maintain order for its cache. So either trust its decisions or dont use it.
     // MARK:- Convenience Methods
+    
+    // TODO: Why do we remove all items? its the recentUsedProjectsManager to maintain order for its cache. So either trust its decisions or dont use it.
     func updateRecentUsedProjectsDropdownView() {
         self.recentlyUsedProjectsDropdownList.removeAllItems()
         self.recentlyUsedProjectsDropdownList.addItemsWithTitles(self.recentListManager.recentProjectsList())
@@ -61,6 +62,7 @@ class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, Scr
     
     
     // MARK:- IBAction outlets
+    
     @IBAction func recentlyUsedProjectsDropdownListChanged(sender: NSPopUpButton!) {
         println("recent pressed")
 //      self.recentListManager.addProject(sender.title)
@@ -80,15 +82,14 @@ class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, Scr
         panel.beginWithCompletionHandler() { (handler: Int) -> Void in
             if handler == NSFileHandlingPanelOKButton {
                 let path = panel.URL.path
-                NSLog("the URL: \(path)")
-                //                self.recentListManager.addProject(panel.URL.path!)
-                //                self.updateRecentUsedProjectsDropdownView()
+
                 self.updateRecentProjectsList(project: path!)
             }
         }
     }
     
     // MARK:- ScriptDestinationPath Delegate
+    
     func destinationPath() -> String? {
         return self.recentListManager.selectedProject()
     }
