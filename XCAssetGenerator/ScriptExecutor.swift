@@ -26,10 +26,11 @@ protocol ScriptDestinationPathDelegate {
 class ScriptExecutor: NSObject {
     //let path: String
     private let scriptPath: String
+    var task: NSTask
+    
     var progressDelegate: ScriptProgessDelegate?
     var sourceDelegate: ScriptSourcePathDelegate?
     var destinationDelegate: ScriptDestinationPathDelegate?
-    var task: NSTask
     
     required override init() {
         self.scriptPath = NSBundle.mainBundle().pathForResource("XCasset Generator", ofType: "sh")!
@@ -56,8 +57,7 @@ class ScriptExecutor: NSObject {
         self.executeScript(source: self.sourceDelegate!.sourcePath()!, destination: self.destinationDelegate!.destinationPath()!, generate1x: false, extraArgs: nil)
     }
     
-    func executeScript(#generate1x: Bool, extraArgs args: [String]?)
-    {
+    func executeScript(#generate1x: Bool, extraArgs args: [String]?) {
         self.executeScript(source: self.sourceDelegate!.sourcePath()!, destination: self.destinationDelegate!.destinationPath()!, generate1x: generate1x, extraArgs: args)
     }
     
