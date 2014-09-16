@@ -40,10 +40,6 @@ class DropView: NSView {
         self.wantsLayer = true
     }
     
-//    override func makeBackingLayer() -> CALayer {
-//        return CALayer.init()
-//    }
-    
     override func draggingEntered(sender: NSDraggingInfo!) -> NSDragOperation {
         delegate?.dropViewDidDragFileIntoView(self)
         return NSDragOperation.Copy

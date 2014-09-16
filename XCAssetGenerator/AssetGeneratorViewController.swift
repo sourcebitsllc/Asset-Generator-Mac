@@ -9,7 +9,7 @@
 import Cocoa
 
 
-class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate, AssetGeneratorDestinationProjectDelegate {
+class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate, AssetGeneratorDestinationProjectDelegate, ScriptProgessDelegate {
 
     @IBOutlet var generateButton: NSButton!
   
@@ -33,6 +33,8 @@ class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate
         super.viewDidAppear()
         self.updateGenerateButton()
         self.scriptManager.destinationDelegate = self.view.window?.windowController() as AssetGeneratorWindowController // TODO: HAX!
+        
+        self.scriptManager.progressDelegate = self
     }
 
     // MARK:- Convenience Functions.
@@ -43,8 +45,9 @@ class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate
     // MARK: - IBActions
     @IBAction func generateButtonPressed(sender: AnyObject!) {
 
-        // We _CANNOT_ be in this function if our delegates are not set or if we dont have valid paths
+        // We _CANNOT_ be in this function if canExecuteScript is not checked and passed.
         self.scriptManager.executeScript()
+        self.updateGenerateButton()
 //        self.scriptManager.executeScript(generate1x: false, extraArgs: nil)
     }
     
@@ -68,8 +71,12 @@ class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate
     func fileDropControllerDidRemoveSourcePath(controller: FileDropViewController) {
         self.updateGenerateButton()
     }
-
     
+    // MARK:- ScriptProgress delegate
+    func scriptFinishedExecutingScript(executor: ScriptExecutor) {
+        self.updateGenerateButton()
+    }
+
     // MARK: - AssetGeneratorDestinationProject Delegate
     func destinationProjectDidChange(path: String?) {
         println("Destination Project Changed")

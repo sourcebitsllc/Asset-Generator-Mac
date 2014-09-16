@@ -19,19 +19,19 @@ struct Project : Any {
 
 typealias Path = (title: String, path: String)
 
+let MaximumCacheCapacity: Int = 10
+
 class RecentlySelectedProjectManager : NSObject {
     
     private var recentProjects: [String]?
-    let MaximumCacheCapacity: Int = 10
     
     required override init() {
         super.init()
         self.loadRecentProjects()
 //        recentProjects = ["Home", "User", "Bader", "Downloads"]
-//        recentProjects = []
     }
     
-    // Returns the currenly selected Project/most recently used project.
+    // Returns the currenly selected Project/most recently used project. nil if "cache" empty.
     func selectedProject() -> String? {
         return recentProjects?.first
     }
@@ -55,7 +55,7 @@ class RecentlySelectedProjectManager : NSObject {
                 let index: Int = find(projectsList, path)!
                 recentProjects!.removeAtIndex(index)
             }
-            if projectsList.count == self.MaximumCacheCapacity {
+            if projectsList.count == MaximumCacheCapacity {
                 recentProjects!.removeLast()
             }
             recentProjects!.insert(path, atIndex: 0)
@@ -63,7 +63,7 @@ class RecentlySelectedProjectManager : NSObject {
         } else {
             recentProjects = [path]
         }
-        println("Project list: \(recentProjects?.count)")
+        
         self.storeRecentProjects()
     }
     
@@ -80,7 +80,5 @@ class RecentlySelectedProjectManager : NSObject {
     func flushStoredProjects() {
         NSUserDefaults.standardUserDefaults().removeObjectForKey(RecentProjectsKey)
     }
-    
-    
     
 }
