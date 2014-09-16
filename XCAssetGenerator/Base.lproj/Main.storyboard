@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="6246" systemVersion="14A343f" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="6246" systemVersion="14A361c" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6246"/>
     </dependencies>
@@ -112,12 +112,12 @@
                                 <toolbarItem implicitItemIdentifier="00973EC9-52B5-4C1A-8421-4F5056D8942E" label="Custom View" paletteLabel="Custom View" id="Nqa-qT-3TG">
                                     <nil key="toolTip"/>
                                     <size key="minSize" width="202" height="27"/>
-                                    <size key="maxSize" width="382" height="42"/>
-                                    <popUpButton key="view" id="Qw3-m5-n1B" userLabel="Project List">
-                                        <rect key="frame" x="0.0" y="14" width="322" height="42"/>
+                                    <size key="maxSize" width="382" height="48"/>
+                                    <popUpButton key="view" focusRingType="none" id="Qw3-m5-n1B" userLabel="Project List">
+                                        <rect key="frame" x="0.0" y="15" width="351" height="45"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <popUpButtonCell key="cell" type="bevel" bezelStyle="regularSquare" imagePosition="left" alignment="left" lineBreakMode="truncatingTail" borderStyle="border" inset="2" autoenablesItems="NO" id="KbY-rL-DmO">
-                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                        <popUpButtonCell key="cell" type="bevel" bezelStyle="regularSquare" imagePosition="left" alignment="left" lineBreakMode="truncatingTail" borderStyle="border" focusRingType="none" allowsMixedState="YES" inset="2" autoenablesItems="NO" id="KbY-rL-DmO">
+                                            <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
                                             <font key="font" metaFont="menu"/>
                                             <menu key="menu" title="No" autoenablesItems="NO" id="2u4-eG-cvO"/>
                                         </popUpButtonCell>
@@ -135,7 +135,7 @@
                                 <toolbarItem reference="HgH-Zl-FKL"/>
                             </defaultToolbarItems>
                         </toolbar>
-                        <contentBorderThickness minY="32"/>
+                        <contentBorderThickness minY="34"/>
                     </window>
                     <connections>
                         <outlet property="browseButton" destination="3Qf-aw-mCy" id="5aM-W3-ffT"/>
@@ -161,7 +161,7 @@
                                 </connections>
                             </containerView>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zwm-O5-9fw">
-                                <rect key="frame" x="343" y="4" width="97" height="32"/>
+                                <rect key="frame" x="343" y="1" width="97" height="32"/>
                                 <buttonCell key="cell" type="push" title="Generate" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="I80-Oy-jI9">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>

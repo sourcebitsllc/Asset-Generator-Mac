@@ -25,7 +25,6 @@ class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate
   
     var fileDropController: FileDropViewController! // Force unwrap since it doesnt make sense it this doesnt exist.
     let recentListManager: RecentlySelectedProjectManager
-    
     var sourceDelegate: ScriptSourcePathDelegate?
     var destinationDelegate: ScriptDestinationPathDelegate?
     

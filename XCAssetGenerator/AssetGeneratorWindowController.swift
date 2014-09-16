@@ -33,7 +33,12 @@ class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, Scr
         self.assetsToolbarDelegate = viewController
         viewController.destinationDelegate = self
         
+        self.dropdownListSetup()
+    }
+    
+    func dropdownListSetup() {
         self.recentlyUsedProjectsDropdownList.addItemsWithTitles(self.recentListManager.recentProjectsList())
+        self.recentlyUsedProjectsDropdownList.preferredEdge = NSMaxYEdge
     }
     
     // TODO: Why do we remove all items? its the recentUsedProjectsManager to maintain order for its cache. So either trust its decisions or dont use it.

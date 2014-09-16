@@ -22,15 +22,14 @@ typealias Path = (title: String, path: String)
 class RecentlySelectedProjectManager : NSObject {
     
     private var recentProjects: [String]?
-    let MaximumCacheCapacity: Int = 15
+    let MaximumCacheCapacity: Int = 10
     
     required override init() {
         super.init()
-        recentProjects = NSUserDefaults.standardUserDefaults().arrayForKey(RecentProjectsKey) as? [String]
+        self.loadRecentProjects()
 //        recentProjects = ["Home", "User", "Bader", "Downloads"]
 //        recentProjects = []
     }
-    
     
     // Returns the currenly selected Project/most recently used project.
     func selectedProject() -> String? {
@@ -48,6 +47,8 @@ class RecentlySelectedProjectManager : NSObject {
     }
     
     // TODO: Too much state manipulation. fix it buddy yea? HEY? fix it.
+    // TODO: ......
+    // TODO: ...... Terrible .......
     func addProject(path: String) {
         if let projectsList = recentProjects {
             if contains(projectsList, path) {
@@ -63,6 +64,21 @@ class RecentlySelectedProjectManager : NSObject {
             recentProjects = [path]
         }
         println("Project list: \(recentProjects?.count)")
+        self.storeRecentProjects()
+    }
+    
+    // MARK:- Convenience functions
+    // TODO: Find better hooks for these calls.
+    func storeRecentProjects() {
+        NSUserDefaults.standardUserDefaults().setObject(self.recentProjects, forKey: RecentProjectsKey)
+    }
+    
+    func loadRecentProjects() {
+        recentProjects = NSUserDefaults.standardUserDefaults().arrayForKey(RecentProjectsKey) as? [String]
+    }
+    
+    func flushStoredProjects() {
+        NSUserDefaults.standardUserDefaults().removeObjectForKey(RecentProjectsKey)
     }
     
     
