@@ -19,11 +19,11 @@ class DropView: NSView {
 
     var delegate: DropViewDelegate?
     
-    override func drawRect(dirtyRect: NSRect) {
-        super.drawRect(dirtyRect)
-
-        // Drawing code here.
-    }
+//    override func drawRect(dirtyRect: NSRect) {
+//        super.drawRect(dirtyRect)
+//
+//        // Drawing code here.
+//    }
     
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)

@@ -18,6 +18,7 @@ protocol FileDropControllerDelegate {
 class FileDropViewController: NSViewController, DropViewDelegate, ScriptSourcePathDelegate {
 
     @IBOutlet var dropView: DropView!
+    @IBOutlet var pathLabel: NSTextField!
     var delegate: FileDropControllerDelegate?
     
     private var folderPath : String?
@@ -35,11 +36,6 @@ class FileDropViewController: NSViewController, DropViewDelegate, ScriptSourcePa
     override func loadView() {
         super.loadView()
     }
-//    
-//    func hasValidPath() -> Bool {
-//        // TODO: Path validation logic can go here
-//        return (self.folderPath? != nil) ? true : false
-//    }
     
     // MARK:- ScriptSourcePath Delegate
     func sourcePath() -> String? {
@@ -53,6 +49,7 @@ class FileDropViewController: NSViewController, DropViewDelegate, ScriptSourcePa
     // MARK: - DropViewDelegate required functions.
     func dropViewDidDropFileToView(dropView: DropView, filePath: String) {
         self.folderPath = filePath
+        self.pathLabel.stringValue = filePath
         delegate?.fileDropControllerDidSetSourcePath(self)
     }
     

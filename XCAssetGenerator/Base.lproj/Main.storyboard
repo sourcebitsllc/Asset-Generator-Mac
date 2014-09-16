@@ -191,11 +191,22 @@
                         <subviews>
                             <customView autoresizesSubviews="NO" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="alU-uq-lqS" customClass="DropView" customModule="XCAssetGenerator" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="450" height="278"/>
+                                <subviews>
+                                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5XS-3Q-MOs">
+                                        <rect key="frame" x="9" y="101" width="432" height="35"/>
+                                        <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" usesSingleLineMode="YES" id="Rh6-MJ-lCt">
+                                            <font key="font" metaFont="system"/>
+                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                        </textFieldCell>
+                                    </textField>
+                                </subviews>
                             </customView>
                         </subviews>
                     </view>
                     <connections>
                         <outlet property="dropView" destination="alU-uq-lqS" id="380-0y-Dw6"/>
+                        <outlet property="pathLabel" destination="5XS-3Q-MOs" id="r3X-Vl-Brc"/>
                     </connections>
                 </viewController>
                 <customObject id="dXT-s7-aE9" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
