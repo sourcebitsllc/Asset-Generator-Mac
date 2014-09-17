@@ -343,11 +343,21 @@ integrateToDestination() {
 	done
 }
 
+display_usage() {
+    echo "Usage: ./XCasset Generator.sh [absolute source path] [absolute destination path]" >&2
+}
 
 ## Entry Point. ##
 ##################
 
 #TODO: Add all the proper flow control here.
+## alright screw it, adding some usage directions. *growl growl*
+if [  $# -le 1 ] ; then
+	echo "- ERROR: missing arguments" >&2
+    display_usage
+    exit 1
+fi
+
 echo "1: Setting Up Temp";
 time { 
 setupTempDirectory; 
