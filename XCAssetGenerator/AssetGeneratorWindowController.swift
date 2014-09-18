@@ -76,9 +76,9 @@ class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, Scr
         println("browse pressed")
         var panel: NSOpenPanel = NSOpenPanel()
         
-        panel.canChooseDirectories = false
-        panel.allowsMultipleSelection = false
-        panel.allowedFileTypes = ["xcodeproj"]
+        panel.allowedFileTypes          = ["xcodeproj"]
+        panel.canChooseDirectories      = false
+        panel.allowsMultipleSelection   = false
         
         panel.beginWithCompletionHandler() { (handler: Int) -> Void in
             if handler == NSFileHandlingPanelOKButton {
