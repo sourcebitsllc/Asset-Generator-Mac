@@ -14,11 +14,9 @@ class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate
     @IBOutlet var generateButton: NSButton!
   
     var fileDropController: FileDropViewController! // Force unwrap since it doesnt make sense it this doesnt exist.
-    let recentListManager: RecentlySelectedProjectManager
     let scriptManager: ScriptExecutor
     
     required init(coder: NSCoder!) {
-        recentListManager = RecentlySelectedProjectManager()
         scriptManager = ScriptExecutor()
         super.init(coder: coder)
     }
@@ -32,7 +30,7 @@ class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate
     override func viewDidAppear() {
         super.viewDidAppear()
         self.updateGenerateButton()
-        self.scriptManager.destinationDelegate = self.view.window?.windowController() as AssetGeneratorWindowController // TODO: HAX!
+        self.scriptManager.destinationDelegate = self.view.window?.windowController() as AssetGeneratorWindowController // TODO: HAX! how does this controller even know about the windowController being the destination delegate?!
         
         self.scriptManager.progressDelegate = self
     }
@@ -78,7 +76,7 @@ class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate
     }
 
     // MARK: - AssetGeneratorDestinationProject Delegate
-    func destinationProjectDidChange(path: String?) {
+    func destinationProjectDidChange(project: XCProject?) {
         println("Destination Project Changed")
         self.updateGenerateButton()
     }

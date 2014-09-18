@@ -24,6 +24,10 @@ protocol ScriptDestinationPathDelegate {
     func hasValidDestinationProject() -> Bool
 }
 
+enum ScriptDestinationValidator {
+    
+}
+
 // TODO: make the script safer to use.
 
 class ScriptExecutor: NSObject {
@@ -72,6 +76,7 @@ class ScriptExecutor: NSObject {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), { () -> Void in
             
             self.task.launchPath = self.scriptPath
+            self.task.arguments = [src, dst]
             self.task.standardOutput = self.pipe
             
             self.pipe.fileHandleForReading.waitForDataInBackgroundAndNotify()
@@ -84,9 +89,9 @@ class ScriptExecutor: NSObject {
                 
                 self.pipe.fileHandleForReading.waitForDataInBackgroundAndNotify()
             }
-            self.task.arguments = [src, dst]
+            
             self.task.launch()
-            self.task.waitUntilExit()
+            self.task.waitUntilExit() // This blocks.
             
             self.running = false
             self.progressDelegate?.scriptFinishedExecutingScript(self)

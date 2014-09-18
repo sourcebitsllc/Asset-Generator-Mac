@@ -111,10 +111,10 @@
                                 <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="WGn-J6-yo9"/>
                                 <toolbarItem implicitItemIdentifier="00973EC9-52B5-4C1A-8421-4F5056D8942E" label="Custom View" paletteLabel="Custom View" id="Nqa-qT-3TG">
                                     <nil key="toolTip"/>
-                                    <size key="minSize" width="202" height="27"/>
-                                    <size key="maxSize" width="382" height="48"/>
+                                    <size key="minSize" width="131" height="27"/>
+                                    <size key="maxSize" width="382" height="50"/>
                                     <popUpButton key="view" focusRingType="none" id="Qw3-m5-n1B" userLabel="Project List">
-                                        <rect key="frame" x="0.0" y="15" width="351" height="45"/>
+                                        <rect key="frame" x="0.0" y="14" width="131" height="50"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                         <popUpButtonCell key="cell" type="bevel" bezelStyle="regularSquare" imagePosition="left" alignment="left" lineBreakMode="truncatingTail" borderStyle="border" focusRingType="none" allowsMixedState="YES" inset="2" autoenablesItems="NO" id="KbY-rL-DmO">
                                             <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
