@@ -22,6 +22,7 @@ class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, Scr
     let recentListManager: RecentlySelectedProjectManager
     var assetsToolbarDelegate: AssetGeneratorDestinationProjectDelegate?
     
+    private  var panel: NSOpenPanel = NSOpenPanel()
     
     required init(coder: NSCoder!) {
         recentListManager = RecentlySelectedProjectManager()
@@ -31,15 +32,21 @@ class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, Scr
     override func windowDidLoad() {
         super.windowDidLoad()
         
-        let viewController = self.contentViewController as AssetGeneratorViewController
-        self.assetsToolbarDelegate = viewController
+        self.assetsToolbarDelegate = self.contentViewController as AssetGeneratorViewController
         
         self.dropdownListSetup()
+        self.openPanelSetup()
     }
     
     func dropdownListSetup() {
         self.recentlyUsedProjectsDropdownList.addItemsWithTitles(self.recentListManager.recentProjectsTitlesList())
         self.recentlyUsedProjectsDropdownList.preferredEdge = NSMaxYEdge
+    }
+    
+    func openPanelSetup() {
+        self.panel.allowedFileTypes          = ["xcodeproj"]
+        self.panel.canChooseDirectories      = false
+        self.panel.allowsMultipleSelection   = false
     }
     
     // MARK:- Convenience Methods
@@ -74,17 +81,10 @@ class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, Scr
     
     @IBAction func browseButtonPressed(sender: AnyObject!) {
         println("browse pressed")
-        var panel: NSOpenPanel = NSOpenPanel()
-        
-        panel.allowedFileTypes          = ["xcodeproj"]
-        panel.canChooseDirectories      = false
-        panel.allowsMultipleSelection   = false
         
         panel.beginWithCompletionHandler() { (handler: Int) -> Void in
             if handler == NSFileHandlingPanelOKButton {
-                let path = panel.URL.path
-
-                self.updateRecentProjectsList(project: path!)
+                self.updateRecentProjectsList(project: self.panel.URL.path!)
             }
         }
     }
