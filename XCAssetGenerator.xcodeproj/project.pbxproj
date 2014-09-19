@@ -33,17 +33,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		1E4250A519C77C8C00BF686B /* AssetGeneratorWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetGeneratorWindowController.swift; sourceTree = "<group>"; };
+		1E4250A519C77C8C00BF686B /* AssetGeneratorWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = AssetGeneratorWindowController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		1E4A926219CB846300BFB0D0 /* XCProject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XCProject.swift; sourceTree = "<group>"; };
-		1E4EA5A919C22DBD00B23001 /* DropView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DropView.swift; sourceTree = "<group>"; };
-		1E4EA5AB19C2343300B23001 /* FileDropViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileDropViewController.swift; sourceTree = "<group>"; };
-		1E959F2F19C251EC00B2759D /* AssetGeneratorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetGeneratorViewController.swift; sourceTree = "<group>"; };
-		1EE9353D19C3A0AB000DA40A /* RecentlySelectedProjectManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecentlySelectedProjectManager.swift; sourceTree = "<group>"; };
-		1EEC193B19C2BB3C00FF16AD /* ScriptExecutor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScriptExecutor.swift; sourceTree = "<group>"; };
+		1E4EA5A919C22DBD00B23001 /* DropView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = DropView.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		1E4EA5AB19C2343300B23001 /* FileDropViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = FileDropViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		1E959F2F19C251EC00B2759D /* AssetGeneratorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = AssetGeneratorViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		1EE9353D19C3A0AB000DA40A /* RecentlySelectedProjectManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = RecentlySelectedProjectManager.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		1EEC193B19C2BB3C00FF16AD /* ScriptExecutor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ScriptExecutor.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		DD09CBE21989A46C002DD2FB /* XCAssetGenerator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XCAssetGenerator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD09CBE61989A46C002DD2FB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DD09CBE71989A46C002DD2FB /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
-		DD09CBEB1989A46C002DD2FB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		DD09CBEB1989A46C002DD2FB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = AppDelegate.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		DD09CBED1989A46C002DD2FB /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		DD09CBF01989A46C002DD2FB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		DD09CBF61989A46C002DD2FB /* XCAssetGeneratorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = XCAssetGeneratorTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
