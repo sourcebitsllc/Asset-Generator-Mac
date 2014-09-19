@@ -81,9 +81,9 @@ class ScriptExecutor: NSObject {
             pipe.fileHandleForReading.waitForDataInBackgroundAndNotify()
             NSNotificationCenter.defaultCenter().addObserverForName(NSFileHandleDataAvailableNotification, object: pipe.fileHandleForReading, queue: nil) { (notification: NSNotification!) -> Void in
                 
-                var echo = NSString(data: pipe.fileHandleForReading.availableData, encoding: NSUTF8StringEncoding)
                 dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                    
+                    var echo = NSString(data: pipe.fileHandleForReading.availableData, encoding: NSUTF8StringEncoding)
+
                     if echo.containsString("progress:") {
                         var progress = echo.stringByReplacingOccurrencesOfString("progress:", withString: "")
                         
@@ -92,11 +92,8 @@ class ScriptExecutor: NSObject {
                         if let range = rangeOfEndline {
                             progress = progress.substringToIndex(range.startIndex)
                         }
-                        println("ww \(progress)")
-                        
                         self.progressDelegate?.scriptExecutingScript(progress.toInt()!)
                     }
-//                   println("\(NSString(data: self.pipe.fileHandleForReading.availableData, encoding: NSUTF8StringEncoding))")
                 })
                 
                 pipe.fileHandleForReading.waitForDataInBackgroundAndNotify()
@@ -105,9 +102,11 @@ class ScriptExecutor: NSObject {
             task.launch()
             task.waitUntilExit() // This blocks.
             
-            self.running = false
-            println("Trmiatingsdgd")
-            self.progressDelegate?.scriptFinishedExecutingScript(self)
+            // Notify delegate in main thread.
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                self.running = false
+                self.progressDelegate?.scriptFinishedExecutingScript(self)
+            })
         })
     }
     
