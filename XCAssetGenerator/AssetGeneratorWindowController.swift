@@ -99,5 +99,4 @@ class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, Scr
         return self.recentListManager.isSelectedProjectValid() && self.recentListManager.selectedProject()!.hasValidAssetsPath()
     }
     
-
 }

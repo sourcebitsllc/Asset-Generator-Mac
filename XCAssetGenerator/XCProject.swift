@@ -64,9 +64,10 @@ struct XCProject : Printable {
         
         var string: String = NSString(data: pipe.fileHandleForReading.readDataToEndOfFile(), encoding: NSUTF8StringEncoding)
         
-        var paths = string.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString: "\n"))
-        println("\(paths.first)")
-        self.xcassetPath = paths.first
+        // If string not empty, convert it into an array and get the first value.
+        self.xcassetPath = string.isEmpty ? nil : string.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString: "\n")).first
+        
+        println("\(self.xcassetPath)")
     }
     
     private func XCProjectDirectoryPath() -> String {
