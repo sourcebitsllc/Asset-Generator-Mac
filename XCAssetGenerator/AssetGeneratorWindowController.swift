@@ -76,7 +76,6 @@ class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, Scr
 //      self.recentListManager.addProject(sender.title)
 //      self.updateRecentUsedProjectsDropdownView()
         self.updateRecentProjectsList(project: sender.titleOfSelectedItem)
-        
     }
     
     @IBAction func browseButtonPressed(sender: AnyObject!) {

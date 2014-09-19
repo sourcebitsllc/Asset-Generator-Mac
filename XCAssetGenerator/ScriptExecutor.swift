@@ -11,6 +11,7 @@ import Foundation
 protocol ScriptProgessDelegate {
 //    @objc optional var percentageProgress: Int { get set }
     func scriptFinishedExecutingScript(executor: ScriptExecutor)
+    func scriptExecutingScript(progress: Int?)
 }
 
 // TODO: hmm to functionally-identical protocols.... You know what to do.
@@ -32,8 +33,6 @@ enum ScriptDestinationValidator {
 
 class ScriptExecutor: NSObject {
     private let scriptPath: String
-    var task: NSTask
-    var pipe: NSPipe
     var running: Bool = false
     
     var progressDelegate: ScriptProgessDelegate?
@@ -42,8 +41,6 @@ class ScriptExecutor: NSObject {
     
     required override init() {
         self.scriptPath = NSBundle.mainBundle().pathForResource("XCasset Generator", ofType: "sh")!
-        self.task = NSTask()
-        self.pipe = NSPipe()
         super.init()
     }
     
@@ -75,30 +72,46 @@ class ScriptExecutor: NSObject {
         self.running = true
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), { () -> Void in
             
-            self.task.launchPath = self.scriptPath
-            self.task.arguments = [src, dst]
-            self.task.standardOutput = self.pipe
+            var task = NSTask()
+            var pipe = NSPipe()
+            task.launchPath = self.scriptPath
+            task.arguments = [src, dst]
+            task.standardOutput = pipe
             
-            self.pipe.fileHandleForReading.waitForDataInBackgroundAndNotify()
-            NSNotificationCenter.defaultCenter().addObserverForName(NSFileHandleDataAvailableNotification, object: self.pipe.fileHandleForReading, queue: nil) { (notification: NSNotification!) -> Void in
-                println("Reading")
+            pipe.fileHandleForReading.waitForDataInBackgroundAndNotify()
+            NSNotificationCenter.defaultCenter().addObserverForName(NSFileHandleDataAvailableNotification, object: pipe.fileHandleForReading, queue: nil) { (notification: NSNotification!) -> Void in
                 
+                var echo = NSString(data: pipe.fileHandleForReading.availableData, encoding: NSUTF8StringEncoding)
                 dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                   println("\(NSString(data: self.pipe.fileHandleForReading.availableData, encoding: NSUTF8StringEncoding))")
+                    
+                    if echo.containsString("progress:") {
+                        var progress = echo.stringByReplacingOccurrencesOfString("progress:", withString: "")
+                        
+                        var rangeOfEndline = progress.rangeOfString("\n", options: NSStringCompareOptions.CaseInsensitiveSearch, range:nil, locale: nil)
+                        
+                        if let range = rangeOfEndline {
+                            progress = progress.substringToIndex(range.startIndex)
+                        }
+                        println("ww \(progress)")
+                        
+                        self.progressDelegate?.scriptExecutingScript(progress.toInt()!)
+                    }
+//                   println("\(NSString(data: self.pipe.fileHandleForReading.availableData, encoding: NSUTF8StringEncoding))")
                 })
                 
-                self.pipe.fileHandleForReading.waitForDataInBackgroundAndNotify()
+                pipe.fileHandleForReading.waitForDataInBackgroundAndNotify()
             }
             
-            self.task.launch()
-            self.task.waitUntilExit() // This blocks.
+            task.launch()
+            task.waitUntilExit() // This blocks.
             
             self.running = false
+            println("Trmiatingsdgd")
             self.progressDelegate?.scriptFinishedExecutingScript(self)
         })
     }
     
     func executing() -> Bool {
-        return task.running || self.running
+        return self.running
     }
 }

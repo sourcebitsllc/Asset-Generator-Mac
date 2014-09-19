@@ -37,7 +37,9 @@ class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate
 
     // MARK:- Convenience Functions.
     func updateGenerateButton() -> Void {
+        println("updatebutton called")
         self.generateButton.enabled = self.scriptManager.canExecuteScript()
+        println("\(self.generateButton.enabled)")
     }
 
     // MARK: - IBActions
@@ -72,12 +74,28 @@ class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate
     
     // MARK:- ScriptProgress delegate
     func scriptFinishedExecutingScript(executor: ScriptExecutor) {
+        println("delegate called")
         self.updateGenerateButton()
+    }
+    
+    func scriptExecutingScript(progress: Int?) {
+        if let p = progress {
+            println("p = \(p)")
+        } else {
+            println("Cannot handle progress")
+        }
+//        println("Progress thus far = \(progress)")
     }
 
     // MARK: - AssetGeneratorDestinationProject Delegate
     func destinationProjectDidChange(project: XCProject?) {
         println("Destination Project Changed")
+        if let xcProject = project {
+            if xcProject.hasValidAssetsPath() == false {
+                println("Error : Selected Project does not have a valid xcassets folder")
+            }
+        }
+   
         self.updateGenerateButton()
     }
    

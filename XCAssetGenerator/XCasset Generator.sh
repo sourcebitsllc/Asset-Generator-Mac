@@ -359,25 +359,29 @@ if [  $# -le 1 ] ; then
 fi
 
 echo "1: Setting Up Temp";
+
 time { 
 setupTempDirectory; 
 };
+echo "progress:5";
 
 echo "2: Creating AppIcon";
 time {
 createAppIcon;
 }
+echo "progress:10"
 
 echo "3: Creating LaunchImages";
 time { 
 createLaunchImage;
 };
+echo "progress:15"
 
 echo "4: Creating Imagesets";
 time { 
 createImagesets; 
 };
-
+echo "progress:30"
 # At this point, every file in the directory should've been processed.
 echo "5: Creating JSON";
 time {
@@ -385,14 +389,18 @@ find "$TEMPFULLPATH" \( -name "*.imageset" -o -name "*.appiconset" -o -name "*.l
 	create_json_content "$i";
 done
 };
+echo "progress:65"
 
 echo "6: Integrate to Destination";
 # Move the final files to the proper destination.
 time {
 	integrateToDestination;
 };
+echo "progress:99"
 
 # Cull the temp directory after finishing.
 echo "7: Delete Temp";
 deleteTempDirectory;
+
+echo "progress:100"
 
