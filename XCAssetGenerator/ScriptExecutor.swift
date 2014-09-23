@@ -100,7 +100,11 @@ class ScriptExecutor: NSObject {
                 
                 pipe.fileHandleForReading.waitForDataInBackgroundAndNotify()
             }
-            self.progressDelegate?.scriptDidStartExecutingScipt(self)
+            
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                self.running = true
+                self.progressDelegate?.scriptDidStartExecutingScipt(self)
+            })
             task.launch()
             task.waitUntilExit() // This blocks.
             
