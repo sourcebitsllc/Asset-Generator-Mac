@@ -396,7 +396,7 @@ echo "6: Integrate to Destination";
 time {
 	integrateToDestination;
 };
-echo "progress:99"
+echo "progress:95"
 
 # Cull the temp directory after finishing.
 echo "7: Delete Temp";

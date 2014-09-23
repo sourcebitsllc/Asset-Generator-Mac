@@ -11,15 +11,45 @@ import Foundation
 let pathKey = "XCAssetGeneratorXcodeProjectPath"
 let assetPathKey = "XCAssetGeneratorXcodeAssetsPath"
 
-struct XCProject : Printable {
-    var path: String
-    private var xcassetPath: String?
+extension XCProject: Printable {
     
     var description: String {
         get {
             return "[\(self)] -- path: \(self.path), asset path: \(self.xcassetPath)"
         }
     }
+    
+    var title: String {
+        get {
+            return self.path
+        }
+    }
+}
+
+// NSUserDefaults compliance extension.
+// Converts the current project into a propertylist Dictionary and initiates project from dictionary content
+// TODO:
+extension XCProject {
+    
+    func dictionaryRepresentation() -> [String: String] {
+        return [pathKey: self.path, assetPathKey: self.xcassetPath ?? ""]
+    }
+    
+    func userDefaultsDictionaryRepresentation() -> [NSString: NSString] {
+        return self.dictionaryRepresentation()
+    }
+    
+    static func projectFromDictionary(dictionary: [String: String]) -> XCProject {
+        let path = dictionary[pathKey]!
+        let asset: String? = dictionary[assetPathKey]!.isEmpty ? nil : dictionary[assetPathKey]!
+        return XCProject(path: path, xcassetPath: asset)
+    }
+    
+}
+struct XCProject : Printable {
+    
+    var path: String
+    private var xcassetPath: String?
     
     // MARK:- Initializers
     
@@ -35,7 +65,6 @@ struct XCProject : Printable {
         } else {
             self.xcassetPathFinder()
         }
-        
     }
     
     func assetDirectoryPath() -> String? {
@@ -47,10 +76,6 @@ struct XCProject : Printable {
     }
     
     // MARK:- Convenience functions and helpers.
-    
-    func dictionaryRepresentation() -> [String: String] {
-        return [pathKey: self.path, assetPathKey: self.xcassetPath ?? ""]
-    }
     
     mutating private func xcassetPathFinder() {
         var task: NSTask = NSTask()
@@ -72,19 +97,6 @@ struct XCProject : Printable {
     
     private func XCProjectDirectoryPath() -> String {
         return self.path.stringByDeletingLastPathComponent + ("/") // .extend
-    }
-    
-    // MARK:- NSUserDefault and AnyObject Protocol compliance functions. [Are there any standard function names instead of free-styling them?
-    
-    // Conform XCProject to AnyObject protocol. // Not ideal but no time. TODO:
-    func userDefaultsDictionaryRepresentation() -> [NSString: NSString] {
-        return self.dictionaryRepresentation()
-    }
-    
-    static func projectFromDictionary(dictionary: [String: String]) -> XCProject {
-        let path = dictionary[pathKey]!
-        let asset: String? = dictionary[assetPathKey]!.isEmpty ? nil : dictionary[assetPathKey]!
-        return XCProject(path: path, xcassetPath: asset)
     }
     
 }

@@ -32,7 +32,7 @@ class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate
         self.updateGenerateButton()
         self.scriptManager.destinationDelegate = self.view.window?.windowController() as AssetGeneratorWindowController // TODO: HAX! how does this controller even know about the windowController being the destination delegate?!
         
-        self.scriptManager.progressDelegate = self
+        self.scriptManager.progressDelegate = self.view.window?.windowController() as AssetGeneratorWindowController
     }
 
     // MARK:- Convenience Functions.
@@ -73,21 +73,29 @@ class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate
     }
     
     // MARK:- ScriptProgress delegate
+    func scriptDidStartExecutingScipt(executor: ScriptExecutor) {
+        println("Script Starting")
+    }
+    
     func scriptFinishedExecutingScript(executor: ScriptExecutor) {
         println("delegate called")
+//        self.progressBar.doubleValue = 0
+//        self.progressBar.hidden = true
         self.updateGenerateButton()
     }
     
     func scriptExecutingScript(progress: Int?) {
         if let p = progress {
             println("p = \(p)")
+//            self.progressBar.hidden = false
+//            self.progressBar.doubleValue = Double(p)
         } else {
             println("Cannot handle progress")
         }
-//        println("Progress thus far = \(progress)")
     }
 
     // MARK: - AssetGeneratorDestinationProject Delegate
+    
     func destinationProjectDidChange(project: XCProject?) {
         println("Destination Project Changed")
         if let xcProject = project {

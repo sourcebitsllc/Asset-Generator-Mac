@@ -10,8 +10,10 @@ import Foundation
 
 protocol ScriptProgessDelegate {
 //    @objc optional var percentageProgress: Int { get set }
+    func scriptDidStartExecutingScipt(executor: ScriptExecutor)
     func scriptFinishedExecutingScript(executor: ScriptExecutor)
     func scriptExecutingScript(progress: Int?)
+    
 }
 
 // TODO: hmm to functionally-identical protocols.... You know what to do.
@@ -98,7 +100,7 @@ class ScriptExecutor: NSObject {
                 
                 pipe.fileHandleForReading.waitForDataInBackgroundAndNotify()
             }
-            
+            self.progressDelegate?.scriptDidStartExecutingScipt(self)
             task.launch()
             task.waitUntilExit() // This blocks.
             

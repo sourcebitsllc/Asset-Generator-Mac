@@ -14,18 +14,19 @@ protocol AssetGeneratorDestinationProjectDelegate {
 }
 
 
-class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, ScriptDestinationPathDelegate {
+class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, ScriptDestinationPathDelegate, ScriptProgessDelegate {
 
-    @IBOutlet var recentlyUsedProjectsDropdownList: NSPopUpButton!
+    @IBOutlet var recentlyUsedProjectsDropdownList: ProgressPopUpButton!
     @IBOutlet var browseButton: NSButton!
     
     let recentListManager: RecentlySelectedProjectManager
     var assetsToolbarDelegate: AssetGeneratorDestinationProjectDelegate?
-    
+    private var timer: NSTimer
     private  var panel: NSOpenPanel = NSOpenPanel()
     
     required init(coder: NSCoder!) {
         recentListManager = RecentlySelectedProjectManager()
+        timer = NSTimer()
         super.init(coder: coder)
     }
     
@@ -41,6 +42,10 @@ class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, Scr
     func dropdownListSetup() {
         self.recentlyUsedProjectsDropdownList.addItemsWithTitles(self.recentListManager.recentProjectsTitlesList())
         self.recentlyUsedProjectsDropdownList.preferredEdge = NSMaxYEdge
+        self.recentlyUsedProjectsDropdownList.progressColor = NSColor(calibratedRed: 0.047, green: 0.261, blue: 0.993, alpha: 1)
+        
+        //self.recentlyUsedProjectsDropdownList.selectedItem.attributedTitle = NSAttributedString(string: self.recentlyUsedProjectsDropdownList.selectedItem.title, attributes:[NSForegroundColorAttributeName: NSColor.blackColor()])
+      
     }
     
     func openPanelSetup() {
@@ -56,7 +61,9 @@ class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, Scr
         self.recentlyUsedProjectsDropdownList.removeAllItems()
         self.recentlyUsedProjectsDropdownList.addItemsWithTitles(self.recentListManager.recentProjectsTitlesList())
         self.recentlyUsedProjectsDropdownList.selectItemAtIndex(0)
+    
     }
+
     
     func updateRecentProjectsList(project path: String){
         if path != self.recentListManager.selectedProject()?.path {
@@ -96,6 +103,31 @@ class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, Scr
     
     func hasValidDestinationProject() -> Bool {
         return self.recentListManager.isSelectedProjectValid() && self.recentListManager.selectedProject()!.hasValidAssetsPath()
+    }
+    
+    func moveProgressSmoothly() {
+        println("Smooth")
+        self.recentlyUsedProjectsDropdownList.setProgress(progress: self.recentlyUsedProjectsDropdownList.progress + 0.2)
+    }
+    // MARK:- Script Progress Delegate
+    
+    func scriptDidStartExecutingScipt(executor: ScriptExecutor) {
+        self.timer = NSTimer(timeInterval: 0.1, target: self, selector: Selector("moveProgressSmoothly") , userInfo: nil, repeats: true)
+        
+        NSRunLoop.currentRunLoop().addTimer(self.timer, forMode: NSDefaultRunLoopMode)
+        self.timer.fire()
+    }
+    
+    func scriptExecutingScript(progress: Int?) {
+        if let p = progress {
+            self.recentlyUsedProjectsDropdownList.setProgress(progress: CGFloat(p))
+            
+        }
+    }
+    func scriptFinishedExecutingScript(executor: ScriptExecutor) {
+        self.recentlyUsedProjectsDropdownList.setProgress(progress: 0)
+        println("Finished Executing")
+        self.timer.invalidate()
     }
     
 }
