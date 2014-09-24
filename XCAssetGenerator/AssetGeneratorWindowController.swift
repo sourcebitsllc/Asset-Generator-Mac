@@ -106,8 +106,7 @@ class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, Scr
     }
     
     func moveProgressSmoothly() {
-        println("Smooth")
-        self.recentlyUsedProjectsDropdownList.setProgress(progress: self.recentlyUsedProjectsDropdownList.progress + 0.2)
+        self.recentlyUsedProjectsDropdownList.setProgress(progress: self.recentlyUsedProjectsDropdownList.progress + 0.05)
     }
     // MARK:- Script Progress Delegate
     
@@ -124,6 +123,7 @@ class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, Scr
             
         }
     }
+    
     func scriptFinishedExecutingScript(executor: ScriptExecutor) {
         self.recentlyUsedProjectsDropdownList.setProgress(progress: 0)
         println("Finished Executing")

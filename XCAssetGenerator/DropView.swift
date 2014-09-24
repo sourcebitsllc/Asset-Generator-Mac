@@ -18,7 +18,7 @@ protocol DropViewDelegate {
 class DropView: NSView {
 
     var delegate: DropViewDelegate?
-    
+   
 //    override func drawRect(dirtyRect: NSRect) {
 //        super.drawRect(dirtyRect)
 //

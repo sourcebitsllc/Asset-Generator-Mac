@@ -17,11 +17,32 @@ class ProgressPopUpButton: NSPopUpButton {
     
     var progressColor: NSColor!
     var clearColor: NSColor
-
+//
+    
+    override init(frame buttonFrame: NSRect, pullsDown flag: Bool) {
+        
+        maxValue = 100
+        minValue = 0
+        progress = 0
+        
+        clearColor = NSColor(calibratedRed: 250/255, green: 250/255, blue: 250/255, alpha: 1)
+        super.init(frame: buttonFrame, pullsDown: flag)
+        setup()
+        
+    }
+    
+    required init(coder: NSCoder!) {
+        maxValue = 100
+        minValue = 0
+        progress = 0
+        clearColor = NSColor(calibratedRed: 250/255, green: 250/255, blue: 250/255, alpha: 1)
+        super.init(coder: coder)
+        setup()
+        
+    }
     override func drawRect(dirtyRect: NSRect) {
         super.drawRect(dirtyRect)
         self.wantsLayer = true
-        var context: CGContextRef = NSGraphicsContext.currentContext().CGContext
 
         let clippingRect = NSRect(x: 0.3, y: 2, width: self.frame.width - 0, height: self.frame.height-5)
         NSBezierPath(roundedRect: clippingRect , xRadius: 3, yRadius: 3).addClip()
@@ -38,8 +59,8 @@ class ProgressPopUpButton: NSPopUpButton {
         self.progressColor.set()
         activeRect.size.width = floor(activeRect.size.width * (self.progress / self.maxValue))
         NSRectFill(activeRect)
-
-        // Drawing code here.
+//
+//        // Drawing code here.
     }
     
     func setProgress(progress p : CGFloat) {
@@ -52,30 +73,7 @@ class ProgressPopUpButton: NSPopUpButton {
         self.setNeedsDisplay()
     }
     
-    override init(frame buttonFrame: NSRect, pullsDown flag: Bool) {
-        
-        
-        maxValue = 100
-        minValue = 0
-        progress = 20
-        
-        clearColor = NSColor(calibratedRed: 250/255, green: 250/255, blue: 250/255, alpha: 1)
-        super.init(frame: buttonFrame, pullsDown: flag)
-        setup()
-        
-    }
-
-    required init(coder: NSCoder!) {
-       
-        
-        maxValue = 100
-        minValue = 0
-        progress = 0
-        clearColor = NSColor(calibratedRed: 250/255, green: 250/255, blue: 250/255, alpha: 1)
-        super.init(coder: coder)
-        setup()
-    
-    }
+   
     
     func setup() {
         self.maxValue = 100
@@ -83,13 +81,21 @@ class ProgressPopUpButton: NSPopUpButton {
         self.progress = self.minValue
         
         self.clearColor = NSColor(calibratedRed: 250/255, green: 250/255, blue: 250/255, alpha: 1)
+//        var lineRect = NSRect(x: 0, y: self.frame.height - 5, width: self.frame.width, height: 2)
+//        
+//        let clippingRect = NSRect(x: 0.3, y: 2, width: self.frame.width - 0, height: self.frame.height-5)
+//        var clippingPath = NSBezierPath(roundedRect: clippingRect , xRadius: 3, yRadius: 3)
+        
+//        var line : LineProgressIndicator = LineProgressIndicator(frame: self.frame, progressColor: NSColor.blueColor(), clearColor: NSColor.brownColor(), clippingMask: clippingPath)
+//        self.addSubview(line)
+//        line.doubleValue = 50
     }
     
-    override func layoutSubtreeIfNeeded() {
-        println("layout")
-        self.setup()
-        println()
-    }
+//    override func layoutSubtreeIfNeeded() {
+//        println("layout")
+//        self.setup()
+//        println()
+//    }
     
     
     

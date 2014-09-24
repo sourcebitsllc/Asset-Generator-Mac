@@ -154,12 +154,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="449" height="284"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <containerView autoresizesSubviews="NO" wantsLayer="YES" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9F3-Cu-4mC">
-                                <rect key="frame" x="0.0" y="0.0" width="480" height="284"/>
-                                <connections>
-                                    <segue destination="PAg-JE-4JN" kind="embed" identifier="embeddedContainer" id="cZX-D2-olz"/>
-                                </connections>
-                            </containerView>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zwm-O5-9fw">
                                 <rect key="frame" x="343" y="1" width="97" height="32"/>
                                 <buttonCell key="cell" type="push" title="Generate" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="I80-Oy-jI9">
@@ -170,6 +164,12 @@
                                     <action selector="generateButtonPressed:" target="jIf-Ib-41m" id="cRq-BH-0Fa"/>
                                 </connections>
                             </button>
+                            <containerView autoresizesSubviews="NO" wantsLayer="YES" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9F3-Cu-4mC">
+                                <rect key="frame" x="0.0" y="31" width="449" height="252"/>
+                                <connections>
+                                    <segue destination="PAg-JE-4JN" kind="embed" identifier="embeddedContainer" id="cZX-D2-olz"/>
+                                </connections>
+                            </containerView>
                         </subviews>
                     </view>
                     <connections>
@@ -193,7 +193,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="450" height="278"/>
                                 <subviews>
                                     <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" setsMaxLayoutWidthAtFirstLayout="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5XS-3Q-MOs">
-                                        <rect key="frame" x="9" y="101" width="432" height="35"/>
+                                        <rect key="frame" x="10" y="35" width="432" height="35"/>
                                         <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="center" usesSingleLineMode="YES" id="Rh6-MJ-lCt">
                                             <font key="font" metaFont="system"/>
                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
