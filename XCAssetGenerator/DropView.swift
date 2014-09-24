@@ -25,6 +25,8 @@ class DropView: NSView {
 //        // Drawing code here.
 //    }
     
+    // MARK:- Initializers
+    
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
         self.setup()
@@ -39,6 +41,9 @@ class DropView: NSView {
         self.registerForDraggedTypes([NSFilenamesPboardType])
         self.wantsLayer = true
     }
+    
+    
+    // MARK:- Drag Handlers.
     
     override func draggingEntered(sender: NSDraggingInfo!) -> NSDragOperation {
         delegate?.dropViewDidDragFileIntoView(self)

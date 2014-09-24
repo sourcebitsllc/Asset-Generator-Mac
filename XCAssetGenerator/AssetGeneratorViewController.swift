@@ -35,14 +35,20 @@ class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate
         self.scriptManager.progressDelegate = self.view.window?.windowController() as AssetGeneratorWindowController
     }
 
+    
+    
     // MARK:- Convenience Functions.
+    
     func updateGenerateButton() -> Void {
         println("updatebutton called")
         self.generateButton.enabled = self.scriptManager.canExecuteScript()
         println("\(self.generateButton.enabled)")
     }
-
+    
+    
+    
     // MARK: - IBActions
+    
     @IBAction func generateButtonPressed(sender: AnyObject!) {
 
         // We _CANNOT_ be in this function if canExecuteScript is not checked and passed.
@@ -51,8 +57,10 @@ class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate
 //        self.scriptManager.executeScript(generate1x: false, extraArgs: nil)
     }
     
-    // Is this better?
+    
+    
     // MARK: - Segues functions
+    // Is this better?
     override func prepareForSegue(segue: NSStoryboardSegue!, sender: AnyObject!) {
         if segue.identifier == "embeddedContainer" {
             self.fileDropController = segue.destinationController as FileDropViewController
@@ -63,7 +71,10 @@ class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate
         }
     }
     
+    
+    
     // MARK: - FileDropController Delegate
+    
     func fileDropControllerDidSetSourcePath(controller: FileDropViewController) {
         self.updateGenerateButton()
         
@@ -72,15 +83,17 @@ class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate
         self.updateGenerateButton()
     }
     
+    
+   
     // MARK:- ScriptProgress delegate
+    
     func scriptDidStartExecutingScipt(executor: ScriptExecutor) {
         println("Script Starting")
     }
     
     func scriptFinishedExecutingScript(executor: ScriptExecutor) {
         println("delegate called")
-//        self.progressBar.doubleValue = 0
-//        self.progressBar.hidden = true
+
         self.updateGenerateButton()
     }
     
@@ -94,6 +107,8 @@ class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate
         }
     }
 
+    
+    
     // MARK: - AssetGeneratorDestinationProject Delegate
     
     func destinationProjectDidChange(project: XCProject?) {

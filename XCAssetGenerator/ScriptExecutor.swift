@@ -9,7 +9,6 @@
 import Foundation
 
 protocol ScriptProgessDelegate {
-//    @objc optional var percentageProgress: Int { get set }
     func scriptDidStartExecutingScipt(executor: ScriptExecutor)
     func scriptFinishedExecutingScript(executor: ScriptExecutor)
     func scriptExecutingScript(progress: Int?)
@@ -34,12 +33,13 @@ enum ScriptDestinationValidator {
 // TODO: make the script safer to use.
 
 class ScriptExecutor: NSObject {
-    private let scriptPath: String
     var running: Bool = false
     
     var progressDelegate: ScriptProgessDelegate?
     var sourceDelegate: ScriptSourcePathDelegate?
     var destinationDelegate: ScriptDestinationPathDelegate?
+    
+    private let scriptPath: String
     
     required override init() {
         self.scriptPath = NSBundle.mainBundle().pathForResource("XCasset Generator", ofType: "sh")!
@@ -52,13 +52,16 @@ class ScriptExecutor: NSObject {
     }
     
     func canExecuteScript() -> Bool {
-        // verbose much?
         switch (self.sourceDelegate, self.destinationDelegate) {
             case (.Some(let source), .Some(let destination)):
                 return source.hasValidSourceProject() && destination.hasValidDestinationProject() && !self.executing()
             case (_,_):
                 return false
         }
+    }
+    
+    func executing() -> Bool {
+        return self.running
     }
     
     func executeScript() {
@@ -115,9 +118,5 @@ class ScriptExecutor: NSObject {
                 self.progressDelegate?.scriptFinishedExecutingScript(self)
             })
         })
-    }
-    
-    func executing() -> Bool {
-        return self.running
     }
 }

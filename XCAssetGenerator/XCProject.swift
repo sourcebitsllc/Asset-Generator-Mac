@@ -11,6 +11,12 @@ import Foundation
 let pathKey = "XCAssetGeneratorXcodeProjectPath"
 let assetPathKey = "XCAssetGeneratorXcodeAssetsPath"
 
+// MARK:- Equatable Conformance
+func == (lhs: XCProject, rhs: XCProject) -> Bool {
+    return lhs.path == rhs.path && lhs.xcassetPath == rhs.xcassetPath
+}
+
+
 extension XCProject: Printable {
     
     var description: String {
@@ -21,7 +27,7 @@ extension XCProject: Printable {
     
     var title: String {
         get {
-            return self.path
+            return self.path.lastPathComponent
         }
     }
 }
@@ -46,10 +52,13 @@ extension XCProject {
     }
     
 }
-struct XCProject : Printable {
+
+
+struct XCProject: Equatable {
     
     var path: String
     private var xcassetPath: String?
+    
     
     // MARK:- Initializers
     
@@ -60,6 +69,7 @@ struct XCProject : Printable {
     
     internal init(path: String, xcassetPath: String?) {
         self.path = path
+        
         if let assetpath = xcassetPath {
             self.xcassetPath = xcassetPath
         } else {
@@ -74,6 +84,8 @@ struct XCProject : Printable {
     func hasValidAssetsPath() -> Bool {
         return (self.xcassetPath? != nil) ? true : false
     }
+    
+    
     
     // MARK:- Convenience functions and helpers.
     

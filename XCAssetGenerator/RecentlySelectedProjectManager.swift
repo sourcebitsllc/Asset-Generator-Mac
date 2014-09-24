@@ -27,6 +27,10 @@ class RecentlySelectedProjectManager : NSObject {
         return recentProjects?.first
     }
     
+    func projectAtIndex(index: Int) -> XCProject? {
+        return recentProjects?[index]
+    }
+    
     // Returns true if the selected project contains a xcasset folder.
     func isSelectedProjectValid() -> Bool {
         return (self.selectedProject()? != nil) ? self.selectedProject()!.hasValidAssetsPath() : false
@@ -35,35 +39,38 @@ class RecentlySelectedProjectManager : NSObject {
     // Returns a sorted list of the titles of the most recently used "projects"
     func recentProjectsTitlesList() -> [String]? {
         return self.recentProjects?.map({ (proj: XCProject) -> String in
-            return proj.path
+            return proj.title
         })
     }
+    
     
     // TODO: Too much state manipulation. fix it buddy yea? HEY? fix it.
     // TODO: ......
     // TODO: ...... Terrible .......
     // FIXME:
-    func addProject(path: String) {
+    func addProject(project newProject: XCProject) {
         if let projectsList = recentProjects {
-            
-            let storedProjectPaths = projectsList.map() { (proj: XCProject) -> String in
-                return proj.path
-            }
-            
-            if let index: Int = find(storedProjectPaths, path) {
+        
+            if let index: Int = find(projectsList, newProject) {
                 recentProjects!.removeAtIndex(index)
             }
             if projectsList.count == MaximumCacheCapacity {
                 recentProjects!.removeLast()
             }
-            recentProjects!.insert(XCProject(path: path), atIndex: 0)
+            recentProjects!.insert(newProject, atIndex: 0)
             
         } else {
-            recentProjects = [XCProject(path: path)]
+            recentProjects = [newProject]
         }
         
         self.storeRecentProjects()
     }
+    
+    func addProject(path: String) {
+        addProject(project: XCProject(path: path))
+    }
+    
+    
     
     // MARK:- Convenience functions
     // TODO: Find better hooks for these calls.

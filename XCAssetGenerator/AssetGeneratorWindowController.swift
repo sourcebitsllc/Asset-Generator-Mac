@@ -22,12 +22,12 @@ class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, Scr
     
     let recentListManager: RecentlySelectedProjectManager
     var assetsToolbarDelegate: AssetGeneratorDestinationProjectDelegate?
-    private var timer: NSTimer
-    private  var panel: NSOpenPanel = NSOpenPanel()
+   
+    private var timer: NSTimer = NSTimer()
+    private var panel: NSOpenPanel = NSOpenPanel()
     
     required init(coder: NSCoder!) {
         recentListManager = RecentlySelectedProjectManager()
-        timer = NSTimer()
         super.init(coder: coder)
     }
     
@@ -40,13 +40,14 @@ class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, Scr
         self.openPanelSetup()
     }
     
+    
+    
+    // MARK:- Setup Helpers
+    
     func dropdownListSetup() {
         self.recentlyUsedProjectsDropdownList.addItemsWithTitles(self.recentListManager.recentProjectsTitlesList())
         self.recentlyUsedProjectsDropdownList.preferredEdge = NSMaxYEdge
         self.recentlyUsedProjectsDropdownList.progressColor = NSColor(calibratedRed: 0.047, green: 0.261, blue: 0.993, alpha: 1)
-        
-        //self.recentlyUsedProjectsDropdownList.selectedItem.attributedTitle = NSAttributedString(string: self.recentlyUsedProjectsDropdownList.selectedItem.title, attributes:[NSForegroundColorAttributeName: NSColor.blackColor()])
-      
     }
     
     func openPanelSetup() {
@@ -54,6 +55,8 @@ class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, Scr
         self.panel.canChooseDirectories      = false
         self.panel.allowsMultipleSelection   = false
     }
+    
+    
     
     // MARK:- Convenience Methods
     
@@ -65,36 +68,48 @@ class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, Scr
     
     }
 
-    // FIXME: make it less depend on path. (One path can have more than one xcasset)
-    func updateRecentProjectsList(project path: String){
-        if path != self.recentListManager.selectedProject()?.path {
+    // TODO: the two function below have the same "funcionality". Think of parametric polymorphism to integrate them
+    func updateRecentProjectsList(#index: Int){
+        if self.recentListManager.projectAtIndex(index) != self.recentListManager.selectedProject()? {
             
-            self.recentListManager.addProject(path)
+            self.recentListManager.addProject(project: self.recentListManager.projectAtIndex(index)!)
             self.updateRecentUsedProjectsDropdownView()
-            // Notify delegate
             self.assetsToolbarDelegate?.destinationProjectDidChange(self.recentListManager.selectedProject())
         }
     }
+    
+    func addNewProject(#path: String) {
+        self.recentListManager.addProject(path)
+        self.updateRecentUsedProjectsDropdownView()
+        self.assetsToolbarDelegate?.destinationProjectDidChange(self.recentListManager.selectedProject())
+    }
+    
+    func moveProgressSmoothly() {
+        self.recentlyUsedProjectsDropdownList.setProgress(progress: self.recentlyUsedProjectsDropdownList.progress + 0.05)
+    }
+    
     
     
     // MARK:- IBAction outlets
     
     @IBAction func recentlyUsedProjectsDropdownListChanged(sender: NSPopUpButton!) {
-        println("recent pressed")
-//      self.recentListManager.addProject(sender.title)
-//      self.updateRecentUsedProjectsDropdownView()
-        self.updateRecentProjectsList(project: sender.titleOfSelectedItem)
+//        var proj1: XCProject = self.recentListManager.projectAtIndex(sender.indexOfSelectedItem)!
+//        var proj2: XCProject = self.recentListManager.projectAtIndex(sender.indexOfSelectedItem)!
+//        println("Equal? \(proj1 == proj2)")
+//        println("Contains? \(contains([proj1], proj2))")
+//        println("Find? \(find([proj1], proj2))")
+        self.updateRecentProjectsList(index: sender.indexOfSelectedItem)
     }
     
     @IBAction func browseButtonPressed(sender: AnyObject!) {
-        println("browse pressed")
-        
         panel.beginWithCompletionHandler() { (handler: Int) -> Void in
             if handler == NSFileHandlingPanelOKButton {
-                self.updateRecentProjectsList(project: self.panel.URL.path!)
+                self.addNewProject(path: self.panel.URL.path!)
             }
         }
     }
+
+    
     
     // MARK:- ScriptDestinationPath Delegate
     
@@ -106,10 +121,8 @@ class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, Scr
         return self.recentListManager.isSelectedProjectValid() && self.recentListManager.selectedProject()!.hasValidAssetsPath()
     }
     
-    func moveProgressSmoothly() {
-        self.recentlyUsedProjectsDropdownList.setProgress(progress: self.recentlyUsedProjectsDropdownList.progress + 0.05)
-    }
     
+   
     // MARK:- Script Progress Delegate
     
     func scriptDidStartExecutingScipt(executor: ScriptExecutor) {
@@ -122,13 +135,11 @@ class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, Scr
     func scriptExecutingScript(progress: Int?) {
         if let p = progress {
             self.recentlyUsedProjectsDropdownList.setProgress(progress: CGFloat(p))
-            
         }
     }
     
     func scriptFinishedExecutingScript(executor: ScriptExecutor) {
         self.recentlyUsedProjectsDropdownList.setProgress(progress: 0)
-        println("Finished Executing")
         self.timer.invalidate()
     }
     
