@@ -9,6 +9,7 @@
 import Cocoa
 
 // TODO: I still dont like how much resposibility the Window controller is carrying. Maybe i can move all the destination Protocol logic to its own container while maintaining Toolbar in window logic somehow?
+// FIXME: This whole dump of a class.
 protocol AssetGeneratorDestinationProjectDelegate {
     func destinationProjectDidChange(project: XCProject?) // Can it be nil? (well maybe we'll add delete operator)
 }
@@ -64,7 +65,7 @@ class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, Scr
     
     }
 
-    
+    // FIXME: make it less depend on path. (One path can have more than one xcasset)
     func updateRecentProjectsList(project path: String){
         if path != self.recentListManager.selectedProject()?.path {
             
@@ -108,6 +109,7 @@ class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, Scr
     func moveProgressSmoothly() {
         self.recentlyUsedProjectsDropdownList.setProgress(progress: self.recentlyUsedProjectsDropdownList.progress + 0.05)
     }
+    
     // MARK:- Script Progress Delegate
     
     func scriptDidStartExecutingScipt(executor: ScriptExecutor) {

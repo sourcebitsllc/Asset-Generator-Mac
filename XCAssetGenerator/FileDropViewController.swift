@@ -39,7 +39,8 @@ class FileDropViewController: NSViewController, DropViewDelegate, ScriptSourcePa
         self.dropImageView.autoresizingMask = NSAutoresizingMaskOptions.ViewMinXMargin | NSAutoresizingMaskOptions.ViewMaxXMargin | NSAutoresizingMaskOptions.ViewMinYMargin | NSAutoresizingMaskOptions.ViewMaxYMargin
         
         self.dropImageView.image = NSImage(named: "DropfileInitialState")
-        self.dropImageView.unregisterDraggedTypes()
+        self.dropImageView.unregisterDraggedTypes() // otherwise, the subview will intercept the dropView calls.
+        
         dropView.addSubview(self.dropImageView)
     }
     
@@ -49,9 +50,13 @@ class FileDropViewController: NSViewController, DropViewDelegate, ScriptSourcePa
     
     // MARK:- ScriptSourcePath Delegate
     func sourcePath() -> String? {
-        let sourcePath = self.folderPath
-        return sourcePath
+        if let sourcePath = self.folderPath {
+            return sourcePath + "/"
+        } else {
+            return self.folderPath
+        }
     }
+    
     func hasValidSourceProject() -> Bool {
         return (self.folderPath? != nil) ? true : false
     }
@@ -61,7 +66,8 @@ class FileDropViewController: NSViewController, DropViewDelegate, ScriptSourcePa
         self.folderPath = filePath
         self.pathLabel.stringValue = filePath
         self.dropImageView.image = NSImage(named: "DropfileSuccessState")
-        delegate?.fileDropControllerDidSetSourcePath(self)
+        
+        self.delegate?.fileDropControllerDidSetSourcePath(self)
     }
     
     func dropViewDidDragFileIntoView(dropView: DropView) {

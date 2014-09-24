@@ -9,6 +9,7 @@
 import Cocoa
 
 // TODO: Basically this class and the whole MacOSX API is a big practical joke. Why else wouldnt NSPopUpButton inherit form NSVIew? ucksake. Everything in this drawrect is fragile and hard-coded which will probably break in the near future.
+// FIXME: This whole dump
 class ProgressPopUpButton: NSPopUpButton {
     
     var progress: CGFloat = 0
@@ -89,6 +90,7 @@ class ProgressPopUpButton: NSPopUpButton {
 //        var line : LineProgressIndicator = LineProgressIndicator(frame: self.frame, progressColor: NSColor.blueColor(), clearColor: NSColor.brownColor(), clippingMask: clippingPath)
 //        self.addSubview(line)
 //        line.doubleValue = 50
+    
     }
     
 //    override func layoutSubtreeIfNeeded() {

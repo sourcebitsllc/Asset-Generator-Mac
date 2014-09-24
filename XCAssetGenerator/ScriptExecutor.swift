@@ -89,12 +89,13 @@ class ScriptExecutor: NSObject {
                     if echo.containsString("progress:") {
                         var progress = echo.stringByReplacingOccurrencesOfString("progress:", withString: "")
                         
+                        // If we yanked more than progress line, remove the rest.
                         var rangeOfEndline = progress.rangeOfString("\n", options: NSStringCompareOptions.CaseInsensitiveSearch, range:nil, locale: nil)
                         
                         if let range = rangeOfEndline {
                             progress = progress.substringToIndex(range.startIndex)
                         }
-                        self.progressDelegate?.scriptExecutingScript(progress.toInt()!)
+                        self.progressDelegate?.scriptExecutingScript(progress.toInt()!) // FIXME: unsafe.
                     }
                 })
                 
