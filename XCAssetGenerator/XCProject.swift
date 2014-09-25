@@ -11,11 +11,18 @@ import Foundation
 let pathKey = "XCAssetGeneratorXcodeProjectPath"
 let assetPathKey = "XCAssetGeneratorXcodeAssetsPath"
 
+
+
 // MARK:- Equatable Conformance
+
 func == (lhs: XCProject, rhs: XCProject) -> Bool {
     return lhs.path == rhs.path && lhs.xcassetPath == rhs.xcassetPath
 }
-
+//        var proj1: XCProject = self.recentListManager.projectAtIndex(sender.indexOfSelectedItem)!
+//        var proj2: XCProject = self.recentListManager.projectAtIndex(sender.indexOfSelectedItem)!
+//        println("Equal? \(proj1 == proj2)")  // Return true
+//        println("Contains? \(contains([proj1], proj2))") // Returns true
+//        println("Find? \(find([proj1], proj2))") // return Optional(0)
 
 extension XCProject: Printable {
     
@@ -32,9 +39,10 @@ extension XCProject: Printable {
     }
 }
 
-// NSUserDefaults compliance extension.
+
+// MARK:- NSUserDefaults compliance extension.
 // Converts the current project into a propertylist Dictionary and initiates project from dictionary content
-// TODO:
+
 extension XCProject {
     
     func dictionaryRepresentation() -> [String: String] {
@@ -53,7 +61,7 @@ extension XCProject {
     
 }
 
-
+// MARK:-
 struct XCProject: Equatable {
     
     var path: String
@@ -77,6 +85,10 @@ struct XCProject: Equatable {
         }
     }
     
+    
+    
+    // MARK:- Convenience functions and helpers.
+    
     func assetDirectoryPath() -> String? {
         return xcassetPath
     }
@@ -84,10 +96,6 @@ struct XCProject: Equatable {
     func hasValidAssetsPath() -> Bool {
         return (self.xcassetPath? != nil) ? true : false
     }
-    
-    
-    
-    // MARK:- Convenience functions and helpers.
     
     mutating private func xcassetPathFinder() {
         var task: NSTask = NSTask()

@@ -15,17 +15,6 @@ protocol ScriptProgessDelegate {
     
 }
 
-// TODO: hmm to functionally-identical protocols.... You know what to do.
-protocol ScriptSourcePathDelegate {
-    func sourcePath() -> String?
-    func hasValidSourceProject() -> Bool
-}
-
-protocol ScriptDestinationPathDelegate {
-    func destinationPath() -> String?
-    func hasValidDestinationProject() -> Bool
-}
-
 enum ScriptDestinationValidator {
     
 }
@@ -36,8 +25,7 @@ class ScriptExecutor: NSObject {
     var running: Bool = false
     
     var progressDelegate: ScriptProgessDelegate?
-    var sourceDelegate: ScriptSourcePathDelegate?
-    var destinationDelegate: ScriptDestinationPathDelegate?
+
     
     private let scriptPath: String
     
@@ -51,26 +39,11 @@ class ScriptExecutor: NSObject {
         self.progressDelegate = progressDelegate
     }
     
-    func canExecuteScript() -> Bool {
-        switch (self.sourceDelegate, self.destinationDelegate) {
-            case (.Some(let source), .Some(let destination)):
-                return source.hasValidSourceProject() && destination.hasValidDestinationProject() && !self.executing()
-            case (_,_):
-                return false
-        }
-    }
     
     func executing() -> Bool {
         return self.running
     }
-    
-    func executeScript() {
-        self.executeScript(source: self.sourceDelegate!.sourcePath()!, destination: self.destinationDelegate!.destinationPath()!, generate1x: false, extraArgs: nil)
-    }
-    
-    func executeScript(#generate1x: Bool, extraArgs args: [String]?) {
-        self.executeScript(source: self.sourceDelegate!.sourcePath()!, destination: self.destinationDelegate!.destinationPath()!, generate1x: generate1x, extraArgs: args)
-    }
+
     
     // TODO: maybe we should return error in here? + This should probably be private.
     func executeScript(source src: String, destination dst: String, generate1x: Bool, extraArgs args: [String]?) {
@@ -98,6 +71,7 @@ class ScriptExecutor: NSObject {
                         if let range = rangeOfEndline {
                             progress = progress.substringToIndex(range.startIndex)
                         }
+                        println("PRogress inside: \(progress)")
                         self.progressDelegate?.scriptExecutingScript(progress.toInt()!) // FIXME: unsafe.
                     }
                 })
