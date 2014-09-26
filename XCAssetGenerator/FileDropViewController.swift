@@ -25,6 +25,8 @@ class FileDropViewController: NSViewController, DropViewDelegate, ScriptSourcePa
 
     @IBOutlet var dropView: DropView!
     @IBOutlet var pathLabel: NSTextField!
+    @IBOutlet var detailLabel: NSTextField!
+    
     var delegate: FileDropControllerDelegate?
     
     var dropImageView: NSImageView!
@@ -65,12 +67,15 @@ class FileDropViewController: NSViewController, DropViewDelegate, ScriptSourcePa
         switch state {
         case .InitialState:
             self.pathLabel.stringValue = "Initial State"
+            self.detailLabel.stringValue = "Initial Detail Label"
             self.dropImageView.image = NSImage(named: "DropfileInitialState")
         case .HoveringState:
             self.pathLabel.stringValue = "Hovering State"
+            self.detailLabel.stringValue = "Hovering Detail Label"
             self.dropImageView.image = NSImage(named: "DropfileHoverState")
         case .SuccessfulDropState:
             self.pathLabel.stringValue = self.folderPath
+            self.detailLabel.stringValue = "Successful Drop Detail Label"
             self.dropImageView.image = NSImage(named: "DropfileSuccessState")
         case .InvalidDropState:
             self.pathLabel.stringValue = "Invalid Drop"

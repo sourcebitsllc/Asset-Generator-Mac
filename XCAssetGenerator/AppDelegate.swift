@@ -9,11 +9,6 @@
 import Cocoa
 
 class AppDelegate: NSObject, NSApplicationDelegate {
-
-    @IBOutlet var windowController: NSWindowController!
-    @IBOutlet var window: NSWindow!
-    
-    @IBOutlet var recentlyUsedProjectsDropdownList: NSPopUpButton!
     
     func applicationDidFinishLaunching(aNotification: NSNotification?) {
         // Insert code here to initialize your application

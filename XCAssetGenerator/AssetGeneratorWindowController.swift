@@ -64,6 +64,7 @@ class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, Scr
         self.generate1xButton.bezelStyle = NSBezelStyle.RoundRectBezelStyle
         self.generate1xButton.setButtonType(NSButtonType.SwitchButton)
         self.generate1xButton.bordered = false
+        self.generate1xButton.focusRingType = NSFocusRingType.None
         self.generate1xButton.transparent = false
         self.generate1xButton.autoresizesSubviews = true
         self.generate1xButton.target = self
