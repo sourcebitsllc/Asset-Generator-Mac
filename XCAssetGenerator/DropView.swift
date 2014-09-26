@@ -11,7 +11,8 @@ import Cocoa
 protocol DropViewDelegate {
     
     func dropViewDidDropFileToView(dropView: DropView, filePath: String)
-    func dropViewDidDragFileIntoView(dropView: DropView) // Should be called when folder enters drag areas.
+    func dropViewDidDragValidFileIntoView(dropView: DropView) // Should be called when folder enters drag areas.
+    func dropViewDidDragInvalidFileIntoView(dropView: DropView)
     func dropViewDidDragFileOutOfView(dropView: DropView) // should be called file already in drag area, but we drag it out to delete it. May not be nessecary.
 }
 
@@ -46,12 +47,24 @@ class DropView: NSView {
     // MARK:- Drag Handlers.
     
     override func draggingEntered(sender: NSDraggingInfo!) -> NSDragOperation {
-        delegate?.dropViewDidDragFileIntoView(self)
-        return NSDragOperation.Copy
+        let filenames = sender.draggingPasteboard().propertyListForType(NSFilenamesPboardType) as Array<String>
+        let filename = filenames[0]
+        
+        var isDirectory: ObjCBool = ObjCBool(0)
+        if NSFileManager.defaultManager().fileExistsAtPath(filename, isDirectory: &isDirectory) {
+            if isDirectory.boolValue {
+                self.delegate?.dropViewDidDragValidFileIntoView(self)
+                return NSDragOperation.Copy
+            }
+        }
+        
+        self.delegate?.dropViewDidDragInvalidFileIntoView(self)
+        return NSDragOperation.None
+        
     }
     
     override func draggingExited(sender: NSDraggingInfo!)  {
-        delegate?.dropViewDidDragFileOutOfView(self)
+        self.delegate?.dropViewDidDragFileOutOfView(self)
     }
     
     override func prepareForDragOperation(sender: NSDraggingInfo!) -> Bool {
@@ -63,10 +76,10 @@ class DropView: NSView {
     }
     
     override func concludeDragOperation(sender: NSDraggingInfo!)  {
-        var filenames = sender.draggingPasteboard().propertyListForType(NSFilenamesPboardType) as Array<String>
-        var filename = filenames[0]
+        let filenames = sender.draggingPasteboard().propertyListForType(NSFilenamesPboardType) as Array<String>
+        let filename = filenames[0]
         
-        delegate?.dropViewDidDropFileToView(self, filePath: filename)
+        self.delegate?.dropViewDidDropFileToView(self, filePath: filename)
     }
     
     

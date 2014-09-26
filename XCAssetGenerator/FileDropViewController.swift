@@ -18,7 +18,7 @@ enum DropViewState {
     case InitialState
     case HoveringState
     case SuccessfulDropState
-    case InvalidDropState
+    case InvalidState
 }
 
 class FileDropViewController: NSViewController, DropViewDelegate, ScriptSourcePathDelegate {
@@ -47,7 +47,7 @@ class FileDropViewController: NSViewController, DropViewDelegate, ScriptSourcePa
         self.dropImageView.translatesAutoresizingMaskIntoConstraints = false
         
         self.dropImageView.unregisterDraggedTypes() // otherwise, the subview will intercept the dropView calls.
-        self.updateDropView(DropViewState.InitialState)
+        self.updateDropView(state: DropViewState.InitialState)
         
         self.dropView.addSubview(self.dropImageView)
         
@@ -63,22 +63,23 @@ class FileDropViewController: NSViewController, DropViewDelegate, ScriptSourcePa
     }
     
     
-    func updateDropView(state: DropViewState) {
+    func updateDropView(#state: DropViewState) {
         switch state {
         case .InitialState:
-            self.pathLabel.stringValue = "Initial State"
+            self.dropImageView.image     = NSImage(named: "DropfileInitialState")
+            self.pathLabel.stringValue   = "Initial State"
             self.detailLabel.stringValue = "Initial Detail Label"
-            self.dropImageView.image = NSImage(named: "DropfileInitialState")
         case .HoveringState:
-            self.pathLabel.stringValue = "Hovering State"
+            self.dropImageView.image     = NSImage(named: "DropfileHoverState")
+            self.pathLabel.stringValue   = "Hovering State"
             self.detailLabel.stringValue = "Hovering Detail Label"
-            self.dropImageView.image = NSImage(named: "DropfileHoverState")
         case .SuccessfulDropState:
-            self.pathLabel.stringValue = self.folderPath
+            self.dropImageView.image     = NSImage(named: "DropfileSuccessState")
+            self.pathLabel.stringValue   = self.folderPath
             self.detailLabel.stringValue = "Successful Drop Detail Label"
-            self.dropImageView.image = NSImage(named: "DropfileSuccessState")
-        case .InvalidDropState:
-            self.pathLabel.stringValue = "Invalid Drop"
+        case .InvalidState:
+            self.pathLabel.stringValue   = "Invalid Drop"
+            self.detailLabel.stringValue = "Invalid Drop Detail Label"
         }
     }
     
@@ -104,22 +105,27 @@ class FileDropViewController: NSViewController, DropViewDelegate, ScriptSourcePa
     
     func dropViewDidDropFileToView(dropView: DropView, filePath: String) {
         self.folderPath = filePath
-        self.updateDropView(DropViewState.SuccessfulDropState)
+        self.updateDropView(state: DropViewState.SuccessfulDropState)
         
         self.delegate?.fileDropControllerDidSetSourcePath(self)
     }
     
-    func dropViewDidDragFileIntoView(dropView: DropView) {
+    func dropViewDidDragValidFileIntoView(dropView: DropView) {
 //        dropView.layer!.backgroundColor = NSColor.init(red: 144/255, green: 230/255, blue: 33/255, alpha:1).CGColor
         if !self.hasValidSourceProject() {
-            self.updateDropView(DropViewState.HoveringState)
+            self.updateDropView(state: DropViewState.HoveringState)
         }
     }
     
+    func dropViewDidDragInvalidFileIntoView(dropView: DropView) {
+        self.updateDropView(state: DropViewState.InvalidState)
+    }
+    
     func dropViewDidDragFileOutOfView(dropView: DropView) {
-        NSLog("File dragged out of view");
         if !self.hasValidSourceProject() {
-            self.updateDropView(DropViewState.InitialState)
+            self.updateDropView(state: DropViewState.InitialState)
+        } else {
+            self.updateDropView(state: DropViewState.SuccessfulDropState)
         }
     }
     
