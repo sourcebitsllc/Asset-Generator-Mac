@@ -41,19 +41,25 @@ class FileDropViewController: NSViewController, DropViewDelegate, ScriptSourcePa
         super.viewDidLoad()
         self.dropView.delegate = self
     
-        self.center = CGPoint(x: (self.view.frame.width - 150) / 2, y: (self.view.frame.height - 150 + 20 + kBottomBarHeight) / 2)
-        self.dropImageView = NSImageView(frame: NSRect(origin: center, size: CGSize(width: 150, height: 150)))
-        self.dropImageView.autoresizingMask = NSAutoresizingMaskOptions.ViewMinXMargin | NSAutoresizingMaskOptions.ViewMaxXMargin | NSAutoresizingMaskOptions.ViewMinYMargin | NSAutoresizingMaskOptions.ViewMaxYMargin
+        self.dropImageView = NSImageView()
+        self.dropImageView.translatesAutoresizingMaskIntoConstraints = false
         
         self.dropImageView.unregisterDraggedTypes() // otherwise, the subview will intercept the dropView calls.
         self.updateDropView(DropViewState.InitialState)
         
         self.dropView.addSubview(self.dropImageView)
+        
+        var centerX: NSLayoutConstraint = NSLayoutConstraint(item: self.dropImageView, attribute: NSLayoutAttribute.CenterX, relatedBy: NSLayoutRelation.Equal, toItem: self.dropView, attribute: NSLayoutAttribute.CenterX, multiplier: 1, constant: 0)
+       
+        var centerY: NSLayoutConstraint = NSLayoutConstraint(item: self.dropImageView, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: self.dropView, attribute: NSLayoutAttribute.CenterY, multiplier: 0.8, constant: 0)
+        
+        self.dropView.addConstraint(centerX)
+        self.dropView.addConstraint(centerY)
+        self.dropView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[imageView(imageWidth)]", options: nil, metrics: ["imageWidth": 150], views: ["imageView": self.dropImageView]))
+         self.dropView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[imageView(imageHeight)]", options: nil, metrics: ["imageHeight": 150], views: ["imageView": self.dropImageView]))
+        
     }
     
-    override func loadView() {
-        super.loadView()
-    }
     
     func updateDropView(state: DropViewState) {
         switch state {

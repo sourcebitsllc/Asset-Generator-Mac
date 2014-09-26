@@ -13,14 +13,12 @@ protocol ScriptParametersDelegate {
 }
 
 class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate, ScriptProgessDelegate {
-
-    @IBOutlet var generateButton: NSButton!
   
     var parametersDelegate: ScriptParametersDelegate?
     
+    var scriptController: ScriptController
     var fileDropController: FileDropViewController!
     var projectToolbarController: ProjectToolbarController!
-    var scriptController: ScriptController
     
     private var timer: NSTimer = NSTimer()
     
@@ -36,13 +34,12 @@ class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
        // TODO: Find better way to connect containerController to local var. sigh.
 //      self.fileDropController = self.childViewControllers.first! as FileDropViewController
         
     }
     
-    override func viewDidAppear() {
+    override func viewDidAppear() {s
         super.viewDidAppear()
         self.scriptController.sourceDelegate        = self.fileDropController
         self.scriptController.destinationDelegate   = self.projectToolbarController

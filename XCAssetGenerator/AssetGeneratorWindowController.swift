@@ -8,8 +8,6 @@
 
 import Cocoa
 
-// TODO: I still dont like how much resposibility the Window controller is carrying. Maybe i can move all the destination Protocol logic to its own container while maintaining Toolbar in window logic somehow?
-// FIXME: This whole dump of a class.
 
 class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, ScriptParametersDelegate {
 
@@ -20,11 +18,12 @@ class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, Scr
     
     var assetGeneratorController: AssetGeneratorViewController!
     
-    // var generate1xButton
+    var generate1xButton: NSButton
     
     
     required init(coder: NSCoder!) {
         generateButton = NSButton()
+        generate1xButton = NSButton()
         super.init(coder: coder)
     }
     
@@ -36,20 +35,47 @@ class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, Scr
         self.assetGeneratorController.parametersDelegate = self
 
         self.buttonSetup()
-        self.window.contentView.addSubview(self.generateButton)
     }
     
+    //
     func buttonSetup() {
-        self.generateButton.frame = NSRect(x: 343, y: 1, width: 96, height: 32)
         self.generateButton.title = "Generate"
+        self.generateButton.font = self.browseButton.font // lolwut. Brogramming (tm)
         self.generateButton.bezelStyle = NSBezelStyle.RoundedBezelStyle
-        self.generateButton.setButtonType(NSButtonType.MomentaryPushInButton)
+        self.generateButton.setButtonType(NSButtonType.MomentaryLightButton)
         self.generateButton.bordered = true
         self.generateButton.transparent = false
         self.generateButton.autoresizesSubviews = true
+        self.generateButton.state = true
+        self.generateButton.continuous = false
         self.generateButton.target = self
         self.generateButton.action = Selector("generateButtonPressed")
+        self.generateButton.translatesAutoresizingMaskIntoConstraints = false
         self.updateGenerateButton()
+        self.window.contentView.addSubview(self.generateButton)
+        
+        let contraintH = NSLayoutConstraint.constraintsWithVisualFormat("H:[generateButton(buttonWidth)]-offsetLeft-|", options: nil, metrics: ["offsetLeft": 20,"buttonWidth": 90], views: ["generateButton": generateButton])
+        let contraintV = NSLayoutConstraint.constraintsWithVisualFormat("V:[generateButton]-offsetBottom-|", options: nil, metrics: ["offsetBottom": 8], views: ["generateButton": generateButton])
+        
+        self.window.contentView.addConstraints(contraintH)
+        self.window.contentView.addConstraints(contraintV)
+        
+        self.generate1xButton.title = "1x/3x Label"
+        self.generate1xButton.bezelStyle = NSBezelStyle.RoundRectBezelStyle
+        self.generate1xButton.setButtonType(NSButtonType.SwitchButton)
+        self.generate1xButton.bordered = false
+        self.generate1xButton.transparent = false
+        self.generate1xButton.autoresizesSubviews = true
+        self.generate1xButton.target = self
+        self.generate1xButton.action = Selector("generate1xButtonPressed")
+        self.generate1xButton.translatesAutoresizingMaskIntoConstraints = false
+
+        self.window.contentView.addSubview(self.generate1xButton)
+        let Hcontraint = NSLayoutConstraint.constraintsWithVisualFormat("H:|-offsetLeft-[generate1xButton(buttonWidth)]", options: nil, metrics: ["offsetLeft": 20,"buttonWidth": 90], views: ["generate1xButton": generate1xButton])
+        let Vcontraint = NSLayoutConstraint.constraintsWithVisualFormat("V:[generate1xButton(buttonHeight)]-offsetBottom-|", options: nil, metrics: ["offsetBottom": 2,"buttonHeight": 30], views: ["generate1xButton": generate1xButton])
+        
+        self.window.contentView.addConstraints(Hcontraint)
+        self.window.contentView.addConstraints(Vcontraint)
     }
     
     func generateButtonPressed() {
@@ -57,6 +83,11 @@ class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, Scr
         self.assetGeneratorController.generateButtonPressed()
         self.updateGenerateButton()
     }
+    
+    func generate1xButtonPressed() {
+        println("Check button state changed: \(self.generate1xButton.state)")
+    }
+    
     
     // MARK:- Convenience Functions.
     
