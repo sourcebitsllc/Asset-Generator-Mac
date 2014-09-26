@@ -12,7 +12,7 @@ protocol ScriptParametersDelegate {
     func scriptParametersChanged(controller: AssetGeneratorViewController)
 }
 
-class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate, ScriptProgessDelegate {
+class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate, ScriptProgessDelegate, ProjectToolbarDelegate {
   
     var parametersDelegate: ScriptParametersDelegate?
     
@@ -30,6 +30,7 @@ class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate
     // We have to set this as soon as possible. Hacky as heck but MVC isnt helping right now.
     func setRecentListDropdown(list: ProgressPopUpButton) {
         self.projectToolbarController = ProjectToolbarController(recentList: list)
+        self.projectToolbarController.delegate = self
     }
 
     override func viewDidLoad() {
@@ -39,7 +40,7 @@ class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate
         
     }
     
-    override func viewDidAppear() {s
+    override func viewDidAppear() {
         super.viewDidAppear()
         self.scriptController.sourceDelegate        = self.fileDropController
         self.scriptController.destinationDelegate   = self.projectToolbarController
@@ -86,6 +87,17 @@ class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate
         self.parametersDelegate?.scriptParametersChanged(self)
     }
     
+    
+    
+    // MARK:- ProjectToolbar Delegate
+    func projectToolbarDidChangeProject(project: XCProject?) {
+        if let p = project {
+            self.parametersDelegate?.scriptParametersChanged(self)
+            if !p.hasValidAssetsPath() {
+                println("Selected project does not contain a valid xcassets path.")
+            }
+        }
+    }
     
     
     // MARK:- Script Progress Delegate

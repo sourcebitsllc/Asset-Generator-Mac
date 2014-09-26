@@ -8,6 +8,9 @@
 
 import Cocoa
 
+protocol ProjectToolbarDelegate {
+    func projectToolbarDidChangeProject(project: XCProject?)
+}
 
 // MARK:- The Toolbars Embeded Progress Indicator Extenstion
 extension ProjectToolbarController {
@@ -30,9 +33,11 @@ extension ProjectToolbarController {
 class ProjectToolbarController: NSObject, ScriptDestinationPathDelegate {
 
     var recentlyUsedProjectsDropdownList: ProgressPopUpButton!
+    var delegate : ProjectToolbarDelegate?
     
     private let recentListManager: RecentlySelectedProjectManager
     private var panel: NSOpenPanel = NSOpenPanel()
+    
     
     // MARK:- Setup Helpers
     
@@ -86,6 +91,7 @@ class ProjectToolbarController: NSObject, ScriptDestinationPathDelegate {
             self.recentListManager.addProject(project: self.recentListManager.projectAtIndex(index)!)
             self.updateRecentUsedProjectsDropdownView()
 //            self.assetsToolbarDelegate?.destinationProjectDidChange(self.recentListManager.selectedProject())
+            self.delegate?.projectToolbarDidChangeProject(self.recentListManager.selectedProject())
         }
     }
     
@@ -93,6 +99,7 @@ class ProjectToolbarController: NSObject, ScriptDestinationPathDelegate {
         self.recentListManager.addProject(path)
         self.updateRecentUsedProjectsDropdownView()
 //        self.assetsToolbarDelegate?.destinationProjectDidChange(self.recentListManager.selectedProject())
+        self.delegate?.projectToolbarDidChangeProject(self.recentListManager.selectedProject())
     }
     
     
