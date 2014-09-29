@@ -118,6 +118,8 @@ class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate
     func scriptFinishedExecutingScript(executor: ScriptExecutor) {
         self.projectToolbarController.setToolbarProgress(progress: 0)
         self.timer.invalidate()
+        
+        self.parametersDelegate?.scriptParametersChanged(self)
     }
     
     func moveProgressSmoothly() {
