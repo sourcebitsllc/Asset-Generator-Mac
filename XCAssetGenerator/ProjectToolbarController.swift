@@ -17,22 +17,22 @@ extension ProjectToolbarController {
     
     var toolbarProgress: CGFloat  {
         get {
-            return self.recentlyUsedProjectsDropdownList.progress
+            return self.recentProjectsDropdownListView.progress
         }
     }
     
     func setToolbarProgress(#progress: CGFloat) {
-        self.recentlyUsedProjectsDropdownList.setProgress(progress: progress)
+        self.recentProjectsDropdownListView.setProgress(progress: progress)
     }
     
     func setToolbarProgressColor(#color: NSColor) {
-        self.recentlyUsedProjectsDropdownList.setProgressColor(color)
+        self.recentProjectsDropdownListView.setProgressColor(color)
     }
 }
 
 class ProjectToolbarController: NSObject, ScriptDestinationPathDelegate {
 
-    var recentlyUsedProjectsDropdownList: ProgressPopUpButton!
+    var recentProjectsDropdownListView: ProgressPopUpButton!
     var delegate : ProjectToolbarDelegate?
     
     private let recentListManager: RecentlySelectedProjectManager
@@ -43,25 +43,38 @@ class ProjectToolbarController: NSObject, ScriptDestinationPathDelegate {
     
     init(recentList: ProgressPopUpButton) {
         recentListManager = RecentlySelectedProjectManager()
-        recentlyUsedProjectsDropdownList = recentList
+        recentProjectsDropdownListView = recentList
         super.init()
         self.dropdownListSetup()
         self.openPanelSetup()
     }
     
     private func dropdownListSetup() {
-        self.recentlyUsedProjectsDropdownList.addItemsWithTitles(self.recentListManager.recentProjectsTitlesList())
-        self.recentlyUsedProjectsDropdownList.preferredEdge = NSMaxYEdge
-        self.recentlyUsedProjectsDropdownList.progressColor = NSColor(calibratedRed: 0.047, green: 0.261, blue: 0.993, alpha: 1)
+        self.recentProjectsDropdownListView.preferredEdge = NSMaxYEdge
+        self.recentProjectsDropdownListView.progressColor = NSColor(calibratedRed: 0.047, green: 0.261, blue: 0.993, alpha: 1)
+        if (self.recentListManager.recentProjectsCount() > 0) {
+            self.enableDropdownList()
+            self.recentProjectsDropdownListView.addItemsWithTitles(self.recentListManager.recentProjectsTitlesList())
+        } else {
+            self.disableDropdownList()
+        }
     }
     
-    private func openPanelSetup() {
-        self.panel.allowedFileTypes          = ["xcodeproj"]
-        self.panel.canChooseDirectories      = false
-        self.panel.allowsMultipleSelection   = false
+    
+    private func disableDropdownList() {
+        self.recentProjectsDropdownListView.removeAllItems()
+        self.recentProjectsDropdownListView.addItemWithTitle("Recently Selected Projects")
+        
+        self.recentProjectsDropdownListView.enabled     = false
+        self.recentProjectsDropdownListView.alignment   = NSTextAlignment.CenterTextAlignment
+        self.recentProjectsDropdownListView.alphaValue  = 0.5 // lul.
+        
+       
     }
     
     
+    
+    // MARK:- Public toolbar controller hooks.
     func recentProjectsListChanged(sender: NSPopUpButton) {
         self.updateRecentProjectsList(index: sender.indexOfSelectedItem)
     }
@@ -69,18 +82,21 @@ class ProjectToolbarController: NSObject, ScriptDestinationPathDelegate {
     func browseButtonPressed() {
         panel.beginWithCompletionHandler() { (handler: Int) -> Void in
             if handler == NSFileHandlingPanelOKButton {
+                
                 self.addNewProject(path: self.panel.URL.path!)
             }
         }
     }
     
+    
+    
     // MARK:- Convenience Methods
     
     // TODO: Why do we remove all items? its the recentUsedProjectsManager to maintain order for its cache. So either trust its decisions or dont use it.
     private func updateRecentUsedProjectsDropdownView() {
-        self.recentlyUsedProjectsDropdownList.removeAllItems()
-        self.recentlyUsedProjectsDropdownList.addItemsWithTitles(self.recentListManager.recentProjectsTitlesList())
-        self.recentlyUsedProjectsDropdownList.selectItemAtIndex(0)
+        self.recentProjectsDropdownListView.removeAllItems()
+        self.recentProjectsDropdownListView.addItemsWithTitles(self.recentListManager.recentProjectsTitlesList())
+        self.recentProjectsDropdownListView.selectItemAtIndex(0)
         
     }
     
@@ -90,7 +106,6 @@ class ProjectToolbarController: NSObject, ScriptDestinationPathDelegate {
             
             self.recentListManager.addProject(project: self.recentListManager.projectAtIndex(index)!)
             self.updateRecentUsedProjectsDropdownView()
-//            self.assetsToolbarDelegate?.destinationProjectDidChange(self.recentListManager.selectedProject())
             self.delegate?.projectToolbarDidChangeProject(self.recentListManager.selectedProject())
         }
     }
@@ -98,11 +113,28 @@ class ProjectToolbarController: NSObject, ScriptDestinationPathDelegate {
     private func addNewProject(#path: String) {
         self.recentListManager.addProject(path)
         self.updateRecentUsedProjectsDropdownView()
-//        self.assetsToolbarDelegate?.destinationProjectDidChange(self.recentListManager.selectedProject())
+        
+        if !self.recentProjectsDropdownListView.enabled {
+            self.enableDropdownList() // We dont need to really call it after each addition. just the first one.
+        }
+        
         self.delegate?.projectToolbarDidChangeProject(self.recentListManager.selectedProject())
     }
     
+    private func enableDropdownList() {
+        self.recentProjectsDropdownListView.enabled     = true
+        self.recentProjectsDropdownListView.alignment   = NSTextAlignment.LeftTextAlignment
+        self.recentProjectsDropdownListView.alphaValue  = 1.0
+    }
     
+    private func openPanelSetup() {
+        self.panel.canChooseFiles            = true
+        self.panel.allowedFileTypes          = ["xcodeproj"]
+        self.panel.canChooseDirectories      = false
+        self.panel.allowsMultipleSelection   = false
+    }
+    
+ 
     
     // MARK:- ScriptDestinationPath Delegate
     

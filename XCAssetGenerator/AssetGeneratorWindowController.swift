@@ -39,6 +39,7 @@ class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, Scr
     
     //
     func buttonSetup() {
+        // Generate button setup
         self.generateButton.title = "Generate"
         self.generateButton.font = self.browseButton.font // lolwut. Brogramming (tm)
         self.generateButton.bezelStyle = NSBezelStyle.RoundedBezelStyle
@@ -60,6 +61,7 @@ class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, Scr
         self.window.contentView.addConstraints(contraintH)
         self.window.contentView.addConstraints(contraintV)
         
+        // Generate1x Radio button Setup
         self.generate1xButton.title = "1x/3x Label"
         self.generate1xButton.bezelStyle = NSBezelStyle.RoundRectBezelStyle
         self.generate1xButton.setButtonType(NSButtonType.SwitchButton)

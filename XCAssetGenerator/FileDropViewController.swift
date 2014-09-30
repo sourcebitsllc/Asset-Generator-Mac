@@ -9,8 +9,9 @@
 import Cocoa
 
 let kBottomBarHeight: CGFloat = 30
+
 protocol FileDropControllerDelegate {
-    func fileDropControllerDidSetSourcePath(controller: FileDropViewController)
+    func fileDropControllerDidSetSourcePath(controller: FileDropViewController, path: String)
     func fileDropControllerDidRemoveSourcePath(controller: FileDropViewController)
 }
 
@@ -107,7 +108,7 @@ class FileDropViewController: NSViewController, DropViewDelegate, ScriptSourcePa
         self.folderPath = filePath
         self.updateDropView(state: DropViewState.SuccessfulDropState)
         
-        self.delegate?.fileDropControllerDidSetSourcePath(self)
+        self.delegate?.fileDropControllerDidSetSourcePath(self,path: self.folderPath!)
     }
     
     func dropViewDidDragValidFileIntoView(dropView: DropView) {

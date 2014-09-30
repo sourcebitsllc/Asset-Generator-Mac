@@ -15,6 +15,7 @@
 		1EA94EBA19D0C3180010E5BF /* LineProgressIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EA94EB919D0C3180010E5BF /* LineProgressIndicator.swift */; };
 		1EBD1ECD19D37FD600A5F0B6 /* ProjectToolbarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBD1ECC19D37FD600A5F0B6 /* ProjectToolbarController.swift */; };
 		1EBD1ECF19D38ED200A5F0B6 /* ScriptController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBD1ECE19D38ED200A5F0B6 /* ScriptController.swift */; };
+		1EE4B56619DA2904009A9A56 /* SourcePathValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE4B56519DA2904009A9A56 /* SourcePathValidator.swift */; };
 		1EE9353E19C3A0AB000DA40A /* RecentlySelectedProjectManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE9353D19C3A0AB000DA40A /* RecentlySelectedProjectManager.swift */; };
 		1EE99B2D19CFCC6A00169245 /* ProgressPopUpButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE99B2C19CFCC6A00169245 /* ProgressPopUpButton.swift */; };
 		1EEC193C19C2BB3C00FF16AD /* ScriptExecutor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EEC193B19C2BB3C00FF16AD /* ScriptExecutor.swift */; };
@@ -45,6 +46,7 @@
 		1EA94EB919D0C3180010E5BF /* LineProgressIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LineProgressIndicator.swift; sourceTree = "<group>"; };
 		1EBD1ECC19D37FD600A5F0B6 /* ProjectToolbarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectToolbarController.swift; sourceTree = "<group>"; };
 		1EBD1ECE19D38ED200A5F0B6 /* ScriptController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScriptController.swift; sourceTree = "<group>"; };
+		1EE4B56519DA2904009A9A56 /* SourcePathValidator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SourcePathValidator.swift; sourceTree = "<group>"; };
 		1EE9353D19C3A0AB000DA40A /* RecentlySelectedProjectManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = RecentlySelectedProjectManager.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		1EE99B2C19CFCC6A00169245 /* ProgressPopUpButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressPopUpButton.swift; sourceTree = "<group>"; };
 		1EEC193B19C2BB3C00FF16AD /* ScriptExecutor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ScriptExecutor.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -102,9 +104,10 @@
 				DD09CBEB1989A46C002DD2FB /* AppDelegate.swift */,
 				1E4250A519C77C8C00BF686B /* AssetGeneratorWindowController.swift */,
 				1E959F2F19C251EC00B2759D /* AssetGeneratorViewController.swift */,
+				1EE4B56519DA2904009A9A56 /* SourcePathValidator.swift */,
 				1EBD1ECC19D37FD600A5F0B6 /* ProjectToolbarController.swift */,
-				1EE99B2C19CFCC6A00169245 /* ProgressPopUpButton.swift */,
 				1EE9353D19C3A0AB000DA40A /* RecentlySelectedProjectManager.swift */,
+				1EE99B2C19CFCC6A00169245 /* ProgressPopUpButton.swift */,
 				1E4A926219CB846300BFB0D0 /* XCProject.swift */,
 				1EBD1ECE19D38ED200A5F0B6 /* ScriptController.swift */,
 				1EEC193B19C2BB3C00FF16AD /* ScriptExecutor.swift */,
@@ -257,6 +260,7 @@
 				1EE9353E19C3A0AB000DA40A /* RecentlySelectedProjectManager.swift in Sources */,
 				1EE99B2D19CFCC6A00169245 /* ProgressPopUpButton.swift in Sources */,
 				1E4EA5AA19C22DBD00B23001 /* DropView.swift in Sources */,
+				1EE4B56619DA2904009A9A56 /* SourcePathValidator.swift in Sources */,
 				1E4EA5AC19C2343300B23001 /* FileDropViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

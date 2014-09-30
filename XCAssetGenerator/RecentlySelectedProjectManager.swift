@@ -18,7 +18,7 @@ class RecentlySelectedProjectManager : NSObject {
     
     required override init() {
         super.init()
-//        self.flushStoredProjects()
+        self.flushStoredProjects()
         self.loadRecentProjects()
     }
     
@@ -41,6 +41,10 @@ class RecentlySelectedProjectManager : NSObject {
         return self.recentProjects?.map({ (proj: XCProject) -> String in
             return proj.title
         })
+    }
+    
+    func recentProjectsCount() -> Int {
+        return self.recentProjects?.count ?? 0
     }
     
     
