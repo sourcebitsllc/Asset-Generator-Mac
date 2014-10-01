@@ -8,8 +8,13 @@
 
 import Foundation
 
+// The purpose of this class is to check if ∃ a directory which contains a dot in its name.
+// However, it does not fix the issue. Just a way to indicate that a problem exists, then
+// have the "fix" be applied directly from the main script (ScriptExecutor)
 class SourcePathValidator {
     
+
+    // The renaming should be done directly from the main bash script (ScriptExecutor)
     class func validatePath(#path: String, options: AnyObject?) -> Bool {
         var task: NSTask = NSTask()
         var pipe = NSPipe()
@@ -20,24 +25,26 @@ class SourcePathValidator {
         task.launch()
         
         var string: String = NSString(data: pipe.fileHandleForReading.readDataToEndOfFile(), encoding:NSUTF8StringEncoding)
-        println(string)
         
-        var array: [String]? = string.isEmpty ? nil : string.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString: "\0"))
-        array = array?.map({ (string: String) -> String in
+        // No directories inside path = no directory which contains a dot = valid = return true
+        if string.isEmpty {
+            return true
+        }
+        
+        // Store found directories into array and get the relative directory path of each entry. (to ensure the erroneous dot originates inside one of our folders - not from the absolute path.
+        // e.g. /Users/Bade.r/$PATH  is fine, /Users/Bader/$PATH/Fol.der is not
+        var array: [String] = string.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString: "\0"))
+        array = array.map({ (string: String) -> String in
             return string.stringByReplacingOccurrencesOfString(path, withString: "", options: NSStringCompareOptions.CaseInsensitiveSearch, range: nil)
         })
         
-        for x in array! {
-            if contains(x, ".") {
-                println("Cotains dot")
-            } else {
-                println("doesnt")
+        // If we find a directory name which contains a dot, invalid paht found = return false
+        for directoryName: String in array {
+            if contains(directoryName, ".") {
+                return false
             }
         }
-        println(array)
+        // else, return true.
         return true
-        // If string not empty, convert it into an array and get the first value.
-//        self.xcassetPath = string.isEmpty ? nil : string.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString: "\n")).first
-        
     }
 }

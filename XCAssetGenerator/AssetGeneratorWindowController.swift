@@ -103,12 +103,10 @@ class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, Scr
     
     @IBAction func recentlyUsedProjectsDropdownListChanged(sender: ProgressPopUpButton!) {
         self.assetGeneratorController.recentlyUsedProjectsDropdownListChanged(sender)
-//        self.updateGenerateButton()
     }
     
     @IBAction func browseButtonPressed(sender: AnyObject!) {
         self.assetGeneratorController.browseButtonPressed()
-//        self.updateGenerateButton()
     }
     
     
