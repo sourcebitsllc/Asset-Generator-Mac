@@ -1,5 +1,5 @@
 #!/bin/bash
-#set -x
+# set -x
 
 # TODO: sanitize the inputs.
 sourcePath="$1";
@@ -8,6 +8,10 @@ shouldGenerate1x=$3;
 
 TEMPDIR=".XCAssetTemp"
 TEMPFULLPATH="$sourcePath$TEMPDIR"
+
+# The character we replace the dot and space with.
+dotAlt="_"
+spaceAlt="_"
 
 deleteTempDirectory() {
 
@@ -26,7 +30,7 @@ setupTempDirectory() {
 	
 	# Find all PNGs in directory and copy them into temp.
 	find "$sourcePath" -name "*.png" -print0 | while read -d $'\0' -r i ; do
-	
+		
 		name=`basename "$i"`;
 		relativePath=${i#$sourcePath/};
 
@@ -35,6 +39,9 @@ setupTempDirectory() {
 
 			folderPath=${i%$name};
 			folderName=${folderPath#$sourcePath/};
+
+			# Remove all dot occurrences in the path.
+			folderName=${folderName//[.]/$dotAlt}
 
 			if [[ ! -d "$TEMPFULLPATH"/"$folderName" ]] ; then
 				mkdir -p -m 777 "$TEMPFULLPATH"/"$folderName";
@@ -45,7 +52,6 @@ setupTempDirectory() {
 		fi
 	done
 }
-
 
 createAppIcon() {
 	
@@ -347,6 +353,7 @@ display_usage() {
     echo "Usage: ./XCasset Generator.sh [absolute source path] [absolute destination path]" >&2
 }
 
+
 ## Entry Point. ##
 ##################
 
@@ -358,8 +365,19 @@ if [  $# -le 1 ] ; then
     exit 1
 fi
 
-echo "1: Setting Up Temp";
+if [[ ! -d "$sourcePath" ]] ; then
+	echo "- ERROR: Invalid source path"
+	echo "The source directory does not exist"
+	exit 1
+fi
 
+if [[ ! -d "$destinationPath" ]] ; then
+	echo "- ERROR: Invalid destination path"
+	echo "The destination directory does not exist"
+	exit 1
+fi
+
+echo "1: Setting Up Temp";
 time { 
 setupTempDirectory; 
 };
@@ -382,6 +400,7 @@ time {
 createImagesets; 
 };
 echo "progress:30"
+
 # At this point, every file in the directory should've been processed.
 echo "5: Creating JSON";
 time {
