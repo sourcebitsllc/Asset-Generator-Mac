@@ -70,7 +70,7 @@ class RecentlySelectedProjectManager : NSObject {
         self.storeRecentProjects()
     }
     
-    func addProject(path: String) {
+    func addProject(#path: String) {
         addProject(project: XCProject(path: path))
     }
     

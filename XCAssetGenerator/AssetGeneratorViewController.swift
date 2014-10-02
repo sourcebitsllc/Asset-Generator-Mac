@@ -43,8 +43,8 @@ class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate
     override func viewDidAppear() {
         super.viewDidAppear()
         self.scriptController.sourceDelegate        = self.fileDropController
-        self.scriptController.destinationDelegate   = self.projectToolbarController
         self.scriptController.progressDelegate      = self
+        self.scriptController.destinationDelegate   = self.projectToolbarController
     }
     
     func recentlyUsedProjectsDropdownListChanged(sender: ProgressPopUpButton) {
@@ -77,11 +77,16 @@ class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate
     
     
     // MARK: - FileDropController Delegate
-    func fileDropControllerDidSetSourcePath(controller: FileDropViewController, path: String) {
+    
+    func fileDropControllerDidRemoveSourcePath(controller: FileDropViewController) {
         self.parametersDelegate?.scriptParametersChanged(self)
     }
     
-    func fileDropControllerDidRemoveSourcePath(controller: FileDropViewController) {
+    func fileDropControllerDidSetSourcePath(controller: FileDropViewController, path: String) {
+        if !SourcePathValidator.validatePath(path: path, options: nil) {
+            println("WARNING: THE SOURCE PATH CONTAINS DODO. I REPEAT, THE SOURCE PATH CONTAINS A DODO")
+            println("REASON: FOUND A SUBDIRECTORY WHICH CONTAINS A DOT..... DOT..DOT..")
+        }
         self.parametersDelegate?.scriptParametersChanged(self)
     }
     
@@ -92,7 +97,8 @@ class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate
         if let p = project {
             self.parametersDelegate?.scriptParametersChanged(self)
             if !p.hasValidAssetsPath() {
-                println("Selected project does not contain a valid xcassets path.")
+                println("ERROR: THE DESTINATION PATH CONTAINS A DODO")
+                println("REASON: SELECTED PROJECT DOES NOT CONTAIN A VALID XCASSETS PATH")
             }
         }
     }
@@ -121,6 +127,7 @@ class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate
         
         self.parametersDelegate?.scriptParametersChanged(self)
     }
+    
     // MARK: H4X. Fix.
     func moveProgressSmoothly() {
         self.projectToolbarController.setToolbarProgress(progress: self.projectToolbarController.toolbarProgress + 0.05)

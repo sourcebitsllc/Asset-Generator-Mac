@@ -68,11 +68,9 @@ class ProjectToolbarController: NSObject, ScriptDestinationPathDelegate {
         self.recentProjectsDropdownListView.enabled     = false
         self.recentProjectsDropdownListView.alignment   = NSTextAlignment.CenterTextAlignment
         self.recentProjectsDropdownListView.alphaValue  = 0.5 // lul.
-        
-       
     }
     
-    
+
     
     // MARK:- Public toolbar controller hooks.
     func recentProjectsListChanged(sender: NSPopUpButton) {
@@ -111,7 +109,7 @@ class ProjectToolbarController: NSObject, ScriptDestinationPathDelegate {
     }
     
     private func addNewProject(#path: String) {
-        self.recentListManager.addProject(path)
+        self.recentListManager.addProject(path: path)
         self.updateRecentUsedProjectsDropdownView()
         
         if !self.recentProjectsDropdownListView.enabled {
