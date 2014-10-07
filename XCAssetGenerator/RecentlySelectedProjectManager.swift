@@ -18,7 +18,7 @@ class RecentlySelectedProjectManager : NSObject {
     
     required override init() {
         super.init()
-        self.flushStoredProjects()
+//        self.flushStoredProjects()
         self.loadRecentProjects()
     }
     

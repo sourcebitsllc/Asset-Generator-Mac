@@ -8,34 +8,39 @@
 
 import Foundation
 
-struct XCAsset {
-// TODO:
-    var path: String?
-    
-    init(directory: String) {
-        path = retrieveAssets(directory: directory)
+func == (lhs: XCAsset, rhs: XCAsset) -> Bool {
+    return lhs.path == rhs.path
+}
+
+func == (lhs: XCAsset?, rhs: XCAsset?) -> Bool {
+    switch (lhs, rhs) {
+        case (.Some(let a), .Some(let b)) : return a.path == b.path
+        case (_,_): return false
     }
+}
+
+extension XCAsset: Printable {
+    
+    var description: String {
+        get {
+            return "[\(self.title)] -- asset path: \(self.path),"
+        }
+    }
+    
+    var title: String {
+        get {
+            return self.path.lastPathComponent
+        }
+    }
+}
+
+
+struct XCAsset: Equatable {
+    var path: String
     
     init (path aPath: String) {
         path = aPath
-    }
-    
-    mutating private func retrieveAssets(#directory: String) -> String? {
-        var task: NSTask = NSTask()
-        var pipe = NSPipe()
-        
-        task.launchPath = "/usr/bin/find"
-        task.arguments = [directory, "-name", "*.xcassets"]
-        task.standardOutput = pipe
-        
-        task.launch()
-        
-        var string: String = NSString(data: pipe.fileHandleForReading.readDataToEndOfFile(), encoding: NSUTF8StringEncoding)
-        
-        let assetPath: String? = string.isEmpty ? nil : string.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString: "\n")).first
-        // If string not empty, convert it into an array and get the first value.
-        
-        return assetPath
+        println(path)
     }
     
 

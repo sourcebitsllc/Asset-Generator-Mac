@@ -11,11 +11,13 @@ import Foundation
 let pathKey = "XCAssetGeneratorXcodeProjectPath"
 let assetPathKey = "XCAssetGeneratorXcodeAssetsPath"
 
+// TODO: If we wanted to add support for multiple xcassets, it simple goes here.
+
 
 // MARK:- Equatable Conformance
 
 func == (lhs: XCProject, rhs: XCProject) -> Bool {
-    return lhs.path == rhs.path && lhs.xcassetPath == rhs.xcassetPath
+    return lhs.path == rhs.path && lhs.xcassets?.first?.path == rhs.xcassets?.first?.path
 }
 //        var proj1: XCProject = self.recentListManager.projectAtIndex(sender.indexOfSelectedItem)!
 //        var proj2: XCProject = self.recentListManager.projectAtIndex(sender.indexOfSelectedItem)!
@@ -27,7 +29,7 @@ extension XCProject: Printable {
     
     var description: String {
         get {
-            return "[\(self)] -- path: \(self.path), asset path: \(self.xcassetPath)"
+            return "[\(title)] -- path: \(path), assets: \(self.xcassets?.first?)"
         }
     }
     
@@ -45,7 +47,7 @@ extension XCProject: Printable {
 extension XCProject {
     
     func dictionaryRepresentation() -> [String: String] {
-        return [pathKey: self.path, assetPathKey: self.xcassetPath ?? ""]
+        return [pathKey: self.path, assetPathKey: self.xcassets?.first?.path ?? ""]
     }
     
     func userDefaultsDictionaryRepresentation() -> [NSString: NSString] {
@@ -64,23 +66,31 @@ extension XCProject {
 struct XCProject: Equatable {
     
     var path: String
-    private var xcassetPath: String?
+    private var xcassets: [XCAsset]?
     
     
     // MARK:- Initializers
     
     internal init(path: String) {
         self.path = path
-        self.xcassetPathFinder()
+        self.xcassets = retrieveAssets(directory: self.XCProjectDirectoryPath())
     }
     
     internal init(path: String, xcassetPath: String?) {
         self.path = path
         
         if let assetpath = xcassetPath {
-            self.xcassetPath = xcassetPath
+            self.xcassets = [XCAsset(path: assetpath)]
+        }
+    }
+    
+    internal init(path: String, xcassets: [XCAsset]?) {
+        self.path = path
+        
+        if let assets = xcassets {
+            self.xcassets = assets
         } else {
-            self.xcassetPathFinder()
+            self.xcassets = nil
         }
     }
     
@@ -89,29 +99,35 @@ struct XCProject: Equatable {
     // MARK:- Convenience functions and helpers.
     
     func assetDirectoryPath() -> String? {
-        return xcassetPath
+        return self.xcassets?.first?.path
     }
     
     func hasValidAssetsPath() -> Bool {
-        return (self.xcassetPath? != nil) ? true : false
+        return (self.xcassets?.first != nil) ? true : false
     }
     
-    mutating private func xcassetPathFinder() {
+
+    
+    mutating private func retrieveAssets(#directory: String) -> [XCAsset]? {
         var task: NSTask = NSTask()
         var pipe = NSPipe()
         
         task.launchPath = "/usr/bin/find"
-        task.arguments = [self.XCProjectDirectoryPath(), "-name", "*.xcassets"]
+        task.arguments = [directory, "-name", "*.xcassets"]
         task.standardOutput = pipe
         
         task.launch()
         
         var string: String = NSString(data: pipe.fileHandleForReading.readDataToEndOfFile(), encoding: NSUTF8StringEncoding)
         
+        let assetPath: String? = string.isEmpty ? nil : string.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString: "\n")).first
         // If string not empty, convert it into an array and get the first value.
-        self.xcassetPath = string.isEmpty ? nil : string.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString: "\n")).first
+        if let path = assetPath {
+            return [XCAsset(path: path)]
+        } else {
+            return nil
+        }
         
-        println("\(self.xcassetPath)")
     }
     
     private func XCProjectDirectoryPath() -> String {
