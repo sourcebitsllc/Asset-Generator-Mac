@@ -141,9 +141,6 @@ class ProjectToolbarController: NSObject, ScriptDestinationPathDelegate {
     }
     
     func hasValidDestinationProject() -> Bool {
-        println(self.recentListManager.isSelectedProjectValid())
-        println(self.recentListManager.selectedProject()?)
-        println(self.recentListManager.selectedProject()!.hasValidAssetsPath())
         return self.recentListManager.isSelectedProjectValid() && self.recentListManager.selectedProject()!.hasValidAssetsPath()
     }
     

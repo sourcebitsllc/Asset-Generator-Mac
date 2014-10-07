@@ -4,7 +4,7 @@
 # TODO: sanitize the inputs.
 sourcePath="$1";
 destinationPath="$2";
-shouldGenerate1x=$3;
+generateMissingAssets=$3;
 
 TEMPDIR=".XCAssetTemp"
 TEMPFULLPATH="$sourcePath$TEMPDIR"
@@ -110,20 +110,81 @@ createImagesets() {
 	done
 }
 
+generateAssets() {
+	echo "LOL"
+	find "$TEMPFULLPATH" \( -name "*@2x*.png" -o -name "*@3x*.png" \) -print0 | while read -d $'\0' -r i ; do 
+		# echo "$i"
+		imageName=`basename "$i"`
+		imagePath=`dirname "$i"`
+		if [[ "$imageName" == *@3x* ]] ; then
+			name2x=${imageName/@3x/@2x}
+			name1x=${imageName/@3x/}
+			# echo "$name2x"
+			# echo "$imagePath"
+			if [[ ! -f "$imagePath/$name2x" ]] ; then 
+				# echo "2x doesnt exist"
+				generate2xFrom3x "$i"
+			fi
+			if [[ ! -f "$imagePath/$name1x" ]] ; then 
+				# echo "1x doesnt exist"
+				generate1xFrom3x "$i"
+			fi
 
-# generate1x() {
-# 	d="$1";	
-# 	# Make a copy of the file.
-# 	a=${d/@2x/};
-# 	cp "$d" "$a";
-# 	# Get the images' dimensions, half them, then create new image with new dimensions.
-# 	width=`sips -g pixelWidth "$a" | tail -n1 | cut -d' ' -f4`;
-#     height=`sips -g pixelHeight "$a" | tail -n1 | cut -d' ' -f4`;
-#     width=$(expr $width / 2);
-#     height=$(expr $height / 2);
+		fi
+
+		if [[ "$imageName" == *@2x* ]] ; then
+			name1x=${imageName/@2x/}
+			if [[ ! -f "$imagePath/$name1x" ]] ; then 
+				# echo "1x doesnt exists for 2x"
+				generate1xFrom2x "$i"
+			fi
+		fi		
+
+	done
+}
+generate1xFrom2x() {
+	d="$1";	
+	# Make a copy of the file.
+	a=${d/@2x/};
+	cp "$d" "$a";
+	# echo "$a"
+	# Get the images' dimensions, half them, then create new image with new dimensions.
+	width=`sips -g pixelWidth "$a" | tail -n1 | cut -d' ' -f4`;
+    height=`sips -g pixelHeight "$a" | tail -n1 | cut -d' ' -f4`;
+    width=$(expr $width / 2);
+    height=$(expr $height / 2);
+    # sips "$d" -z $height $width --out "${d/@2x/}" #> /dev/null;
+    sips -z $height $width "$a" > /dev/null;
+    # sips -s format png $IMG --out Converted/${IMG_BASENAME%%.jpg}.png
+}
+
+generate2xFrom3x() {
+	d="$1";	
+	# Make a copy of the file.
+	a=${d/@3x/@2x};
+	cp "$d" "$a";
+	# Get the images' dimensions, half them, then create new image with new dimensions.
+	width=`sips -g pixelWidth "$a" | tail -n1 | cut -d' ' -f4`;
+    height=`sips -g pixelHeight "$a" | tail -n1 | cut -d' ' -f4`;
+    width=$(expr $width / 1.5);
+    height=$(expr $height / 1.5);
     
-#     sips -z $height $width "$a";
-# }
+    sips -z $height $width "$a" > /dev/null;
+}
+
+generate1xFrom3x() {
+	d="$1";	
+	# Make a copy of the file.
+	a=${d/@3x/};
+	cp "$d" "$a";
+	# Get the images' dimensions, half them, then create new image with new dimensions.
+	width=`sips -g pixelWidth "$a" | tail -n1 | cut -d' ' -f4`;
+    height=`sips -g pixelHeight "$a" | tail -n1 | cut -d' ' -f4`;
+    width=$(expr $width / 3);
+    height=$(expr $height / 3);
+    
+    sips -z $height $width "$a" > /dev/null;
+}
 
 # Takes file (basename) as argument. 
 create_json_content() {
@@ -402,6 +463,12 @@ createImagesets;
 };
 echo "progress:30"
 
+# Check if we should create missing assets
+if [[ $generateMissingAssets -eq 1 ]] ; then
+	echo "4.5: Generating missing assets";
+	generateAssets;
+fi
+
 # At this point, every file in the directory should've been processed.
 echo "5: Creating JSON";
 time {
@@ -420,7 +487,7 @@ echo "progress:95"
 
 # Cull the temp directory after finishing.
 echo "7: Delete Temp";
-deleteTempDirectory;
+# deleteTempDirectory;
 
 echo "progress:100"
 

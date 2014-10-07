@@ -52,8 +52,11 @@ class ScriptExecutor: NSObject {
             
             var task = NSTask()
             var pipe = NSPipe()
+            
+            let generate : String = generate1x ?  "1" : "0"
+            
             task.launchPath = self.scriptPath
-            task.arguments = [src, dst]
+            task.arguments = [src, dst, generate]
             task.standardOutput = pipe
             
             pipe.fileHandleForReading.waitForDataInBackgroundAndNotify()
@@ -63,6 +66,7 @@ class ScriptExecutor: NSObject {
                     var echo = NSString(data: pipe.fileHandleForReading.availableData, encoding: NSUTF8StringEncoding)
 
                     if echo.containsString("progress:") {
+                        println("echo: \(echo)")
                         var progress = echo.stringByReplacingOccurrencesOfString("progress:", withString: "")
                         
                         // If we yanked more than progress line, remove the rest.

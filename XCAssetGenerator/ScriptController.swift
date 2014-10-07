@@ -19,6 +19,11 @@ protocol ScriptDestinationPathDelegate {
     func hasValidDestinationProject() -> Bool
 }
 
+enum ScriptOptions {
+    case GenerateMissingAssets
+    case CreateDesitnationIfMissing
+}
+
 class ScriptController: NSObject {
 
     var sourceDelegate: ScriptSourcePathDelegate?
@@ -53,13 +58,22 @@ class ScriptController: NSObject {
         }
     }
     
-    func executeScript() {
+    func executeScript(options: [ScriptOptions]?) {
+        if let ops = options {
+            let generate1x = contains(ops, ScriptOptions.GenerateMissingAssets)
+            let createDest = contains(ops, ScriptOptions.CreateDesitnationIfMissing)
+            self.executeScript(generate1x: generate1x, extraArgs: nil)
+        } else {
+            self.executeScript()
+        }
+    }
+    private func executeScript() {
 //        let dest = createNewAsset(project: self.destinationDelegate!.destinationPath()!)
 //        self.scriptManager.executeScript(source: self.sourceDelegate!.sourcePath()!, destination: dest, generate1x: false, extraArgs: nil)
         self.scriptManager.executeScript(source: self.sourceDelegate!.sourcePath()!, destination: self.destinationDelegate!.destinationPath()!, generate1x: false, extraArgs: nil)
     }
     
-    func executeScript(#generate1x: Bool, extraArgs args: [String]?) {
+    private func executeScript(#generate1x: Bool, extraArgs args: [String]?) {
         self.scriptManager.executeScript(source: self.sourceDelegate!.sourcePath()!, destination: self.destinationDelegate!.destinationPath()!, generate1x: generate1x, extraArgs: args)
     }
     
