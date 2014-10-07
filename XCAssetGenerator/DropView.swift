@@ -20,11 +20,11 @@ class DropView: NSView {
 
     var delegate: DropViewDelegate?
    
-//    override func drawRect(dirtyRect: NSRect) {
-//        super.drawRect(dirtyRect)
-//
-//        // Drawing code here.
-//    }
+    override func drawRect(dirtyRect: NSRect) {
+        super.drawRect(dirtyRect)
+        
+        // Drawing code here.
+    }
     
     // MARK:- Initializers
     
@@ -50,16 +50,15 @@ class DropView: NSView {
         let filenames = sender.draggingPasteboard().propertyListForType(NSFilenamesPboardType) as Array<String>
         let filename = filenames[0]
         
-        var isDirectory: ObjCBool = ObjCBool(0)
-        if NSFileManager.defaultManager().fileExistsAtPath(filename, isDirectory: &isDirectory) {
-            if isDirectory.boolValue {
-                self.delegate?.dropViewDidDragValidFileIntoView(self)
-                return NSDragOperation.Copy
-            }
-        }
+
+        if PathValidator.directoryExists(path: filename) {
+            self.delegate?.dropViewDidDragValidFileIntoView(self)
+            return NSDragOperation.Copy
         
-        self.delegate?.dropViewDidDragInvalidFileIntoView(self)
-        return NSDragOperation.None
+        } else {
+            self.delegate?.dropViewDidDragInvalidFileIntoView(self)
+            return NSDragOperation.None
+        }
         
     }
     

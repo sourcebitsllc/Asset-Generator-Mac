@@ -12,7 +12,6 @@ let pathKey = "XCAssetGeneratorXcodeProjectPath"
 let assetPathKey = "XCAssetGeneratorXcodeAssetsPath"
 
 
-
 // MARK:- Equatable Conformance
 
 func == (lhs: XCProject, rhs: XCProject) -> Bool {

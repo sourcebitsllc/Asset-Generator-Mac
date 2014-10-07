@@ -37,7 +37,12 @@ class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate
         super.viewDidLoad()
        // TODO: Find better way to connect containerController to local var. sigh.
 //      self.fileDropController = self.childViewControllers.first! as FileDropViewController
-        
+//        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("hello"), name: "NSApplicationDidBecomeActiveNotification", object: nil)
+    }
+    
+    func controllerDidBecomeActive() {
+        println("Active")
+        self.fileDropController.validateIfSourcePathStillExists()
     }
     
     override func viewDidAppear() {
@@ -83,7 +88,7 @@ class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate
     }
     
     func fileDropControllerDidSetSourcePath(controller: FileDropViewController, path: String) {
-        if !SourcePathValidator.validatePath(path: path, options: nil) {
+        if PathValidator.directoryContainsInvalidCharacters(path: path, options: nil) {
             println("WARNING: THE SOURCE PATH CONTAINS DODO. I REPEAT, THE SOURCE PATH CONTAINS A DODO")
             println("REASON: FOUND A SUBDIRECTORY WHICH CONTAINS A DOT..... DOT..DOT..")
         }
@@ -132,7 +137,5 @@ class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate
     func moveProgressSmoothly() {
         self.projectToolbarController.setToolbarProgress(progress: self.projectToolbarController.toolbarProgress + 0.05)
     }
-
-
    
 }

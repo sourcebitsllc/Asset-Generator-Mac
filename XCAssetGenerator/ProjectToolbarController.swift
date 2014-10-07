@@ -63,7 +63,7 @@ class ProjectToolbarController: NSObject, ScriptDestinationPathDelegate {
     
     private func disableDropdownList() {
         self.recentProjectsDropdownListView.removeAllItems()
-        self.recentProjectsDropdownListView.addItemWithTitle("Recently Selected Projects")
+        self.recentProjectsDropdownListView.addItemWithTitle("Recent Projects")
         
         self.recentProjectsDropdownListView.enabled     = false
         self.recentProjectsDropdownListView.alignment   = NSTextAlignment.CenterTextAlignment

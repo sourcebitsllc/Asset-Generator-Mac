@@ -54,10 +54,18 @@ class ScriptController: NSObject {
     }
     
     func executeScript() {
+//        let dest = createNewAsset(project: self.destinationDelegate!.destinationPath()!)
+//        self.scriptManager.executeScript(source: self.sourceDelegate!.sourcePath()!, destination: dest, generate1x: false, extraArgs: nil)
         self.scriptManager.executeScript(source: self.sourceDelegate!.sourcePath()!, destination: self.destinationDelegate!.destinationPath()!, generate1x: false, extraArgs: nil)
     }
     
     func executeScript(#generate1x: Bool, extraArgs args: [String]?) {
         self.scriptManager.executeScript(source: self.sourceDelegate!.sourcePath()!, destination: self.destinationDelegate!.destinationPath()!, generate1x: generate1x, extraArgs: args)
+    }
+    
+    
+    // MARK:- For future usages, maybe.
+    private func createNewAsset(#project: String) -> String {
+        return project.stringByDeletingPathExtension + "/Images.xcassets"
     }
 }

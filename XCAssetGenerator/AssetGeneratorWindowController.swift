@@ -9,7 +9,7 @@
 import Cocoa
 
 
-class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, ScriptParametersDelegate {
+class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, ScriptParametersDelegate, NSWindowDelegate {
 
     @IBOutlet var recentlyUsedProjectsDropdownList: ProgressPopUpButton!
     @IBOutlet var browseButton: NSButton!
@@ -33,7 +33,7 @@ class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, Scr
         self.assetGeneratorController = self.contentViewController as AssetGeneratorViewController
         self.assetGeneratorController.setRecentListDropdown(self.recentlyUsedProjectsDropdownList)
         self.assetGeneratorController.parametersDelegate = self
-
+        self.window.delegate = self
         self.buttonSetup()
     }
     
@@ -55,7 +55,7 @@ class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, Scr
         self.updateGenerateButton()
         self.window.contentView.addSubview(self.generateButton)
         
-        let contraintH = NSLayoutConstraint.constraintsWithVisualFormat("H:[generateButton(buttonWidth)]-offsetLeft-|", options: nil, metrics: ["offsetLeft": 20,"buttonWidth": 90], views: ["generateButton": generateButton])
+        let contraintH = NSLayoutConstraint.constraintsWithVisualFormat("H:[generateButton(buttonWidth)]-offsetLeft-|", options: nil, metrics: ["offsetLeft": 10,"buttonWidth": 90], views: ["generateButton": generateButton])
         let contraintV = NSLayoutConstraint.constraintsWithVisualFormat("V:[generateButton]-offsetBottom-|", options: nil, metrics: ["offsetBottom": 8], views: ["generateButton": generateButton])
         
         self.window.contentView.addConstraints(contraintH)
@@ -75,7 +75,7 @@ class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, Scr
 
         self.window.contentView.addSubview(self.generate1xButton)
         let Hcontraint = NSLayoutConstraint.constraintsWithVisualFormat("H:|-offsetLeft-[generate1xButton(buttonWidth)]", options: nil, metrics: ["offsetLeft": 20,"buttonWidth": 90], views: ["generate1xButton": generate1xButton])
-        let Vcontraint = NSLayoutConstraint.constraintsWithVisualFormat("V:[generate1xButton(buttonHeight)]-offsetBottom-|", options: nil, metrics: ["offsetBottom": 2,"buttonHeight": 30], views: ["generate1xButton": generate1xButton])
+        let Vcontraint = NSLayoutConstraint.constraintsWithVisualFormat("V:[generate1xButton]-offsetBottom-|", options: nil, metrics: ["offsetBottom": 8,"buttonHeight": 30], views: ["generate1xButton": generate1xButton])
         
         self.window.contentView.addConstraints(Hcontraint)
         self.window.contentView.addConstraints(Vcontraint)
@@ -116,5 +116,8 @@ class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, Scr
         self.updateGenerateButton()
     }
     
+    func windowDidBecomeKey(notification: NSNotification!) {
+        self.assetGeneratorController.controllerDidBecomeActive()
+    }
     
 }

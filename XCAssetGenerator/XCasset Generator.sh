@@ -374,7 +374,8 @@ fi
 if [[ ! -d "$destinationPath" ]] ; then
 	echo "- ERROR: Invalid destination path"
 	echo "The destination directory does not exist"
-	exit 1
+#	mkdir "$destinationPath"
+    exit 1
 fi
 
 echo "1: Setting Up Temp";

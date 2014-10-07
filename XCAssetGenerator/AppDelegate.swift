@@ -12,7 +12,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     func applicationDidFinishLaunching(aNotification: NSNotification?) {
         // Insert code here to initialize your application
-        SourcePathValidator.validatePath(path: "/Users/Bader/Downloads/test a/", options: nil)
+        PathValidator.directoryContainsInvalidCharacters(path: "/Users/Bader/Downloads/test a/", options: nil)
     }
 
     func applicationWillTerminate(aNotification: NSNotification?) {
@@ -26,6 +26,5 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationShouldTerminate(sender: NSApplication!) -> NSApplicationTerminateReply {
         return NSApplicationTerminateReply.TerminateNow
     }
-
 }
 

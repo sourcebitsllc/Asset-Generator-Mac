@@ -10,6 +10,8 @@ import Cocoa
 
 let kBottomBarHeight: CGFloat = 30
 
+
+
 protocol FileDropControllerDelegate {
     func fileDropControllerDidSetSourcePath(controller: FileDropViewController, path: String)
     func fileDropControllerDidRemoveSourcePath(controller: FileDropViewController)
@@ -19,7 +21,8 @@ enum DropViewState {
     case InitialState
     case HoveringState
     case SuccessfulDropState
-    case InvalidState
+    case InvalidDropState
+    case PathNoLongerExistsState
 }
 
 class FileDropViewController: NSViewController, DropViewDelegate, ScriptSourcePathDelegate {
@@ -78,9 +81,25 @@ class FileDropViewController: NSViewController, DropViewDelegate, ScriptSourcePa
             self.dropImageView.image     = NSImage(named: "DropfileSuccessState")
             self.pathLabel.stringValue   = self.folderPath
             self.detailLabel.stringValue = "Successful Drop Detail Label"
-        case .InvalidState:
+        case .InvalidDropState:
             self.pathLabel.stringValue   = "Invalid Drop"
             self.detailLabel.stringValue = "Invalid Drop Detail Label"
+        case .PathNoLongerExistsState:
+            self.dropImageView.image     = nil
+            self.pathLabel.stringValue   = "Directory no longer exists"
+            self.detailLabel.stringValue = "Directory no longer exists Detail Label"
+        }
+    }
+    
+    func validateIfSourcePathStillExists() {
+        if let source = self.folderPath {
+            if !PathValidator.directoryExists(path: source) {
+                self.updateDropView(state: DropViewState.PathNoLongerExistsState)
+            } else {
+                self.updateDropView(state: DropViewState.SuccessfulDropState)
+            }
+        } else {
+            self.updateDropView(state: DropViewState.InitialState)
         }
     }
     
@@ -104,22 +123,23 @@ class FileDropViewController: NSViewController, DropViewDelegate, ScriptSourcePa
 
     // MARK: - DropViewDelegate required functions.
     
+    
     func dropViewDidDropFileToView(dropView: DropView, filePath: String) {
         self.folderPath = filePath
         self.updateDropView(state: DropViewState.SuccessfulDropState)
-        
+    
         self.delegate?.fileDropControllerDidSetSourcePath(self,path: self.folderPath!)
     }
     
+    
     func dropViewDidDragValidFileIntoView(dropView: DropView) {
-//        dropView.layer!.backgroundColor = NSColor.init(red: 144/255, green: 230/255, blue: 33/255, alpha:1).CGColor
         if !self.hasValidSourceProject() {
             self.updateDropView(state: DropViewState.HoveringState)
         }
     }
     
     func dropViewDidDragInvalidFileIntoView(dropView: DropView) {
-        self.updateDropView(state: DropViewState.InvalidState)
+        self.updateDropView(state: DropViewState.InvalidDropState)
     }
     
     func dropViewDidDragFileOutOfView(dropView: DropView) {
