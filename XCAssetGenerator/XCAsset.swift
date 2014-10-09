@@ -14,16 +14,17 @@ func == (lhs: XCAsset, rhs: XCAsset) -> Bool {
 
 func == (lhs: XCAsset?, rhs: XCAsset?) -> Bool {
     switch (lhs, rhs) {
-        case (.Some(let a), .Some(let b)) : return a.path == b.path
+        case (.Some(let a), .Some(let b)) : return a == b
         case (_,_): return false
     }
 }
 
+// MARK:- Printable Protocol
 extension XCAsset: Printable {
     
     var description: String {
         get {
-            return "[\(self.title)] -- asset path: \(self.path),"
+            return "\(self.title) -- asset path: \(self.path),"
         }
     }
     
@@ -40,7 +41,7 @@ struct XCAsset: Equatable {
     
     init (path aPath: String) {
         path = aPath
-        println(path)
+//        println(path)
     }
     
 

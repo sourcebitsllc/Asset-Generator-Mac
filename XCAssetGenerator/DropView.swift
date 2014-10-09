@@ -45,7 +45,7 @@ class DropView: NSView {
     
     
     // MARK:- Drag Handlers.
-    
+    // FIXME: The view should know what is valid and what is not. Send it back and let the controller handle that
     override func draggingEntered(sender: NSDraggingInfo!) -> NSDragOperation {
         let filenames = sender.draggingPasteboard().propertyListForType(NSFilenamesPboardType) as Array<String>
         let filename = filenames[0]

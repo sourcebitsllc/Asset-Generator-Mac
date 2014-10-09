@@ -47,16 +47,10 @@ class PathValidator {
         return false
     }
     
-    
     class func directoryExists(#path: String) -> Bool {
         var isDirectory: ObjCBool = ObjCBool(0)
-        if NSFileManager.defaultManager().fileExistsAtPath(path, isDirectory: &isDirectory) {
-            if isDirectory.boolValue {
-                return true
-            }
-        }
+        NSFileManager.defaultManager().fileExistsAtPath(path, isDirectory: &isDirectory)
         
-        return false
-        
+        return isDirectory.boolValue
     }
 }

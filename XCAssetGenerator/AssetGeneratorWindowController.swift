@@ -64,10 +64,9 @@ class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, Scr
         self.window.contentView.addConstraints(contraintV)
         
         // Generate1x Radio button Setup
-        self.generate1xButton.title                 = "1x/3x Label"
+        self.generate1xButton.title                 = "Create @1x, @2x"
         self.generate1xButton.state                 = 0
         self.generate1xButton.target                = self
-        self.generate1xButton.action                = Selector("generate1xButtonPressed")
         self.generate1xButton.bordered              = false
         self.generate1xButton.bezelStyle            = NSBezelStyle.RoundRectBezelStyle
         self.generate1xButton.transparent           = false
@@ -78,7 +77,7 @@ class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, Scr
         
         self.window.contentView.addSubview(self.generate1xButton)
         
-        let Hcontraint = NSLayoutConstraint.constraintsWithVisualFormat("H:|-offsetLeft-[generate1xButton(buttonWidth)]", options: nil, metrics: ["offsetLeft": 20,"buttonWidth": 90], views: ["generate1xButton": generate1xButton])
+        let Hcontraint = NSLayoutConstraint.constraintsWithVisualFormat("H:|-offsetLeft-[generate1xButton(buttonWidth)]", options: nil, metrics: ["offsetLeft": 20,"buttonWidth": 180], views: ["generate1xButton": generate1xButton])
         let Vcontraint = NSLayoutConstraint.constraintsWithVisualFormat("V:[generate1xButton]-offsetBottom-|", options: nil, metrics: ["offsetBottom": 8,"buttonHeight": 30], views: ["generate1xButton": generate1xButton])
         
         self.window.contentView.addConstraints(Hcontraint)
@@ -86,18 +85,11 @@ class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, Scr
     }
     
     func generateButtonPressed() {
-        var options : [ScriptOptions]? = [ScriptOptions]()
-        
-        if self.generate1xButton.state == 1 {
-            options?.insert(ScriptOptions.GenerateMissingAssets, atIndex: 0)
-        }
-        self.assetGeneratorController.generateButtonPressed(options)
+        let generateMissingAssets: Bool = Bool(generate1xButton.state)
+        self.assetGeneratorController.generateButtonPressed(generateAssets: generateMissingAssets, args: nil)
         self.updateGenerateButton()
     }
-    
-    func generate1xButtonPressed() {
-        println("Check button state changed: \(self.generate1xButton.state)")
-    }
+
     
     
     // MARK:- Convenience Functions.

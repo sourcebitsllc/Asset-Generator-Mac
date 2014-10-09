@@ -17,7 +17,14 @@ let assetPathKey = "XCAssetGeneratorXcodeAssetsPath"
 // MARK:- Equatable Conformance
 
 func == (lhs: XCProject, rhs: XCProject) -> Bool {
-    return lhs.path == rhs.path && lhs.xcassets?.first?.path == rhs.xcassets?.first?.path
+    return lhs.path == rhs.path && lhs.xcassets?.first? == rhs.xcassets?.first?
+}
+// MARK: Convenience Funcion
+func == (lhs: XCProject?, rhs: XCProject?) -> Bool {
+    switch (lhs, rhs) {
+        case (.Some(let a), .Some(let b)) : return a == b
+        case (_,_): return false
+    }
 }
 //        var proj1: XCProject = self.recentListManager.projectAtIndex(sender.indexOfSelectedItem)!
 //        var proj2: XCProject = self.recentListManager.projectAtIndex(sender.indexOfSelectedItem)!
@@ -25,11 +32,12 @@ func == (lhs: XCProject, rhs: XCProject) -> Bool {
 //        println("Contains? \(contains([proj1], proj2))") // Returns true
 //        println("Find? \(find([proj1], proj2))") // return Optional(0)
 
+// MARK:- Printable Protocol
 extension XCProject: Printable {
     
     var description: String {
         get {
-            return "[\(title)] -- path: \(path), assets: \(self.xcassets?.first?)"
+            return "\(title) -- path: \(path), assets: \(self.xcassets?.first?)"
         }
     }
     
@@ -56,8 +64,14 @@ extension XCProject {
     
     static func projectFromDictionary(dictionary: [String: String]) -> XCProject {
         let path = dictionary[pathKey]!
-        let asset: String? = dictionary[assetPathKey]!.isEmpty ? nil : dictionary[assetPathKey]!
-        return XCProject(path: path, xcassetPath: asset)
+//        let asset: String? = dictionary[assetPathKey]!.isEmpty ? nil : dictionary[assetPathKey]!
+        
+        if dictionary[assetPathKey]!.isEmpty {
+            return XCProject(path: path)
+        } else {
+            let asset = dictionary[assetPathKey]!
+            return XCProject(path: path, xcassetPath: asset)
+        }
     }
     
 }
@@ -72,11 +86,13 @@ struct XCProject: Equatable {
     // MARK:- Initializers
     
     internal init(path: String) {
+        println("initing project with path only")
         self.path = path
         self.xcassets = retrieveAssets(directory: self.XCProjectDirectoryPath())
     }
     
     internal init(path: String, xcassetPath: String?) {
+        println("inting project with path and asset path")
         self.path = path
         
         if let assetpath = xcassetPath {

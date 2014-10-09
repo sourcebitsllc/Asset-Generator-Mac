@@ -60,7 +60,13 @@ class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate
         self.projectToolbarController.browseButtonPressed()
     }
     
-    func generateButtonPressed(options: [ScriptOptions]?) {
+//    func generateButtonPressed(options: [ScriptOptions]?) {
+    func generateButtonPressed(#generateAssets: Bool, args: [AnyObject]?) {
+        var options : [ScriptOptions]? = [ScriptOptions]()
+        
+        if generateAssets {
+            options?.insert(ScriptOptions.GenerateMissingAssets, atIndex: 0)
+        }
         self.scriptController.executeScript(options)
     }
     
