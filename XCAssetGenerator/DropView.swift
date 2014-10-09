@@ -10,6 +10,7 @@ import Cocoa
 
 protocol DropViewDelegate {
     
+    func dropViewShouldAcceptDraggedPath(dropView: DropView, paths: [String]) -> Bool
     func dropViewDidDropFileToView(dropView: DropView, filePath: String)
     func dropViewDidDragValidFileIntoView(dropView: DropView) // Should be called when folder enters drag areas.
     func dropViewDidDragInvalidFileIntoView(dropView: DropView)
@@ -45,13 +46,12 @@ class DropView: NSView {
     
     
     // MARK:- Drag Handlers.
-    // FIXME: The view should know what is valid and what is not. Send it back and let the controller handle that
+    
     override func draggingEntered(sender: NSDraggingInfo!) -> NSDragOperation {
-        let filenames = sender.draggingPasteboard().propertyListForType(NSFilenamesPboardType) as Array<String>
-        let filename = filenames[0]
+        let filenames = sender.draggingPasteboard().propertyListForType(NSFilenamesPboardType) as [String]
+        let acceptDrag: Bool = self.delegate?.dropViewShouldAcceptDraggedPath(self, paths: filenames) ?? false
         
-
-        if PathValidator.directoryExists(path: filename) {
+        if acceptDrag {
             self.delegate?.dropViewDidDragValidFileIntoView(self)
             return NSDragOperation.Copy
         

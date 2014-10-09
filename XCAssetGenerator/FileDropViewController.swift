@@ -123,6 +123,10 @@ class FileDropViewController: NSViewController, DropViewDelegate, ScriptSourcePa
 
     // MARK: - DropViewDelegate required functions.
     
+    func dropViewShouldAcceptDraggedPath(dropView: DropView, paths: [String]) -> Bool {
+        let pathname = paths[0]
+        return PathValidator.directoryExists(path: pathname)
+    }
     
     func dropViewDidDropFileToView(dropView: DropView, filePath: String) {
         self.folderPath = filePath
