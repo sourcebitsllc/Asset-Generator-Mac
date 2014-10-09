@@ -30,6 +30,7 @@ extension ProjectToolbarController {
     }
 }
 
+
 class ProjectToolbarController: NSObject, ScriptDestinationPathDelegate {
 
     var recentProjectsDropdownListView: ProgressPopUpButton!

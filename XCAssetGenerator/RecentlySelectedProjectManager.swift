@@ -36,10 +36,10 @@ class RecentlySelectedProjectManager : NSObject {
         return (self.selectedProject()? != nil) ? self.selectedProject()!.hasValidAssetsPath() : false
     }
     
-    // Returns a sorted list of the titles of the most recently used "projects"
+    // Returns the title of the projects which will appear in the dropdown view
     func recentProjectsTitlesList() -> [String]? {
         return self.recentProjects?.map({ (proj: XCProject) -> String in
-            return proj.title
+            return proj.title + "  > " + proj.assetDirectoryTitle()
         })
     }
     

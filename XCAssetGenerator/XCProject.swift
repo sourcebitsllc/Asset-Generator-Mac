@@ -10,7 +10,7 @@ import Foundation
 
 let pathKey = "XCAssetGeneratorXcodeProjectPath"
 let assetPathKey = "XCAssetGeneratorXcodeAssetsPath"
-
+let invalidAssetTitleDisplay = ""
 // TODO: If we wanted to add support for multiple xcassets, it simple goes here.
 
 
@@ -86,13 +86,11 @@ struct XCProject: Equatable {
     // MARK:- Initializers
     
     internal init(path: String) {
-        println("initing project with path only")
         self.path = path
         self.xcassets = retrieveAssets(directory: self.XCProjectDirectoryPath())
     }
     
     internal init(path: String, xcassetPath: String?) {
-        println("inting project with path and asset path")
         self.path = path
         
         if let assetpath = xcassetPath {
@@ -113,6 +111,10 @@ struct XCProject: Equatable {
     
     
     // MARK:- Convenience functions and helpers.
+    
+    func assetDirectoryTitle() -> String {
+        return self.xcassets?.first?.title ?? invalidAssetTitleDisplay
+    }
     
     func assetDirectoryPath() -> String? {
         return self.xcassets?.first?.path

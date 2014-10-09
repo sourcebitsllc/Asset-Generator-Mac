@@ -86,6 +86,7 @@ class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, Scr
     
     func generateButtonPressed() {
         let generateMissingAssets: Bool = Bool(generate1xButton.state)
+        
         self.assetGeneratorController.generateButtonPressed(generateAssets: generateMissingAssets, args: nil)
         self.updateGenerateButton()
     }
