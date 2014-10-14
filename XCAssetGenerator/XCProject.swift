@@ -23,21 +23,17 @@ func == (lhs: XCProject, rhs: XCProject) -> Bool {
 func == (lhs: XCProject?, rhs: XCProject?) -> Bool {
     switch (lhs, rhs) {
         case (.Some(let a), .Some(let b)) : return a == b
+        case (nil, nil): return true
         case (_,_): return false
     }
 }
-//        var proj1: XCProject = self.recentListManager.projectAtIndex(sender.indexOfSelectedItem)!
-//        var proj2: XCProject = self.recentListManager.projectAtIndex(sender.indexOfSelectedItem)!
-//        println("Equal? \(proj1 == proj2)")  // Return true
-//        println("Contains? \(contains([proj1], proj2))") // Returns true
-//        println("Find? \(find([proj1], proj2))") // return Optional(0)
 
 // MARK:- Printable Protocol
 extension XCProject: Printable {
     
     var description: String {
         get {
-            return "\(title) -- path: \(path), assets: \(self.xcassets?.first?)"
+            return "path: \(path) -> assets: \(self.xcassets?.first?)"
         }
     }
     
@@ -51,7 +47,6 @@ extension XCProject: Printable {
 
 // MARK:- NSUserDefaults compliance extension.
 // Converts the current project into a propertylist Dictionary and initiates project from dictionary content
-
 extension XCProject {
     
     func dictionaryRepresentation() -> [String: String] {
@@ -111,7 +106,7 @@ struct XCProject: Equatable {
     
     
     // MARK:- Convenience functions and helpers.
-    
+    // MARK: XCAsset accessors.
     func assetDirectoryTitle() -> String {
         return self.xcassets?.first?.title ?? invalidAssetTitleDisplay
     }

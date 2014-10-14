@@ -14,8 +14,13 @@ func == (lhs: XCAsset, rhs: XCAsset) -> Bool {
 
 func == (lhs: XCAsset?, rhs: XCAsset?) -> Bool {
     switch (lhs, rhs) {
-        case (.Some(let a), .Some(let b)) : return a == b
-        case (_,_): return false
+        case (.Some(let a), .Some(let b)) :
+            return a == b
+        case (nil,nil) :
+            // Exteremely argueble. Im not sure how i ended in this rabbit hole.
+            return true
+        case (_,_):
+            return false
     }
 }
 
@@ -24,7 +29,7 @@ extension XCAsset: Printable {
     
     var description: String {
         get {
-            return "\(self.title) -- asset path: \(self.path),"
+            return "\(self.path)"
         }
     }
     
