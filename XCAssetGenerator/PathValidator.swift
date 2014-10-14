@@ -23,7 +23,7 @@ class PathValidator {
         task.standardOutput = pipe
         task.launch()
         
-        var string: String = NSString(data: pipe.fileHandleForReading.readDataToEndOfFile(), encoding:NSUTF8StringEncoding)
+        var string: String = NSString(data: pipe.fileHandleForReading.readDataToEndOfFile(), encoding:NSUTF8StringEncoding)!
         
         // No directories inside path = no directory which contains a dot = valid = return true
         if string.isEmpty {
@@ -48,7 +48,7 @@ class PathValidator {
     }
     
     class func directoryExists(#path: String) -> Bool {
-        var isDirectory: ObjCBool = ObjCBool(0)
+        var isDirectory: ObjCBool = ObjCBool(false)
         NSFileManager.defaultManager().fileExistsAtPath(path, isDirectory: &isDirectory)
         
         return isDirectory.boolValue

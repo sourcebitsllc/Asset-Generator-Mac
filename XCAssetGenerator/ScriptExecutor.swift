@@ -63,10 +63,9 @@ class ScriptExecutor: NSObject {
             NSNotificationCenter.defaultCenter().addObserverForName(NSFileHandleDataAvailableNotification, object: pipe.fileHandleForReading, queue: nil) { (notification: NSNotification!) -> Void in
                 
                 dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                    var echo = NSString(data: pipe.fileHandleForReading.availableData, encoding: NSUTF8StringEncoding)
-
-                    if echo.containsString("progress:") {
-                        println("echo: \(echo)")
+                    var echo: String = NSString(data: pipe.fileHandleForReading.availableData, encoding: NSUTF8StringEncoding)!
+                    
+                    if echo.hasPrefix("progress:") {
                         var progress = echo.stringByReplacingOccurrencesOfString("progress:", withString: "")
                         
                         // If we yanked more than progress line, remove the rest.

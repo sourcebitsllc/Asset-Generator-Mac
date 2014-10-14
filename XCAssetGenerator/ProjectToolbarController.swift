@@ -55,7 +55,7 @@ class ProjectToolbarController: NSObject, ScriptDestinationPathDelegate {
         self.recentProjectsDropdownListView.progressColor = NSColor(calibratedRed: 0.047, green: 0.261, blue: 0.993, alpha: 1)
         if (self.recentListManager.recentProjectsCount() > 0) {
             self.enableDropdownList()
-            self.recentProjectsDropdownListView.addItemsWithTitles(self.recentListManager.recentProjectsTitlesList())
+            self.recentProjectsDropdownListView.addItemsWithTitles(self.recentListManager.recentProjectsTitlesList()!)
         } else {
             self.disableDropdownList()
         }
@@ -82,7 +82,7 @@ class ProjectToolbarController: NSObject, ScriptDestinationPathDelegate {
         panel.beginWithCompletionHandler() { (handler: Int) -> Void in
             if handler == NSFileHandlingPanelOKButton {
                 
-                self.addNewProject(path: self.panel.URL.path!)
+                self.addNewProject(path: self.panel.URL!.path!)
             }
         }
     }
@@ -94,15 +94,16 @@ class ProjectToolbarController: NSObject, ScriptDestinationPathDelegate {
     // TODO: Why do we remove all items? its the recentUsedProjectsManager to maintain order for its cache. So either trust its decisions or dont use it.
     private func updateRecentUsedProjectsDropdownView() {
         self.recentProjectsDropdownListView.removeAllItems()
-        self.recentProjectsDropdownListView.addItemsWithTitles(self.recentListManager.recentProjectsTitlesList())
-        self.recentProjectsDropdownListView.selectItemAtIndex(0)
+        if let titles = self.recentListManager.recentProjectsTitlesList() {
+            self.recentProjectsDropdownListView.addItemsWithTitles(titles)
+            self.recentProjectsDropdownListView.selectItemAtIndex(0)
+        }
         
     }
     
     // TODO: the two function below have the same "funcionality". Think of parametric polymorphism to integrate them
     private func updateRecentProjectsList(#index: Int){
         if self.recentListManager.projectAtIndex(index) != self.recentListManager.selectedProject()? {
-            
             self.recentListManager.addProject(project: self.recentListManager.projectAtIndex(index)!)
             self.updateRecentUsedProjectsDropdownView()
             self.delegate?.projectToolbarDidChangeProject(self.recentListManager.selectedProject())
@@ -142,7 +143,6 @@ class ProjectToolbarController: NSObject, ScriptDestinationPathDelegate {
     }
     
     func hasValidDestinationProject() -> Bool {
-        println(self.recentListManager.selectedProject())
         return self.recentListManager.isSelectedProjectValid() && self.recentListManager.selectedProject()!.hasValidAssetsPath()
     }
     

@@ -23,7 +23,7 @@ class ProgressPopUpButton: NSPopUpButton {
     
     // MARK:- Initializers.
     
-    required init(coder: NSCoder!) {
+    required init?(coder: NSCoder) {
         println("Coder init")
         maxValue = 100
         minValue = 0

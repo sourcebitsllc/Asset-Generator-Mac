@@ -22,7 +22,7 @@ class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate
     
     private var timer: NSTimer = NSTimer()
     
-    required init(coder: NSCoder!) {
+    required init?(coder: NSCoder) {
         scriptController = ScriptController()
         super.init(coder: coder)
     }
@@ -37,7 +37,7 @@ class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate
         super.viewDidLoad()
        // TODO: Find better way to connect containerController to local var. sigh.
 //      self.fileDropController = self.childViewControllers.first! as FileDropViewController
-//        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("hello"), name: "NSApplicationDidBecomeActiveNotification", object: nil)
+
     }
     
     func controllerDidBecomeActive() {
@@ -60,7 +60,6 @@ class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate
         self.projectToolbarController.browseButtonPressed()
     }
     
-//    func generateButtonPressed(options: [ScriptOptions]?) {
     func generateButtonPressed(#generateAssets: Bool, args: [AnyObject]?) {
         var options : [ScriptOptions]? = [ScriptOptions]()
         
@@ -77,7 +76,7 @@ class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate
     
     // MARK: - Segues functions
     // Is this better?
-    override func prepareForSegue(segue: NSStoryboardSegue!, sender: AnyObject!) {
+    override func prepareForSegue(segue: NSStoryboardSegue, sender: AnyObject!) {
         if segue.identifier == "embeddedContainer" {
             self.fileDropController = segue.destinationController as FileDropViewController
             self.fileDropController.delegate = self
@@ -105,6 +104,7 @@ class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate
     
     // MARK:- ProjectToolbar Delegate
     func projectToolbarDidChangeProject(project: XCProject?) {
+        println("ProjectToolbar did change delegate: \(project)")
         if let p = project {
             self.parametersDelegate?.scriptParametersChanged(self)
             if !p.hasValidAssetsPath() {

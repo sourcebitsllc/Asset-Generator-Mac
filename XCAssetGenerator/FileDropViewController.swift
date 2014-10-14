@@ -39,7 +39,7 @@ class FileDropViewController: NSViewController, DropViewDelegate, ScriptSourcePa
     private var folderPath : String?
     
     
-    required init(coder: NSCoder!) {
+    required init?(coder: NSCoder) {
         super.init(coder: coder)
     }
     
@@ -79,7 +79,7 @@ class FileDropViewController: NSViewController, DropViewDelegate, ScriptSourcePa
             self.detailLabel.stringValue = "Hovering Detail Label"
         case .SuccessfulDropState:
             self.dropImageView.image     = NSImage(named: "DropfileSuccessState")
-            self.pathLabel.stringValue   = self.folderPath
+            self.pathLabel.stringValue   = self.folderPath ?? ""
             self.detailLabel.stringValue = "Successful Drop Detail Label"
         case .InvalidDropState:
             self.pathLabel.stringValue   = "Invalid Drop"
