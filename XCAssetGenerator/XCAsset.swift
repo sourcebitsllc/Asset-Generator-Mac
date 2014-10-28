@@ -14,13 +14,9 @@ func == (lhs: XCAsset, rhs: XCAsset) -> Bool {
 
 func == (lhs: XCAsset?, rhs: XCAsset?) -> Bool {
     switch (lhs, rhs) {
-        case (.Some(let a), .Some(let b)) :
-            return a == b
-        case (nil,nil) :
-            // Exteremely argueble. Im not sure how i ended in this rabbit hole.
-            return true
-        case (_,_):
-            return false
+        case (.Some(let a), .Some(let b)): return a == b
+        case (.None,.None): return true
+        case (_,_): return false
     }
 }
 
@@ -46,7 +42,6 @@ struct XCAsset: Equatable {
     
     init (path aPath: String) {
         path = aPath
-//        println(path)
     }
     
 

@@ -96,6 +96,7 @@ class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate
         if PathValidator.directoryContainsInvalidCharacters(path: path, options: nil) {
             println("WARNING: THE SOURCE PATH CONTAINS DODO. I REPEAT, THE SOURCE PATH CONTAINS A DODO")
             println("REASON: FOUND A SUBDIRECTORY WHICH CONTAINS A DOT..... DOT..DOT..")
+            NSLog("HELLO")
         }
         self.parametersDelegate?.scriptParametersChanged(self)
     }

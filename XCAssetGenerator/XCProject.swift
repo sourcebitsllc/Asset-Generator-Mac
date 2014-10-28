@@ -23,7 +23,7 @@ func == (lhs: XCProject, rhs: XCProject) -> Bool {
 func == (lhs: XCProject?, rhs: XCProject?) -> Bool {
     switch (lhs, rhs) {
         case (.Some(let a), .Some(let b)) : return a == b
-        case (nil, nil): return true
+        case (.None,.None): return true
         case (_,_): return false
     }
 }

@@ -35,6 +35,7 @@ class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, Scr
         self.assetGeneratorController = self.contentViewController as AssetGeneratorViewController
         self.assetGeneratorController.setRecentListDropdown(self.recentlyUsedProjectsDropdownList)
         self.assetGeneratorController.parametersDelegate = self
+        
         self.buttonSetup()
     }
     
@@ -60,11 +61,11 @@ class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, Scr
         let contraintH = NSLayoutConstraint.constraintsWithVisualFormat("H:[generateButton(buttonWidth)]-offsetLeft-|", options: nil, metrics: ["offsetLeft": 10,"buttonWidth": 90], views: ["generateButton": generateButton])
         let contraintV = NSLayoutConstraint.constraintsWithVisualFormat("V:[generateButton]-offsetBottom-|", options: nil, metrics: ["offsetBottom": 8], views: ["generateButton": generateButton])
         
-        self.window!.contentView!.addConstraints(contraintH)
-        self.window!.contentView!.addConstraints(contraintV)
+        self.window?.contentView?.addConstraints(contraintH)
+        self.window?.contentView?.addConstraints(contraintV)
         
         // Generate1x Radio button Setup
-        self.generate1xButton.title                 = "Create @1x, @2x"
+        self.generate1xButton.title                 = "Generate Missing Assets"
         self.generate1xButton.state                 = 0
         self.generate1xButton.target                = self
         self.generate1xButton.bordered              = false
@@ -80,8 +81,9 @@ class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, Scr
         let Hcontraint = NSLayoutConstraint.constraintsWithVisualFormat("H:|-offsetLeft-[generate1xButton(buttonWidth)]", options: nil, metrics: ["offsetLeft": 20,"buttonWidth": 180], views: ["generate1xButton": generate1xButton])
         let Vcontraint = NSLayoutConstraint.constraintsWithVisualFormat("V:[generate1xButton]-offsetBottom-|", options: nil, metrics: ["offsetBottom": 8,"buttonHeight": 30], views: ["generate1xButton": generate1xButton])
         
-        self.window!.contentView!.addConstraints(Hcontraint)
-        self.window!.contentView!.addConstraints(Vcontraint)
+        self.window?.contentView?.addConstraints(Hcontraint)
+        self.window?.contentView?.addConstraints(Vcontraint)
+        
     }
     
     func generateButtonPressed() {
