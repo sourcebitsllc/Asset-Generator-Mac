@@ -49,24 +49,51 @@ extension XCProject: Printable {
 // Converts the current project into a propertylist Dictionary and initiates project from dictionary content
 extension XCProject {
     
-    func dictionaryRepresentation() -> [String: String] {
-        return [pathKey: self.path, assetPathKey: self.xcassets?.first?.path ?? ""]
+    func dictionaryRepresentation() -> [String: NSData] {
+        if let assets = xcassets {
+            var assetsAsDataArray: [NSData] = assets.map({ (asset: XCAsset) -> NSData in
+                return asset.data
+            })
+            var assetsData = NSKeyedArchiver.archivedDataWithRootObject(assetsAsDataArray)
+            return [pathKey: self.pathData, assetPathKey: assetsData]
+        } else {
+            return [pathKey: self.pathData, assetPathKey: NSData() ]
+        }
+        
     }
     
-    func userDefaultsDictionaryRepresentation() -> [NSString: NSString] {
+    func userDefaultsDictionaryRepresentation() -> [NSString: NSData] {
         return self.dictionaryRepresentation()
     }
     
-    static func projectFromDictionary(dictionary: [String: String]) -> XCProject {
+    static func projectFromDictionary(dictionary: [String: NSData]) -> XCProject {
         let path = dictionary[pathKey]!
 //        let asset: String? = dictionary[assetPathKey]!.isEmpty ? nil : dictionary[assetPathKey]!
         
-        if dictionary[assetPathKey]!.isEmpty {
-            return XCProject(path: path)
+        if let assetsData: NSData = dictionary[assetPathKey] {
+            
+            let emptyDataTester = NSData()
+            
+            if assetsData.isEqualToData(emptyDataTester) == false {
+                let assetsAsData = NSKeyedUnarchiver.unarchiveObjectWithData(assetsData) as [NSData]
+                let XCAssets = assetsAsData.map({ (data: NSData) -> XCAsset in
+                    return XCAsset(data: data)
+                })
+                return XCProject(data: path, xcassets: XCAssets)
+            
+            } else {
+                return XCProject(data: path)
+            }
+        
         } else {
-            let asset = dictionary[assetPathKey]!
-            return XCProject(path: path, xcassetPath: asset)
+            return XCProject(data: path)
         }
+//        if dictionary[assetPathKey]!.isEmpty {
+//            return XCProject(path: path)
+//        } else {
+//            let asset = dictionary[assetPathKey]!
+//            return XCProject(path: path, xcassetPath: asset)
+//        }
     }
     
 }
@@ -74,27 +101,53 @@ extension XCProject {
 // MARK:-
 struct XCProject: Equatable {
     
-    var path: String
+    var path: String {
+        get {
+            var url = NSURL(byResolvingBookmarkData: self.pathData, options: NSURLBookmarkResolutionOptions.WithoutMounting, relativeToURL: nil, bookmarkDataIsStale: nil, error: nil)
+            
+            return url!.path! // This cannot be nil. If it is, catastrophe.
+//            if let p = url {
+//                return p.path!
+//            } else {
+//                return ""
+//            }
+        }
+    }
+    var pathData : NSData
     private var xcassets: [XCAsset]?
     
     
     // MARK:- Initializers
     
-    internal init(path: String) {
-        self.path = path
+//    internal init(path: String) {
+//        self.path = path
+//        self.xcassets = retrieveAssets(directory: self.XCProjectDirectoryPath())
+//    }
+    
+    internal init(data: NSData) {
+        self.pathData = data
         self.xcassets = retrieveAssets(directory: self.XCProjectDirectoryPath())
     }
     
-    internal init(path: String, xcassetPath: String?) {
-        self.path = path
-        
-        if let assetpath = xcassetPath {
-            self.xcassets = [XCAsset(path: assetpath)]
-        }
-    }
+//    internal init(path: String, xcassetPath: String?) {
+//        self.path = path
+//        
+//        if let assetpath = xcassetPath {
+//            self.xcassets = [XCAsset(path: assetpath)]
+//        }
+//    }
     
-    internal init(path: String, xcassets: [XCAsset]?) {
-        self.path = path
+//    internal init(path: String, xcassets: [XCAsset]?) {
+//        self.path = path
+//        
+//        if let assets = xcassets {
+//            self.xcassets = assets
+//        } else {
+//            self.xcassets = nil
+//        }
+//    }
+    internal init(data: NSData, xcassets: [XCAsset]?) {
+        self.pathData = data
         
         if let assets = xcassets {
             self.xcassets = assets
@@ -120,7 +173,6 @@ struct XCProject: Equatable {
     }
     
 
-    
     mutating private func retrieveAssets(#directory: String) -> [XCAsset]? {
         var task: NSTask = NSTask()
         var pipe = NSPipe()
@@ -136,7 +188,10 @@ struct XCProject: Equatable {
         let assetPath: String? = string.isEmpty ? nil : string.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString: "\n")).first
         // If string not empty, convert it into an array and get the first value.
         if let path = assetPath {
-            return [XCAsset(path: path)]
+            let url: NSURL = NSURL(fileURLWithPath: path, isDirectory: true)!
+            var data: NSData = url.bookmarkDataWithOptions(NSURLBookmarkCreationOptions.SuitableForBookmarkFile, includingResourceValuesForKeys: nil, relativeToURL: nil, error: nil)!
+            
+            return [XCAsset(data: data)]
         } else {
             return nil
         }

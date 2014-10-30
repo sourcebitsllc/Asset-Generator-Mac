@@ -82,7 +82,7 @@ class ProjectToolbarController: NSObject, ScriptDestinationPathDelegate {
         panel.beginWithCompletionHandler() { (handler: Int) -> Void in
             if handler == NSFileHandlingPanelOKButton {
                 
-                self.addNewProject(path: self.panel.URL!.path!)
+                self.addNewProject(url: self.panel.URL!)
             }
         }
     }
@@ -110,8 +110,8 @@ class ProjectToolbarController: NSObject, ScriptDestinationPathDelegate {
         }
     }
     
-    private func addNewProject(#path: String) {
-        self.recentListManager.addProject(path: path)
+    private func addNewProject(#url: NSURL) {
+        self.recentListManager.addProject(url: url)
         self.updateRecentUsedProjectsDropdownView()
         
         if !self.recentProjectsDropdownListView.enabled {

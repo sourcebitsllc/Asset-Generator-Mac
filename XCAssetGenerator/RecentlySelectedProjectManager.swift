@@ -47,6 +47,14 @@ class RecentlySelectedProjectManager : NSObject {
         return self.recentProjects?.count ?? 0
     }
     
+    func removeProject(#project: XCProject) {
+        if let projectsList = recentProjects {
+            
+            if let index: Int = find(projectsList, project) {
+                recentProjects!.removeAtIndex(index)
+            }
+        }
+    }
     
     // TODO: Too much state manipulation. fix it buddy yea? HEY? fix it.
     // TODO: ......
@@ -70,8 +78,13 @@ class RecentlySelectedProjectManager : NSObject {
         self.storeRecentProjects()
     }
     
-    func addProject(#path: String) {
-        addProject(project: XCProject(path: path))
+//    func addProject(#path: String) {
+//        addProject(project: XCProject(path: path))
+//    }
+    
+    func addProject(#url: NSURL) {
+        var data: NSData = url.bookmarkDataWithOptions(NSURLBookmarkCreationOptions.SuitableForBookmarkFile, includingResourceValuesForKeys: nil, relativeToURL: nil, error: nil)!
+        addProject(project: XCProject(data: data))
     }
     
     
@@ -79,7 +92,7 @@ class RecentlySelectedProjectManager : NSObject {
     // MARK:- Convenience functions
     // TODO: Find better hooks for these calls.
     func storeRecentProjects() {
-        let projects = self.recentProjects?.map({ (proj: XCProject) -> [NSString: NSString] in
+        let projects = self.recentProjects?.map({ (proj: XCProject) -> [NSString: NSData] in
             return proj.userDefaultsDictionaryRepresentation()
         })
         NSUserDefaults.standardUserDefaults().setObject(projects, forKey: kRecentProjectsKey)
@@ -89,11 +102,11 @@ class RecentlySelectedProjectManager : NSObject {
         let projectDicts = NSUserDefaults.standardUserDefaults().objectForKey(kRecentProjectsKey) as? [NSDictionary]
         
        self.recentProjects = projectDicts?.map({ (a: NSDictionary) -> XCProject in
-            return XCProject.projectFromDictionary(a as [String: String])
+            return XCProject.projectFromDictionary(a as [String: NSData])
         })
     }
     
-    func flushStoredProjects() {
+    private func flushStoredProjects() {
         NSUserDefaults.standardUserDefaults().removeObjectForKey(kRecentProjectsKey)
     }
     

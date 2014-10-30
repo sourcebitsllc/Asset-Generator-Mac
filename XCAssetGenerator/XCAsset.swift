@@ -38,10 +38,28 @@ extension XCAsset: Printable {
 
 
 struct XCAsset: Equatable {
-    var path: String
+    var data: NSData
     
-    init (path aPath: String) {
-        path = aPath
+    var path: String {
+        get {
+            var url = NSURL(byResolvingBookmarkData: self.data, options: NSURLBookmarkResolutionOptions.WithoutMounting, relativeToURL: nil, bookmarkDataIsStale: nil, error: nil)
+            
+            if let p = url {
+                return p.path!
+            } else {
+                return ""
+            }
+            
+        }
+    }
+    
+    
+//    init (path aPath: String) {
+//        path = aPath
+//    }
+    
+    init (data aData: NSData) {
+        data = aData
     }
     
 
