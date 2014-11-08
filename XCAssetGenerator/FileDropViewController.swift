@@ -13,8 +13,8 @@ let kBottomBarHeight: CGFloat = 30
 
 
 protocol FileDropControllerDelegate {
-    func fileDropControllerDidSetSourcePath(controller: FileDropViewController, path: String)
-    func fileDropControllerDidRemoveSourcePath(controller: FileDropViewController)
+    func fileDropControllerDidSetSourcePath(controller: FileDropViewController, path: String, previousPath: String?)
+    func fileDropControllerDidRemoveSourcePath(controller: FileDropViewController, removedPath: String)
 }
 
 enum DropViewState {
@@ -32,6 +32,7 @@ class FileDropViewController: NSViewController, DropViewDelegate, ScriptSourcePa
     @IBOutlet var detailLabel: NSTextField!
     
     var delegate: FileDropControllerDelegate?
+    var directoryObserver: SourceObserver!
     
     var dropImageView: NSImageView!
     var center: CGPoint!
@@ -40,6 +41,7 @@ class FileDropViewController: NSViewController, DropViewDelegate, ScriptSourcePa
     
     
     required init?(coder: NSCoder) {
+        
         super.init(coder: coder)
     }
     
@@ -55,15 +57,47 @@ class FileDropViewController: NSViewController, DropViewDelegate, ScriptSourcePa
         
         self.dropView.addSubview(self.dropImageView)
         
-        var centerX: NSLayoutConstraint = NSLayoutConstraint(item: self.dropImageView, attribute: NSLayoutAttribute.CenterX, relatedBy: NSLayoutRelation.Equal, toItem: self.dropView, attribute: NSLayoutAttribute.CenterX, multiplier: 1, constant: 0)
+        let centerX: NSLayoutConstraint = NSLayoutConstraint(item: self.dropImageView, attribute: NSLayoutAttribute.CenterX, relatedBy: NSLayoutRelation.Equal, toItem: self.dropView, attribute: NSLayoutAttribute.CenterX, multiplier: 1, constant: 0)
        
-        var centerY: NSLayoutConstraint = NSLayoutConstraint(item: self.dropImageView, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: self.dropView, attribute: NSLayoutAttribute.CenterY, multiplier: 0.8, constant: 0)
+        let centerY: NSLayoutConstraint = NSLayoutConstraint(item: self.dropImageView, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: self.dropView, attribute: NSLayoutAttribute.CenterY, multiplier: 0.8, constant: 0)
         
         self.dropView.addConstraint(centerX)
         self.dropView.addConstraint(centerY)
         self.dropView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[imageView(imageWidth)]", options: nil, metrics: ["imageWidth": 150], views: ["imageView": self.dropImageView]))
          self.dropView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[imageView(imageHeight)]", options: nil, metrics: ["imageHeight": 150], views: ["imageView": self.dropImageView]))
         
+        // Observing the File System Setup.
+        let sourceClosure: DirectoryObserver.SourceDirectoryObserverClosure = { (operation: FileSystemOperation, oldPath: String!, newPath: String!) -> Void in
+            switch operation {
+                
+            case FileSystemOperation.DirectoryRenamed:
+                
+                // Stop observing the old path, and observe the new path using the same callback.
+                self.directoryObserver.updatePathForObserver(oldPath: oldPath, newPath: newPath)
+                // Set the new path and update the state.
+                self.folderPath = newPath
+                self.updateDropView(state: DropViewState.SuccessfulDropState)
+                
+            case FileSystemOperation.DirectoryDeleted:
+                
+                self.updateDropView(state: DropViewState.PathNoLongerExistsState)
+                self.directoryObserver.stopObservingPath(oldPath)
+                self.folderPath = nil
+                self.delegate?.fileDropControllerDidRemoveSourcePath(self, removedPath: oldPath)
+                
+            case FileSystemOperation.DirectoryInitializationFailedAsPathDoesNotExist:
+                println("Initialization failed cause the path we want to observe does not exist")
+                
+            case FileSystemOperation.DirectoryUnknownOperationForUnresolvedPath:
+                println("We couldnt open the filde to process the change operation")
+                
+            default:
+                break;
+            }
+            
+        }
+        
+        directoryObserver = SourceObserver(sourceObserver: sourceClosure)
     }
     
     
@@ -86,7 +120,7 @@ class FileDropViewController: NSViewController, DropViewDelegate, ScriptSourcePa
             self.detailLabel.stringValue = "Invalid Drop Detail Label"
         case .PathNoLongerExistsState:
             self.dropImageView.image     = nil
-            self.pathLabel.stringValue   = "Directory no longer exists"
+            self.pathLabel.stringValue   = self.folderPath ?? "Directory no longer exists"
             self.detailLabel.stringValue = "Directory no longer exists Detail Label"
         }
     }
@@ -129,10 +163,15 @@ class FileDropViewController: NSViewController, DropViewDelegate, ScriptSourcePa
     }
     
     func dropViewDidDropFileToView(dropView: DropView, filePath: String) {
+        let old = self.folderPath
         self.folderPath = filePath
+        
         self.updateDropView(state: DropViewState.SuccessfulDropState)
-    
-        self.delegate?.fileDropControllerDidSetSourcePath(self,path: self.folderPath!)
+        
+        self.directoryObserver.observeSource(filePath)
+        
+        self.delegate?.fileDropControllerDidSetSourcePath(self,path: self.folderPath!, previousPath: old)
+        
     }
     
     
