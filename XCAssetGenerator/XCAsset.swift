@@ -37,30 +37,31 @@ extension XCAsset: Printable {
 }
 
 
+
+// The bookmark data canot be invalid in here. It doesnt make sense for an XCAsset to not exist.
+// So, invalid data = crash. Protect.Yo.Self.
 struct XCAsset: Equatable {
     var data: NSData
     
-    var path: String {
+    internal private(set) var path: String {
         get {
-            var url = NSURL(byResolvingBookmarkData: self.data, options: NSURLBookmarkResolutionOptions.WithoutMounting, relativeToURL: nil, bookmarkDataIsStale: nil, error: nil)
-            
-            if let p = url {
-                return p.path!
-            } else {
-                return ""
-            }
-            
+            // This may be not ideal; we can just access the string property. But its better to get the "truth" directly from its source.
+            return PathBookmarkResolver.resolvePathFromBookmark(self.data)!
         }
+        
+        set {
+            path = newValue
+        }
+        
     }
-    
-    
-//    init (path aPath: String) {
-//        path = aPath
-//    }
     
     init (data aData: NSData) {
         data = aData
     }
     
-
+    init (data aData: NSData, path aPath: String) {
+        data = aData
+        path = aPath
+    }
+    
 }

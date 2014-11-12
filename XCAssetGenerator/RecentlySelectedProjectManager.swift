@@ -18,7 +18,7 @@ class RecentlySelectedProjectManager : NSObject {
     
     required override init() {
         super.init()
-//        self.flushStoredProjects()
+        self.flushStoredProjects()
         self.loadRecentProjects()
     }
     
@@ -31,9 +31,23 @@ class RecentlySelectedProjectManager : NSObject {
         return recentProjects?[index]
     }
     
+    func indexOfProject(project: XCProject) -> Int? {
+        if let recent = self.recentProjects {
+            return find(recent, project)
+        } else {
+            return nil
+        }
+    }
+    
+    // Return whether the selected project is suitable for script execution
     // Returns true if the selected project contains a xcasset folder.
     func isSelectedProjectValid() -> Bool {
-        return (self.selectedProject()? != nil) ? self.selectedProject()!.hasValidAssetsPath() : false
+        return (self.selectedProject()? != nil) ? self.isProjectValid(self.selectedProject()!) && self.selectedProject()!.hasValidAssetsPath() : false
+    }
+    
+    // Returns whether a project _can_ exist.
+    private func isProjectValid(project: XCProject) -> Bool {
+        return PathBookmarkResolver.isBookmarkValid(project.pathBookmark)
     }
     
     // Returns the title of the projects which will appear in the dropdown view
@@ -45,6 +59,10 @@ class RecentlySelectedProjectManager : NSObject {
     
     func recentProjectsCount() -> Int {
         return self.recentProjects?.count ?? 0
+    }
+    
+    func projects() -> [XCProject]? {
+        return self.recentProjects
     }
     
     func removeProject(#project: XCProject) {
@@ -61,15 +79,19 @@ class RecentlySelectedProjectManager : NSObject {
     // TODO: ...... Terrible .......
     // FIXME:
     func addProject(project newProject: XCProject) {
+        self.addProject(project: newProject, index: 0)
+    }
+    
+    func addProject(project newProject: XCProject, index: Int) {
         if let projectsList = recentProjects {
-        
+            
             if let index: Int = find(projectsList, newProject) {
                 recentProjects!.removeAtIndex(index)
             }
             if projectsList.count == MaximumCacheCapacity {
                 recentProjects!.removeLast()
             }
-            recentProjects!.insert(newProject, atIndex: 0)
+            recentProjects!.insert(newProject, atIndex: index)
             
         } else {
             recentProjects = [newProject]
@@ -77,17 +99,68 @@ class RecentlySelectedProjectManager : NSObject {
         
         self.storeRecentProjects()
     }
-    
 //    func addProject(#path: String) {
 //        addProject(project: XCProject(path: path))
 //    }
     
     func addProject(#url: NSURL) {
-        var data: NSData = url.bookmarkDataWithOptions(NSURLBookmarkCreationOptions.SuitableForBookmarkFile, includingResourceValuesForKeys: nil, relativeToURL: nil, error: nil)!
+        var data: NSData = PathBookmarkResolver.resolveBookmarkFromURL(url)
         addProject(project: XCProject(data: data))
     }
     
+    func recentProjectWithAsset(path: String) -> XCProject? {
+        let matches: [XCProject]? = self.recentProjects?.filter({ (project: XCProject) -> Bool in
+            
+            if project.assetDirectoryPath() == path {
+                return true
+            } else {
+                return false
+            }
+            
+        })
+        
+        if matches?.count > 1 {
+            println("Houston, we have a problem. Found multiple projects. with the same fucking asset path; which is not possible btw,")
+        }
+        
+        return matches?.first
+    }
     
+    func recentProjectWithPath(path: String) -> XCProject? {
+        let matches: [XCProject]? = self.recentProjects?.filter({ (project: XCProject) -> Bool in
+            if project.path == path {
+                return true
+            } else {
+                return false
+            }
+            
+        })
+        
+        if matches?.count > 1 {
+            println("Houston, we have a problem. Found multiple projects. with the same fucking asset path; which is not possible btw,")
+        }
+        
+        return matches?.first
+    }
+    
+    func cullStaleProjects() -> Void {
+        self.recentProjects =  self.recentProjects?.filter({ (project: XCProject) -> Bool in
+            return self.isProjectValid(project)
+        })
+        
+        self.storeRecentProjects()
+    }
+    
+    func cullStaleAssets() -> Void {
+        self.recentProjects =  self.recentProjects?.filter({ (project: XCProject) -> Bool in
+            return project.hasValidAssetsPath()
+        })
+        
+        self.storeRecentProjects()
+        
+    }
+
+ 
     
     // MARK:- Convenience functions
     // TODO: Find better hooks for these calls.
