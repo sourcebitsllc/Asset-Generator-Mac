@@ -111,11 +111,11 @@ createImagesets() {
 }
 
 generateAssets() {
-	echo "LOL"
-	find "$TEMPFULLPATH" \( -name "*@2x*.png" -o -name "*@3x*.png" \) -print0 | while read -d $'\0' -r i ; do 
+	find "$TEMPFULLPATH" \( -name "*@2x*.png" -o -name "*@3x*.png" \) -print0 | while read -d $'\0' -r i ; do
 		# echo "$i"
 		imageName=`basename "$i"`
 		imagePath=`dirname "$i"`
+        echo
 		if [[ "$imageName" == *@3x* ]] ; then
 			name2x=${imageName/@3x/@2x}
 			name1x=${imageName/@3x/}
@@ -151,9 +151,10 @@ generate1xFrom2x() {
 	# Get the images' dimensions, half them, then create new image with new dimensions.
 	width=`sips -g pixelWidth "$a" | tail -n1 | cut -d' ' -f4`;
     height=`sips -g pixelHeight "$a" | tail -n1 | cut -d' ' -f4`;
-    width=$(expr $width / 2);
-    height=$(expr $height / 2);
-    # sips "$d" -z $height $width --out "${d/@2x/}" #> /dev/null;
+#    width=$(expr $width / 2);
+#    height=$(expr $height / 2);
+    width=`bc -l <<< "$width/2"`
+    height=`bc -l <<< "$height/2"`
     sips -z $height $width "$a" > /dev/null;
     # sips -s format png $IMG --out Converted/${IMG_BASENAME%%.jpg}.png
 }
@@ -166,9 +167,10 @@ generate2xFrom3x() {
 	# Get the images' dimensions, half them, then create new image with new dimensions.
 	width=`sips -g pixelWidth "$a" | tail -n1 | cut -d' ' -f4`;
     height=`sips -g pixelHeight "$a" | tail -n1 | cut -d' ' -f4`;
-    width=$(expr $width / 1.5);
-    height=$(expr $height / 1.5);
-    
+#    width=$(expr $width / 1.5);
+#    height=$(expr $height / 1.5);
+	width=`bc -l <<< "$width/1.5"`
+	height=`bc -l <<< "$height/1.5"`
     sips -z $height $width "$a" > /dev/null;
 }
 
@@ -180,9 +182,11 @@ generate1xFrom3x() {
 	# Get the images' dimensions, half them, then create new image with new dimensions.
 	width=`sips -g pixelWidth "$a" | tail -n1 | cut -d' ' -f4`;
     height=`sips -g pixelHeight "$a" | tail -n1 | cut -d' ' -f4`;
-    width=$(expr $width / 3);
-    height=$(expr $height / 3);
-    
+#    width=$(expr $width / 3);
+#    height=$(expr $height / 3);
+    width=`bc -l <<< "$width/3"`
+    height=`bc -l <<< "$height/3"`
+
     sips -z $height $width "$a" > /dev/null;
 }
 
@@ -487,7 +491,7 @@ echo "progress:95"
 
 # Cull the temp directory after finishing.
 echo "7: Delete Temp";
-# deleteTempDirectory;
+ deleteTempDirectory;
 
 echo "progress:100"
 
