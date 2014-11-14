@@ -13,6 +13,7 @@ typedef NS_ENUM(NSUInteger, FileSystemOperation) {
     FileSystemDirectoryDeleted,
     FileSystemDirectoryRenamed,
     FileSystemDirectoryContentChanged,
+    FileSystemDirectoryBazookad,
     FileSystemDirectoryInitializationFailedAsPathDoesNotExist,
     FileSystemDirectoryUnknownOperationForUnresolvedPath
 };
@@ -24,7 +25,7 @@ typedef void(^FileSystemObserverBlock)(FileSystemOperation, NSString *, NSString
 
 - (void)addObserverForPath:(NSString *)path handler:(FileSystemObserverBlock)directoryBlock;
 - (void)replacePathForObserversFrom:(NSString *)originalPath To:(NSString *)newPath;
-- (NSString *)pathForBlock:(FileSystemObserverBlock)block;
+//- (NSString *)pathForBlock:(FileSystemObserverBlock)block;
 /*
   Description: 
         Remove the path and continue observing the other paths.
@@ -33,5 +34,8 @@ typedef void(^FileSystemObserverBlock)(FileSystemOperation, NSString *, NSString
 - (void)removeObserverForPath:(NSString *)path restartStream:(BOOL)restart;
 - (void)removeAllObservers;
 - (void)stopStream;
+
+// Debug
+-(void)debugPathsBeingObserved;
 
 @end

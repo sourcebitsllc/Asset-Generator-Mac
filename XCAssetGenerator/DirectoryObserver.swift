@@ -9,6 +9,10 @@
 // Maybe have a base class with all the proper layouts and have the subclasses override the cool shit and augment the rest?
 import Foundation
 
+protocol DirectoryObserver {
+    func observerClosure() -> FileSystemObserverBlock
+}
+
 // These classes can be the stateful "shell" to the immutable + stateless cores.
 class SourceObserver {
     
@@ -28,7 +32,6 @@ class SourceObserver {
     func observeSource(path: String) -> Void {
         if let previousPath = self.observedPath {
             self.directoryObserver.removeObserverForPath(previousPath, restartStream: false)
-            
         }
         
         self.observedPath = path
@@ -49,14 +52,13 @@ class SourceObserver {
 
 class ProjectObserver {
 
-    typealias DestinationDirectoryObserverClosure = FileSystemObserverBlock
-    
+    typealias ProjectObserverClosure = FileSystemObserverBlock
 
-    let destinationClosure: DestinationDirectoryObserverClosure
+    let destinationClosure: ProjectObserverClosure
     
     var directoryObserver: FileSystemObserver
     
-    init(projectObserver: DestinationDirectoryObserverClosure) {
+    init(projectObserver: ProjectObserverClosure) {
         directoryObserver  = FileSystemObserver()
         destinationClosure = projectObserver
     }
@@ -108,59 +110,4 @@ class ProjectObserver {
         }
         
     }
-}
-
-
-class DirectoryObserver {
-    
-    typealias SourceDirectoryObserverClosure = FileSystemObserverBlock
-    typealias DestinationDirectoryObserverClosure = FileSystemObserverBlock
-
-    
-    enum DirectoryType {
-        case SourceDirectory
-        case DestinationDirectory
-    }
-    
-    let sourceClosure: SourceDirectoryObserverClosure!
-    let projectClosure: DestinationDirectoryObserverClosure!
-    
-    var directoryObserver: FileSystemObserver
-    
-    
-    init(sourceObserver: SourceDirectoryObserverClosure, destinationObserver: DestinationDirectoryObserverClosure) {
-        sourceClosure = sourceObserver
-        projectClosure = destinationObserver
-        directoryObserver = FileSystemObserver()
-    }
-    
-    init(sourceObserver: SourceDirectoryObserverClosure) {
-        sourceClosure = sourceObserver
-        directoryObserver = FileSystemObserver()
-    }
-
-    // There should only be 1 source. Thus, remove the old path if it exists.
-    func observeSource(path: String) -> Void {
-        let previousPath = self.directoryObserver.pathForBlock(self.sourceClosure)
-        if (previousPath != nil) {
-            self.directoryObserver.removeObserverForPath(previousPath, restartStream: false)
-        }
-        
-        self.directoryObserver.addObserverForPath(path, handler: self.sourceClosure)
-    }
-    
-
-    
-    func observeDestination(path: String) -> Void {
-        self.directoryObserver.addObserverForPath(path, handler: self.projectClosure)
-    }
-    
-    func stopObservingPath(path: String) {
-        self.directoryObserver.removeObserverForPath(path)
-    }
-    
-    func updatePathForObserver(#oldPath: String, newPath: String) -> Void {
-        self.directoryObserver.replacePathForObserversFrom(oldPath, to: newPath)
-    }
-    
 }

@@ -13,15 +13,10 @@ typealias Bookmark = NSData
 
 class PathBookmarkResolver {
     
-    
     class func resolvePathFromBookmark(data: Bookmark) -> String? {
         let url = NSURL(byResolvingBookmarkData: data, options: NSURLBookmarkResolutionOptions.WithoutMounting, relativeToURL: nil, bookmarkDataIsStale: nil, error: nil)
         
-        if let p = url {
-            return p.path!
-        } else {
-            return nil
-        }
+        return url?.path ?? nil
     }
     
     class func resolveBookmarkFromPath(path: String) -> Bookmark {
@@ -38,6 +33,7 @@ class PathBookmarkResolver {
 }
 
 extension PathBookmarkResolver {
+    
     typealias PathBookmark = (path: String, bookmark: Bookmark)
     
     class func resolveValidPathsFromBookmarks(data: [Bookmark]) -> [PathBookmark] {
@@ -50,31 +46,16 @@ extension PathBookmarkResolver {
                 valid.insert((p,d), atIndex: 0)
             }
         }
-//        let validData = data.filter({ (d: NSData) -> Bool in
-//            let path: String? = self.resolvePathFromBookmark(d)
-//            return (path != nil) ? true : false
-//        })
-//        
-//        let valid: [(String, NSData)] = validData.map({ (d: NSData) -> (String, NSData) in
-//            return (self.resolvePathFromBookmark(d)!, d)
-//        })
         return valid
     }
 }
 
-protocol BookmarkValidator {
-}
+protocol BookmarkValidator {}
     
 extension PathBookmarkResolver: BookmarkValidator {
+    
     class func isBookmarkValid(bookmark: Bookmark) -> Bool {
         let path: String? = self.resolvePathFromBookmark(bookmark)
-        if path == nil {
-            return false
-        } else {
-            return true
-        }
+        return (path != nil) ? PathValidator.directoryExists(path: path!) : false
     }
 }
-
-
-

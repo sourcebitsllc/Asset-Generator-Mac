@@ -12,7 +12,7 @@ protocol ScriptParametersDelegate {
     func scriptParametersChanged(controller: AssetGeneratorViewController)
 }
 
-class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate, ScriptProgessDelegate, ProjectToolbarDelegate {
+class AssetGeneratorViewController: NSViewController {
   
     var parametersDelegate: ScriptParametersDelegate?
     
@@ -27,6 +27,7 @@ class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate
         super.init(coder: coder)
     }
     
+    
     // We have to set this as soon as possible. Hacky as heck but MVC isnt helping right now.
     func setRecentListDropdown(list: ProgressPopUpButton) {
         self.projectToolbarController = ProjectToolbarController(recentList: list)
@@ -35,15 +36,10 @@ class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate
 
     override func viewDidLoad() {
         super.viewDidLoad()
-       // TODO: Find better way to connect containerController to local var. sigh.
-//      self.fileDropController = self.childViewControllers.first! as FileDropViewController
-
+        // TODO: Find better way to connect containerController to local var. sigh.
+        // self.fileDropController = self.childViewControllers.first! as FileDropViewController
     }
     
-    func controllerDidBecomeActive() {
-        println("Active")
-        self.fileDropController.validateIfSourcePathStillExists()
-    }
     
     override func viewDidAppear() {
         super.viewDidAppear()
@@ -72,40 +68,24 @@ class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate
     func canExecuteScript() -> Bool {
         return self.scriptController.canExecuteScript()
     }
-    
-    
+
     // MARK: - Segues functions
     // Is this better?
     override func prepareForSegue(segue: NSStoryboardSegue, sender: AnyObject!) {
         if segue.identifier == "embeddedContainer" {
             self.fileDropController = segue.destinationController as FileDropViewController
             self.fileDropController.delegate = self
-//            self.scriptController.sourceDelegate = self.fileDropController
+            // self.scriptController.sourceDelegate = self.fileDropController
         }
     }
     
+}
+
+
+// MARK:- ProjectToolbar Delegate
+extension AssetGeneratorViewController: ProjectToolbarDelegate {
     
-    
-    // MARK: - FileDropController Delegate
-    
-    func fileDropControllerDidRemoveSourcePath(controller: FileDropViewController) {
-        self.parametersDelegate?.scriptParametersChanged(self)
-    }
-    
-    func fileDropControllerDidSetSourcePath(controller: FileDropViewController, path: String) {
-        if PathValidator.directoryContainsInvalidCharacters(path: path, options: nil) {
-            println("WARNING: THE SOURCE PATH CONTAINS DODO. I REPEAT, THE SOURCE PATH CONTAINS A DODO")
-            println("REASON: FOUND A SUBDIRECTORY WHICH CONTAINS A DOT..... DOT..DOT..")
-            NSLog("HELLO")
-        }
-        self.parametersDelegate?.scriptParametersChanged(self)
-    }
-    
-    
-    
-    // MARK:- ProjectToolbar Delegate
     func projectToolbarDidChangeProject(project: XCProject?) {
-        println("ProjectToolbar did change delegate: \(project)")
         if let p = project {
             self.parametersDelegate?.scriptParametersChanged(self)
             if !p.hasValidAssetsPath() {
@@ -114,11 +94,29 @@ class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate
             }
         }
     }
+}
+
+
+// MARK: - FileDropController Delegate
+extension AssetGeneratorViewController: FileDropControllerDelegate {
     
+    func fileDropControllerDidRemoveSourcePath(controller: FileDropViewController, removedPath: String) {
+        self.parametersDelegate?.scriptParametersChanged(self)
+    }
     
-    
-    // MARK:- Script Progress Delegate
-    
+    func fileDropControllerDidSetSourcePath(controller: FileDropViewController, path: String, previousPath: String?) {
+        if PathValidator.directoryContainsInvalidCharacters(path: path, options: nil) {
+            println("WARNING: THE SOURCE PATH CONTAINS DODO. I REPEAT, THE SOURCE PATH CONTAINS A DODO")
+            println("REASON: FOUND A SUBDIRECTORY WHICH CONTAINS A DOT..... DOT..DOT..")
+        }
+        
+        self.parametersDelegate?.scriptParametersChanged(self)
+    }
+}
+
+
+// MARK:- Script Progress Delegate
+extension AssetGeneratorViewController: ScriptProgessDelegate {
     func scriptDidStartExecutingScipt(executor: ScriptExecutor) {
         // This is just a tmeporary h4x. Fix progress bar and remove it.
         self.timer = NSTimer(timeInterval: 0.1, target: self, selector: Selector("moveProgressSmoothly") , userInfo: nil, repeats: true)
@@ -144,5 +142,7 @@ class AssetGeneratorViewController: NSViewController, FileDropControllerDelegate
     func moveProgressSmoothly() {
         self.projectToolbarController.setToolbarProgress(progress: self.projectToolbarController.toolbarProgress + 0.05)
     }
-   
 }
+
+
+

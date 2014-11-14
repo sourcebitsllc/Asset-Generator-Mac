@@ -10,9 +10,9 @@ import Cocoa
 
 // TODO: the script option passing seems hacky and rushed. Revisit it later.
 
-class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, ScriptParametersDelegate, NSWindowDelegate {
+class AssetGeneratorWindowController: NSWindowController  {
 
-    @IBOutlet var recentlyUsedProjectsDropdownList: ProgressPopUpButton!
+    @IBOutlet var recentlyUsedProjectsDropdownList: ProgressPopUpButton! // Shame.
     @IBOutlet var browseButton: NSButton!
     
     var generateButton: NSButton
@@ -31,7 +31,6 @@ class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, Scr
  
     override func windowDidLoad() {
         super.windowDidLoad()
-        self.window!.delegate = self
         self.assetGeneratorController = self.contentViewController as AssetGeneratorViewController
         self.assetGeneratorController.setRecentListDropdown(self.recentlyUsedProjectsDropdownList)
         self.assetGeneratorController.parametersDelegate = self
@@ -39,7 +38,6 @@ class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, Scr
         self.buttonSetup()
     }
     
-    //
     func buttonSetup() {
         // Generate button setup
         self.generateButton.font                = self.browseButton.font // lolwut. Brogramming (tm)
@@ -86,17 +84,6 @@ class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, Scr
         
     }
     
-    func generateButtonPressed() {
-        let generateMissingAssets: Bool = Bool(generate1xButton.state)
-        
-        self.assetGeneratorController.generateButtonPressed(generateAssets: generateMissingAssets, args: nil)
-        self.updateGenerateButton()
-    }
-
-    
-    
-    // MARK:- Convenience Functions.
-    
     func updateGenerateButton() -> Void {
         self.generateButton.enabled = self.assetGeneratorController.canExecuteScript()
     }
@@ -108,19 +95,23 @@ class AssetGeneratorWindowController: NSWindowController, NSToolbarDelegate, Scr
         self.assetGeneratorController.recentlyUsedProjectsDropdownListChanged(sender)
     }
     
+    // MARK - NSButton Callback Functions
     @IBAction func browseButtonPressed(sender: AnyObject!) {
         self.assetGeneratorController.browseButtonPressed()
     }
     
-    
-    // MARK:- ScriptParameters Delegate
-    
+    func generateButtonPressed() {
+        let generateMissingAssets: Bool = Bool(generate1xButton.state)
+        
+        self.assetGeneratorController.generateButtonPressed(generateAssets: generateMissingAssets, args: nil)
+        self.updateGenerateButton()
+    }
+}
+
+
+// MARK:- ScriptParameters Delegate
+extension AssetGeneratorWindowController: ScriptParametersDelegate {
     func scriptParametersChanged(controller: AssetGeneratorViewController) {
         self.updateGenerateButton()
     }
-    
-    func windowDidBecomeKey(notification: NSNotification!) {
-        self.assetGeneratorController.controllerDidBecomeActive()
-    }
-    
 }

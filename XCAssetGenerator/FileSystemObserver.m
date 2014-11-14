@@ -53,9 +53,6 @@ NSString * const kDirectoryObserverKey = @"DirectoryObserverKey";
                                        kCFRunLoopDefaultMode);
     FSEventStreamInvalidate(self.fileStream);
     FSEventStreamRelease(self.fileStream);
-    
-    
-    //    _fileStream = nil;
 }
 
 #pragma MARK - Observers Management
@@ -69,11 +66,9 @@ NSString * const kDirectoryObserverKey = @"DirectoryObserverKey";
         directoryBlock(FileSystemDirectoryInitializationFailedAsPathDoesNotExist, @"", @"");
         return ;
     }
-    
-    if (self.fileStream != NULL) {
-        
-        [self invalidateStream:self.fileStream];
-    }
+    if (self.fileStream != NULL)
+        [self invalidateStream];
+
     
     if (![self.pathsToObserve containsObject:path]) {
         [self.pathsToObserve addObject:path];
@@ -83,7 +78,6 @@ NSString * const kDirectoryObserverKey = @"DirectoryObserverKey";
     
     
     [self.observers setValue:@{ kDirectoryObserverKey: directoryBlock } forKey:path];
-    
     
     [self createStream];
     
@@ -110,7 +104,7 @@ NSString * const kDirectoryObserverKey = @"DirectoryObserverKey";
     [self.pathsToObserve removeAllObjects];
     [self.observers removeAllObjects];
     [self.pathFileDescriptors removeAllObjects];
-    [self invalidateStream:self.fileStream];
+    [self invalidateStream];
 }
 
 
@@ -130,35 +124,40 @@ NSString * const kDirectoryObserverKey = @"DirectoryObserverKey";
                                           //                                          kFSEventStreamCreateFlagNone);
                                           kFSEventStreamCreateFlagWatchRoot);
     
-    // start the stream on the main event loop
-    FSEventStreamScheduleWithRunLoop(self.fileStream,
-                                     CFRunLoopGetCurrent(),
-                                     kCFRunLoopDefaultMode);
-    FSEventStreamStart(self.fileStream);
+    if (self.fileStream != NULL) {
+        // start the stream on the main event loop IFF stream was successfully created.
+        FSEventStreamScheduleWithRunLoop(self.fileStream,
+                                         CFRunLoopGetCurrent(),
+                                         kCFRunLoopDefaultMode);
+        FSEventStreamStart(self.fileStream);
+    }
     
 }
 
 - (void)restartStream
 {
-    if (self.fileStream != NULL)
-        [self invalidateStream:self.fileStream];
-    //    [self createStream];
+    if (self.fileStream != nil)
+        [self invalidateStream];
+    [self createStream];
 }
 
 - (void)stopStream
 {
-    [self invalidateStream:self.fileStream];
+    [self invalidateStream];
 }
 
-- (void)invalidateStream:(FSEventStreamRef)ref
+-(void)invalidateStream
 {
-    if (ref == NULL) return;
+    if (self.fileStream == NULL) return; // Do not over release. (Why are you over releasing, fool?
     
-    FSEventStreamStop(ref);
-    FSEventStreamUnscheduleFromRunLoop(ref, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
-    FSEventStreamInvalidate(ref);
-    FSEventStreamRelease(ref);
+    FSEventStreamStop(self.fileStream);
+    FSEventStreamUnscheduleFromRunLoop(self.fileStream, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
+    FSEventStreamInvalidate(self.fileStream);
+    FSEventStreamRelease(self.fileStream);
+    
+    self.fileStream = NULL;
 }
+
 
 // Returns the main directory that we are observing -- given a subpath
 - (NSString *)observedPathForSubdirectory:(NSString *)subpath
@@ -187,6 +186,11 @@ NSString * const kDirectoryObserverKey = @"DirectoryObserverKey";
     
 }
 
+-(void)debugPathsBeingObserved
+{
+    NSArray *pathsBeingObserved = (__bridge NSArray *)(FSEventStreamCopyPathsBeingWatched(self.fileStream));
+    NSLog(@"%@",pathsBeingObserved);
+}
 
 - (void)replacePathForObserversFrom:(NSString *)originalPath To:(NSString *)newPath
 {
@@ -207,13 +211,15 @@ fs_callback(ConstFSEventStreamRef ref, void * data, size_t events, void * paths,
     char ** _paths	= paths;
     NSString *path = [NSString stringWithFormat:@"%s", _paths[0]];
     NSArray *pathsBeingObserved = (__bridge NSArray *)(FSEventStreamCopyPathsBeingWatched(ref));
-    
+
     for (i = 0; i < events; ++i) {
         
         if (flags[i] & kFSEventStreamEventFlagRootChanged) {
             
             //            NSString *thePath   = [theObserver observedPathForSubdirectory:path];
-            NSString *thePath = [theObserver parentDirectoryForSubdirectory:path fromDirectories:pathsBeingObserved];
+            NSString *thePath = [theObserver parentDirectoryForSubdirectory:path
+                                                            fromDirectories:pathsBeingObserved];
+            
             int descriptor = ((NSNumber *)theObserver.pathFileDescriptors[thePath]).intValue;
             char filePath[PATH_MAX];
             
@@ -225,8 +231,13 @@ fs_callback(ConstFSEventStreamRef ref, void * data, size_t events, void * paths,
                 {
                     NSString *newPath = [NSString stringWithUTF8String:filePath];
                     BOOL isTrashed = [newPath containsString:@"/.Trash"];
+                    BOOL isOldPathEqualToNewPath = [path isEqualToString:newPath]; // This only happens when we "rm".
+                    // No other notifications are sent except a rename with non-changed filename
                     
-                    if (isTrashed)
+                    
+                    if (isOldPathEqualToNewPath)
+                        block(FileSystemDirectoryBazookad, path, nil);
+                    else if (isTrashed)
                         block(FileSystemDirectoryDeleted, path, newPath);
                     else
                         block(FileSystemDirectoryRenamed, path, newPath);

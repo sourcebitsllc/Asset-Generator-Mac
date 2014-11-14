@@ -25,7 +25,7 @@ enum DropViewState {
     case PathNoLongerExistsState
 }
 
-class FileDropViewController: NSViewController, DropViewDelegate, ScriptSourcePathDelegate {
+class FileDropViewController: NSViewController {
 
     @IBOutlet var dropView: DropView!
     @IBOutlet var pathLabel: NSTextField!
@@ -35,7 +35,6 @@ class FileDropViewController: NSViewController, DropViewDelegate, ScriptSourcePa
     var directoryObserver: SourceObserver!
     
     var dropImageView: NSImageView!
-    var center: CGPoint!
     
     private var folderPath : String?
     
@@ -67,36 +66,7 @@ class FileDropViewController: NSViewController, DropViewDelegate, ScriptSourcePa
          self.dropView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[imageView(imageHeight)]", options: nil, metrics: ["imageHeight": 150], views: ["imageView": self.dropImageView]))
         
         // Observing the File System Setup.
-        let sourceClosure: DirectoryObserver.SourceDirectoryObserverClosure = { (operation: FileSystemOperation, oldPath: String!, newPath: String!) -> Void in
-            switch operation {
-                
-            case FileSystemOperation.DirectoryRenamed:
-                
-                // Stop observing the old path, and observe the new path using the same callback.
-                self.directoryObserver.updatePathForObserver(oldPath: oldPath, newPath: newPath)
-                // Set the new path and update the state.
-                self.folderPath = newPath
-                self.updateDropView(state: DropViewState.SuccessfulDropState)
-                
-            case FileSystemOperation.DirectoryDeleted:
-                
-                self.updateDropView(state: DropViewState.PathNoLongerExistsState)
-                self.directoryObserver.stopObservingPath(oldPath)
-                self.folderPath = nil
-                self.delegate?.fileDropControllerDidRemoveSourcePath(self, removedPath: oldPath)
-                
-            case FileSystemOperation.DirectoryInitializationFailedAsPathDoesNotExist:
-                println("Initialization failed cause the path we want to observe does not exist")
-                
-            case FileSystemOperation.DirectoryUnknownOperationForUnresolvedPath:
-                println("We couldnt open the filde to process the change operation")
-                
-            default:
-                break;
-            }
-            
-        }
-        
+        let sourceClosure: SourceObserver.SourceDirectoryObserverClosure = self.observerClosure()
         directoryObserver = SourceObserver(sourceObserver: sourceClosure)
     }
     
@@ -125,21 +95,11 @@ class FileDropViewController: NSViewController, DropViewDelegate, ScriptSourcePa
         }
     }
     
-    func validateIfSourcePathStillExists() {
-        if let source = self.folderPath {
-            if !PathValidator.directoryExists(path: source) {
-                self.updateDropView(state: DropViewState.PathNoLongerExistsState)
-            } else {
-                self.updateDropView(state: DropViewState.SuccessfulDropState)
-            }
-        } else {
-            self.updateDropView(state: DropViewState.InitialState)
-        }
-    }
-    
-    
-    
-    // MARK:- ScriptSourcePath Delegate
+}
+
+
+// MARK:- ScriptSourcePath Delegate
+extension FileDropViewController: ScriptSourcePathDelegate {
     
     func sourcePath() -> String? {
         if let sourcePath = self.folderPath {
@@ -152,10 +112,11 @@ class FileDropViewController: NSViewController, DropViewDelegate, ScriptSourcePa
     func hasValidSourceProject() -> Bool {
         return (self.folderPath? != nil) ? true : false
     }
+}
 
-    
 
-    // MARK: - DropViewDelegate required functions.
+// MARK: - DropViewDelegate required functions.
+extension FileDropViewController: DropViewDelegate {
     
     func dropViewShouldAcceptDraggedPath(dropView: DropView, paths: [String]) -> Bool {
         let pathname = paths[0]
@@ -167,11 +128,8 @@ class FileDropViewController: NSViewController, DropViewDelegate, ScriptSourcePa
         self.folderPath = filePath
         
         self.updateDropView(state: DropViewState.SuccessfulDropState)
-        
         self.directoryObserver.observeSource(filePath)
-        
         self.delegate?.fileDropControllerDidSetSourcePath(self,path: self.folderPath!, previousPath: old)
-        
     }
     
     
@@ -192,5 +150,41 @@ class FileDropViewController: NSViewController, DropViewDelegate, ScriptSourcePa
             self.updateDropView(state: DropViewState.SuccessfulDropState)
         }
     }
-    
 }
+
+extension FileDropViewController: DirectoryObserver {
+    func observerClosure() -> FileSystemObserverBlock {
+        return { (operation: FileSystemOperation, oldPath: String!, newPath: String!) -> Void in
+            switch operation {
+                
+            case FileSystemOperation.DirectoryRenamed:
+                
+                // Stop observing the old path, and observe the new path using the same callback.
+                self.directoryObserver.updatePathForObserver(oldPath: oldPath, newPath: newPath)
+                
+                // Set the new path and update the state.
+                self.folderPath = newPath
+                self.updateDropView(state: DropViewState.SuccessfulDropState)
+                
+            case FileSystemOperation.DirectoryDeleted:
+                
+                self.updateDropView(state: DropViewState.PathNoLongerExistsState)
+                self.directoryObserver.stopObservingPath(oldPath)
+                self.folderPath = nil
+                self.delegate?.fileDropControllerDidRemoveSourcePath(self, removedPath: oldPath)
+                
+            case FileSystemOperation.DirectoryInitializationFailedAsPathDoesNotExist:
+                println("Initialization failed cause the path we want to observe does not exist")
+                
+            case FileSystemOperation.DirectoryUnknownOperationForUnresolvedPath:
+                println("We couldnt open the filde to process the change operation")
+                
+            default:
+                break;
+            }
+            
+        }
+    }
+}
+
+

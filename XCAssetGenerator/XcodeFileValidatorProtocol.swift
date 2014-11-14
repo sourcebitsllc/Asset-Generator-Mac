@@ -12,7 +12,13 @@ import Foundation
 
 protocol XcodeFileValidator {}
 
+// TODO: We should probably check if its a directory too.
 extension String: XcodeFileValidator {
+    
+    /*
+        Determines whether the string is a project or asset. 
+        NOTE: It does not determine whether that associated objects actually exist.
+    */
     func isXCProject() -> Bool {
         return self.hasSuffix(".xcodeproj")
     }
@@ -23,24 +29,16 @@ extension String: XcodeFileValidator {
 }
 
 extension Bookmark: XcodeFileValidator {
+    
     func isXCProject() -> Bool {
         let path: String? = PathBookmarkResolver.resolvePathFromBookmark(self)
-        
-        if let validPath = path {
-            return validPath.isXCProject()
-        } else {
-            return false
-        }
+        return (path != nil) ? path!.isXCProject() : false
     }
     
     func isXCAsset() -> Bool {
         let path: String? = PathBookmarkResolver.resolvePathFromBookmark(self)
-        
-        if let validPath = path {
-            return validPath.isXCAsset()
-        } else {
-            return false
-        }
+        return (path != nil) ? path!.isXCAsset() : false
     }
+    
 }
 
