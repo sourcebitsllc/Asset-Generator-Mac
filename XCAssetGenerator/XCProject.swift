@@ -48,36 +48,35 @@ extension XCProject: Printable {
 // Converts the current project into a propertylist Dictionary and initiates project from dictionary content
 extension XCProject {
     
-    func dictionaryRepresentation() -> [String: NSData] {
+    func dictionaryRepresentation() -> [String: Bookmark] {
         if let assets = xcassets {
-            var assetsAsDataArray: [NSData] = assets.map({ (asset: XCAsset) -> NSData in
+            var assetsAsDataArray: [Bookmark] = assets.map({ (asset: XCAsset) -> Bookmark in
                 return asset.data
             })
             var assetsData = NSKeyedArchiver.archivedDataWithRootObject(assetsAsDataArray)
             return [pathKey: self.pathBookmark, assetPathKey: assetsData]
         } else {
-            return [pathKey: self.pathBookmark, assetPathKey: NSData() ]
+            return [pathKey: self.pathBookmark, assetPathKey: Bookmark() ]
         }
         
     }
     
-    func userDefaultsDictionaryRepresentation() -> [NSString: NSData] {
+    func userDefaultsDictionaryRepresentation() -> [NSString: Bookmark] {
         return self.dictionaryRepresentation()
     }
     
-    static func projectFromDictionary(dictionary: [String: NSData]) -> XCProject {
+    static func projectFromDictionary(dictionary: [String: Bookmark]) -> XCProject {
         let path = dictionary[pathKey]!
-//        let asset: String? = dictionary[assetPathKey]!.isEmpty ? nil : dictionary[assetPathKey]!
         
-        if let assetsData: NSData = dictionary[assetPathKey] {
+        if let assetsData: Bookmark = dictionary[assetPathKey] {
             
             // the data can be initialized but empty -> should be equivelant to nil data.
             // If asset data is not empty, process it. else, ignore it.
-            let emptyDataTester = NSData()
+            let emptyDataTester = Bookmark()
             
             if assetsData.isEqualToData(emptyDataTester) == false {
-                let assetsAsData = NSKeyedUnarchiver.unarchiveObjectWithData(assetsData) as [NSData]
-                let XCAssets = assetsAsData.map({ (data: NSData) -> XCAsset in
+                let assetsAsData = NSKeyedUnarchiver.unarchiveObjectWithData(assetsData) as [Bookmark]
+                let XCAssets = assetsAsData.map({ (data: Bookmark) -> XCAsset in
                     return XCAsset(data: data)
                 })
                 return XCProject(data: path, xcassets: XCAssets)
@@ -102,12 +101,7 @@ struct XCProject: Equatable {
         get {
             var url = NSURL(byResolvingBookmarkData: self.pathBookmark, options: NSURLBookmarkResolutionOptions.WithoutMounting, relativeToURL: nil, bookmarkDataIsStale: nil, error: nil)
             
-            return url!.path! // This cannot be nil. If it is, catastrophe.
-//            if let p = url {
-//                return p.path!
-//            } else {
-//                return ""
-//            }
+            return url!.path! // This cannot be nil. If it is, catastrophe. It doesnt make sense for a project to not have a valid path -- else it shouldnt exist
         }
     }
     var pathBookmark : Bookmark
@@ -116,34 +110,13 @@ struct XCProject: Equatable {
     
     // MARK:- Initializers
     
-//    internal init(path: String) {
-//        self.path = path
-//        self.xcassets = retrieveAssets(directory: self.XCProjectDirectoryPath())
-//    }
     
-    internal init(data: NSData) {
+    internal init(data: Bookmark) {
         self.pathBookmark = data
         self.xcassets = retrieveAssets(directory: self.XCProjectDirectoryPath())
     }
-    
-//    internal init(path: String, xcassetPath: String?) {
-//        self.path = path
-//        
-//        if let assetpath = xcassetPath {
-//            self.xcassets = [XCAsset(path: assetpath)]
-//        }
-//    }
-    
-//    internal init(path: String, xcassets: [XCAsset]?) {
-//        self.path = path
-//        
-//        if let assets = xcassets {
-//            self.xcassets = assets
-//        } else {
-//            self.xcassets = nil
-//        }
-//    }
-    internal init(data: NSData, xcassetData: [NSData]?) {
+
+    internal init(data: Bookmark, xcassetData: [Bookmark]?) {
         self.pathBookmark = data
         
         if let assetsData = xcassetData {
@@ -164,41 +137,18 @@ struct XCProject: Equatable {
         }
     }
     
-    internal init(data: NSData, xcassets: [XCAsset]?) {
+    internal init(data: Bookmark, xcassets: [XCAsset]?) {
         self.pathBookmark = data
-        
-        if let assets = xcassets {
-            self.xcassets = assets
-        } else {
-            self.xcassets = nil
-        }
+    
+        self.xcassets = xcassets ?? nil
+    }
+    
+    private func XCProjectDirectoryPath() -> String {
+        return self.path.stringByDeletingLastPathComponent + ("/") // .extend
     }
     
     
-    
-    // MARK:- Convenience functions and helpers.
-    // MARK: XCAsset accessors.
-    func assetDirectoryTitle() -> String {
-        return self.xcassets?.first?.title ?? invalidAssetTitleDisplay
-    }
-    
-    func assetDirectoryPath() -> String? {
-        return self.xcassets?.first?.path
-    }
-    
-    func assetDirectoryBookmark() -> Bookmark? {
-        return self.xcassets?.first?.data
-    }
-    
-    // A project will have a valid assets path if it contains an asset and if the asset path is not empty.
-    func hasValidAssetsPath() -> Bool {
-        if (self.xcassets?.first != nil) {
-            return PathBookmarkResolver.isBookmarkValid(self.xcassets!.first!.data) && !self.xcassets!.first!.path.isEmpty
-        }
-        
-        return false
-    }
-    
+    // MARK - Mutating Functions
     mutating func invalidateAssets() {
         self.xcassets = nil
     }
@@ -221,7 +171,7 @@ struct XCProject: Equatable {
         
         
         if let path = assetPath {
-            var data: NSData = PathBookmarkResolver.resolveBookmarkFromPath(path)
+            var data: Bookmark = PathBookmarkResolver.resolveBookmarkFromPath(path)
             return [XCAsset(data: data)]
         } else {
             return nil
@@ -229,8 +179,30 @@ struct XCProject: Equatable {
         
     }
     
-    private func XCProjectDirectoryPath() -> String {
-        return self.path.stringByDeletingLastPathComponent + ("/") // .extend
+}
+
+
+// MARK:- XCProject Assets Public Query Interface
+extension XCProject {
+    func assetDirectoryTitle() -> String {
+        return self.xcassets?.first?.title ?? invalidAssetTitleDisplay
     }
     
+    func assetDirectoryPath() -> String? {
+        return self.xcassets?.first?.path
+    }
+    
+    func assetDirectoryBookmark() -> Bookmark? {
+        return self.xcassets?.first?.data
+    }
+    
+    // A project will have a valid assets path if it contains an asset and if the asset path is not empty.
+    func hasValidAssetsPath() -> Bool {
+        if (self.xcassets?.first != nil) {
+            return PathBookmarkResolver.isBookmarkValid(self.xcassets!.first!.data) && !self.xcassets!.first!.path.isEmpty
+        }
+        
+        return false
+    }
 }
+

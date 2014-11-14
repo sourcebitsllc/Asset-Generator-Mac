@@ -41,7 +41,7 @@ extension XCAsset: Printable {
 // The bookmark data canot be invalid in here. It doesnt make sense for an XCAsset to not exist.
 // So, invalid data = crash. Protect.Yo.Self.
 struct XCAsset: Equatable {
-    var data: NSData
+    var data: Bookmark
     
     internal private(set) var path: String {
         get {
@@ -55,11 +55,11 @@ struct XCAsset: Equatable {
         
     }
     
-    init (data aData: NSData) {
+    init (data aData: Bookmark) {
         data = aData
     }
     
-    init (data aData: NSData, path aPath: String) {
+    init (data aData: Bookmark, path aPath: String) {
         data = aData
         path = aPath
     }
