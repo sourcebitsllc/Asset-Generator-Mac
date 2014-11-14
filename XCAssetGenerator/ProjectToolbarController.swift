@@ -23,7 +23,7 @@ extension ProjectToolbarController: ScriptDestinationPathDelegate {
     }
 }
 
-class ProjectToolbarController: NSObject, DirectoryObserver  {
+class ProjectToolbarController: NSObject  {
 
     var recentProjectsDropdownListView: ProgressPopUpButton!
     var delegate : ProjectToolbarDelegate?
@@ -120,12 +120,6 @@ extension ProjectToolbarController {
         }
     }
     
-    private func updateRecentProjectsList(#index: Int){
-        self.recentListMaintainer.addProject(project: self.recentListMaintainer.projectAtIndex(index)!)
-        self.updateDropdownListTitles()
-        self.delegate?.projectToolbarDidChangeProject(self.recentListMaintainer.selectedProject())
-    }
-    
     private func addNewProject(#url: NSURL) {
         self.recentListMaintainer.addProject(url: url)
         self.updateDropdownListTitles()
@@ -137,19 +131,30 @@ extension ProjectToolbarController {
         self.delegate?.projectToolbarDidChangeProject(self.recentListMaintainer.selectedProject())
     }
     
+    
+    private func updateRecentProjectsList(#index: Int){
+        self.recentListMaintainer.addProject(project: self.recentListMaintainer.projectAtIndex(index)!)
+        self.updateDropdownListTitles()
+        self.delegate?.projectToolbarDidChangeProject(self.recentListMaintainer.selectedProject())
+    }
+    
+    
     // TODO: Why do we remove all items? its the recentUsedProjectsManager concern to maintain order for its cache. So either trust its decisions or dont use it.
     private func updateDropdownListTitles() -> Void {
         self.recentProjectsDropdownListView.removeAllItems()
-        if let titles = self.recentListMaintainer.recentProjectsTitlesList() {
+        if self.recentListMaintainer.recentProjectsCount() > 0 {
+            let titles = self.recentListMaintainer.recentProjectsTitlesList()!
             self.recentProjectsDropdownListView.addItemsWithTitles(titles)
             self.recentProjectsDropdownListView.selectItemAtIndex(0)
+        } else {
+            self.disableDropdownList()
         }
     }
     
 }
 
 // MARK: Directory Observer Compliance
-extension ProjectToolbarController: DirectoryObserver {
+extension ProjectToolbarController {
     func observerClosure() -> FileSystemObserverBlock {
         return { (operation: FileSystemOperation, oldPath: String!, newPath: String!) -> Void in
             switch operation {
@@ -159,7 +164,6 @@ extension ProjectToolbarController: DirectoryObserver {
                 // Stop observing the old path, and observe the new path using the same callback.
                 self.directoryObserver.updatePathForObserver(oldPath: oldPath, newPath: newPath)
                 self.updateDropdownListTitles()
-                
                 
             case .DirectoryBazookad:
                 if (newPath == nil) {

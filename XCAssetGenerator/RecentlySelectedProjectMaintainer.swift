@@ -18,7 +18,7 @@ class RecentlySelectedProjectMaintainer : NSObject {
     
     required override init() {
         super.init()
-//        self.__flushStoredProjects
+//        self.__flushStoredProjects()
         self.loadRecentProjects()
     }
     
@@ -137,7 +137,7 @@ extension RecentlySelectedProjectMaintainer {
     private func recentProject(closure: (project: XCProject) -> Bool) -> XCProject? {
         let matches = self.recentProjects?.filter(closure)
         if matches?.count > 1 {
-            println("Houston, we have a problem. Found multiple projects. with the same fucking asset path; which is not possible btw,")
+            println("[XCAssetGenerator] Houston, we have a problem. Found multiple projects for a check that should return one.")
         }
         
         return matches?.first

@@ -152,8 +152,9 @@ extension FileDropViewController: DropViewDelegate {
     }
 }
 
-extension FileDropViewController: DirectoryObserver {
-    func observerClosure() -> FileSystemObserverBlock {
+extension FileDropViewController {
+
+    func observerClosure() -> SourceObserver.SourceDirectoryObserverClosure {
         return { (operation: FileSystemOperation, oldPath: String!, newPath: String!) -> Void in
             switch operation {
                 
@@ -186,5 +187,3 @@ extension FileDropViewController: DirectoryObserver {
         }
     }
 }
-
-

@@ -9,12 +9,10 @@
 // Maybe have a base class with all the proper layouts and have the subclasses override the cool shit and augment the rest?
 import Foundation
 
-protocol DirectoryObserver {
-    func observerClosure() -> FileSystemObserverBlock
-}
 
-// These classes can be the stateful "shell" to the immutable + stateless cores.
-class SourceObserver {
+protocol FileSystemObserverType {}
+
+class SourceObserver: FileSystemObserverType {
     
     typealias SourceDirectoryObserverClosure = FileSystemObserverBlock
     
@@ -50,10 +48,9 @@ class SourceObserver {
     }
 }
 
-class ProjectObserver {
+class ProjectObserver: FileSystemObserverType {
 
     typealias ProjectObserverClosure = FileSystemObserverBlock
-
     let destinationClosure: ProjectObserverClosure
     
     var directoryObserver: FileSystemObserver
