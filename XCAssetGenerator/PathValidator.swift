@@ -8,6 +8,8 @@
 
 import Foundation
 
+
+
 // The purpose of this class is to check if ∃ a directory which contains a dot in its name.
 // However, it does not fix the issue. Just a way to indicate that a problem exists, then
 // have the "fix" be applied directly from the main script (ScriptExecutor)
@@ -15,6 +17,8 @@ class PathValidator {
 
     // The renaming should be done directly from the main bash script (ScriptExecutor)
     class func directoryContainsInvalidCharacters(#path: String, options: AnyObject?) -> Bool {
+        NSLog("Checking if directory contains invalid characters")
+        
         var task: NSTask = NSTask()
         var pipe = NSPipe()
         
@@ -23,6 +27,8 @@ class PathValidator {
         task.standardOutput = pipe
         task.launch()
         
+        NSLog("Done checking if directory contains invalid characters")
+
         var string: String = NSString(data: pipe.fileHandleForReading.readDataToEndOfFile(), encoding:NSUTF8StringEncoding)!
         
         // No directories inside path = no directory which contains a dot = valid = return true
@@ -43,14 +49,15 @@ class PathValidator {
                 return true
             }
         }
-        // else, return true.
+
         return false
     }
     
     class func directoryExists(#path: String) -> Bool {
         var isDirectory: ObjCBool = ObjCBool(false)
-        NSFileManager.defaultManager().fileExistsAtPath(path, isDirectory: &isDirectory)
-        
+        if path.rangeOfString("/.Trash") == nil || path.isEmpty {
+            NSFileManager.defaultManager().fileExistsAtPath(path, isDirectory: &isDirectory)
+        }
         return isDirectory.boolValue
     }
     
