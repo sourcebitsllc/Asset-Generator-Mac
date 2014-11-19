@@ -45,6 +45,7 @@ class ProjectToolbarController: NSObject  {
         self.setupProjectObserver()
         self.dropdownListSetup()
         self.openPanelSetup()
+        
     }
     
     private func setupProjectObserver() {
@@ -118,6 +119,8 @@ extension ProjectToolbarController {
             }
             
         }
+        self.delegate?.projectToolbarDidChangeProject(self.recentListMaintainer.selectedProject())
+
     }
     
     private func addNewProject(#url: NSURL) {

@@ -4,14 +4,42 @@
 # TODO: sanitize the inputs.
 sourcePath="$1";
 destinationPath="$2";
-generateMissingAssets=$3;
+generateMissingAssets="0";
 
 TEMPDIR=".XCAssetTemp"
 TEMPFULLPATH="$sourcePath$TEMPDIR"
-
+VERBOSE="1"
 # The character we replace the dot and space with.
 dotAlt="_"
 spaceAlt="_"
+
+
+# while getopts ":g:" opt; do
+# 	  case $opt in
+# 	    g)
+# 	      echo "-a was triggered!"
+# 	      ;;
+# 	    g ) echo "-g was tizzaz"
+# 		;;
+# 	    \?)
+# 	      echo "Invalid option: -$OPTARG"
+# 	      ;;
+# 	  esac
+# 	done
+
+	
+	while getopts "g:" opt; do
+	  case $opt in
+	    g)
+	      echo "2-a was triggered!"
+	      ;;
+	    g ) echo "2-g was tizzaz"
+		;;
+	    \?)
+	      echo "Invalid option: -$OPTARG"
+	      ;;
+	  esac
+	done
 
 deleteTempDirectory() {
 
@@ -415,14 +443,17 @@ integrateToDestination() {
 }
 
 display_usage() {
-    echo "Usage: ./XCasset Generator.sh [absolute source path] [absolute destination path]" >&2
+    echo "Usage: ./XCasset Generator.sh <absolute source path> <absolute destination path> [-g generateMissingAssets] " >&2
 }
 
 
 ## Entry Point. ##
 ##################
+echo "hello"
 
-#TODO: Add all the proper flow control here.
+	
+
+## Parse script inputs.
 ## alright screw it, adding some usage directions. *growl growl*
 if [  $# -le 1 ] ; then
 	echo "- ERROR: missing arguments" >&2
@@ -435,6 +466,7 @@ if [[ ! -d "$sourcePath" ]] ; then
 	echo "The source directory does not exist"
 	exit 1
 fi
+shift;
 
 if [[ ! -d "$destinationPath" ]] ; then
 	echo "- ERROR: Invalid destination path"
@@ -442,7 +474,17 @@ if [[ ! -d "$destinationPath" ]] ; then
 #	mkdir "$destinationPath"
     exit 1
 fi
+shift;
 
+while getopts g opt; do
+	  case $opt in
+	    g)
+	      generateMissingAssets="1"
+	      ;;
+	  esac
+	done
+
+## starting executing main funcitonality.
 echo "1: Setting Up Temp";
 time { 
 setupTempDirectory; 

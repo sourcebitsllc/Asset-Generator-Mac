@@ -27,9 +27,9 @@ typedef void(^FileSystemObserverBlock)(FileSystemOperation, NSString *, NSString
 - (void)replacePathForObserversFrom:(NSString *)originalPath To:(NSString *)newPath;
 //- (NSString *)pathForBlock:(FileSystemObserverBlock)block;
 /*
-  Description: 
+    Description:
         Remove the path and continue observing the other paths.
- */
+*/
 - (void)removeObserverForPath:(NSString *)path;
 - (void)removeObserverForPath:(NSString *)path restartStream:(BOOL)restart;
 - (void)removeAllObservers;

@@ -169,18 +169,20 @@ extension RecentlySelectedProjectMaintainer {
     
     
     private func loadRecentProjects() {
-        let projectDicts = NSUserDefaults.standardUserDefaults().objectForKey(kRecentProjectsKey) as? [NSDictionary]
-        
-        let validProjectDicts = projectDicts?.filter({ (dictionary: NSDictionary) -> Bool in
+        let projectDicts = NSUserDefaults.standardUserDefaults().objectForKey(kRecentProjectsKey) as? [[String: NSData]]
+//        if projectDicts?.count > 0 {
+        let validProjectDicts = projectDicts?.filter({ (dictionary: [String: NSData]) -> Bool in
             return PathBookmarkResolver.isBookmarkValid(dictionary[pathKey]! as Bookmark)
         })
         
-        self.recentProjects = validProjectDicts?.map({ (a: NSDictionary) -> XCProject in
+        self.recentProjects = validProjectDicts?.map({ (a: [String: NSData]) -> XCProject in
             return XCProject.projectFromDictionary(a as [String: NSData])
         })
         
         //        self.cullStaleProjectsAndAssets()
         self.cullStaleAssets()
+        self.storeRecentProjects()
+//        }
     }
     
     private func __flushStoredProjects() {

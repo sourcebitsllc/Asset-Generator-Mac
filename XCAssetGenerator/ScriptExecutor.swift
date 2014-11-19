@@ -53,7 +53,7 @@ class ScriptExecutor: NSObject {
             var task = NSTask()
             var pipe = NSPipe()
             
-            let generate : String = generate1x ?  "1" : "0"
+            let generate : String = generate1x ?  "-g" : "0"
             
             task.launchPath = self.scriptPath
             task.arguments = [src, dst, generate]

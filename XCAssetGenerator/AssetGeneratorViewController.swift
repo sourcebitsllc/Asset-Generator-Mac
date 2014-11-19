@@ -86,11 +86,17 @@ class AssetGeneratorViewController: NSViewController {
 extension AssetGeneratorViewController: ProjectToolbarDelegate {
     
     func projectToolbarDidChangeProject(project: XCProject?) {
+        println("projectToolbarDidChangeProject: \(project)")
         if let p = project {
             self.parametersDelegate?.scriptParametersChanged(self)
             if !p.hasValidAssetsPath() {
                 println("ERROR: THE DESTINATION PATH CONTAINS A DODO")
                 println("REASON: SELECTED PROJECT DOES NOT CONTAIN A VALID XCASSETS PATH")
+//                let alert = NSAlert()
+//                alert.messageText = "Project does not contain any .xcassets folder\n What the fuck man?"
+//                alert.beginSheetModalForWindow(self.view.superview!.window!, completionHandler: { (response :NSModalResponse) -> Void in
+//                    println(response)
+//                })
             }
         }
     }
