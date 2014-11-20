@@ -33,6 +33,27 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		1EADB4601A1D787A00E096A5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1EADB4411A1D771200E096A5 /* ObjectiveGitFramework.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
+			remoteInfo = "ObjectiveGit-Mac";
+		};
+		1EADB4621A1D787A00E096A5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1EADB4411A1D771200E096A5 /* ObjectiveGitFramework.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 88F05A6B16011E5400B7AD1D;
+			remoteInfo = "ObjectiveGit-MacTests";
+		};
+		1EADB4641A1D787A00E096A5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1EADB4411A1D771200E096A5 /* ObjectiveGitFramework.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D01B6ED319F82E2000D411BC;
+			remoteInfo = "ObjectiveGit-iOS";
+		};
 		DD09CBF71989A46C002DD2FB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = DD09CBDA1989A46C002DD2FB /* Project object */;
@@ -42,6 +63,18 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		1EADB4541A1D774300E096A5 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		1E4250A519C77C8C00BF686B /* AssetGeneratorWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = AssetGeneratorWindowController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		1E4A926219CB846300BFB0D0 /* XCProject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XCProject.swift; sourceTree = "<group>"; };
@@ -49,6 +82,7 @@
 		1E4EA5AB19C2343300B23001 /* FileDropViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = FileDropViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		1E959F2F19C251EC00B2759D /* AssetGeneratorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = AssetGeneratorViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		1EA94EB919D0C3180010E5BF /* LineProgressIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LineProgressIndicator.swift; sourceTree = "<group>"; };
+		1EADB4411A1D771200E096A5 /* ObjectiveGitFramework.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ObjectiveGitFramework.xcodeproj; path = "objective-git/ObjectiveGitFramework.xcodeproj"; sourceTree = "<group>"; };
 		1EBD1ECC19D37FD600A5F0B6 /* ProjectToolbarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectToolbarController.swift; sourceTree = "<group>"; };
 		1EBD1ECE19D38ED200A5F0B6 /* ScriptController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScriptController.swift; sourceTree = "<group>"; };
 		1ED5A7E019E7494A00B96118 /* XCAssetGenerator-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "XCAssetGenerator-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -92,9 +126,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1EADB4571A1D787900E096A5 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1EADB4611A1D787A00E096A5 /* ObjectiveGit.framework */,
+				1EADB4631A1D787A00E096A5 /* ObjectiveGit-MacTests.xctest */,
+				1EADB4651A1D787A00E096A5 /* ObjectiveGit.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		DD09CBD91989A46C002DD2FB = {
 			isa = PBXGroup;
 			children = (
+				1EADB4411A1D771200E096A5 /* ObjectiveGitFramework.xcodeproj */,
 				DD09CBE41989A46C002DD2FB /* XCAssetGenerator */,
 				DD09CBF91989A46C002DD2FB /* XCAssetGeneratorTests */,
 				DD09CBE31989A46C002DD2FB /* Products */,
@@ -177,6 +222,7 @@
 				DD09CBDE1989A46C002DD2FB /* Sources */,
 				DD09CBDF1989A46C002DD2FB /* Frameworks */,
 				DD09CBE01989A46C002DD2FB /* Resources */,
+				1EADB4541A1D774300E096A5 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -234,6 +280,12 @@
 			mainGroup = DD09CBD91989A46C002DD2FB;
 			productRefGroup = DD09CBE31989A46C002DD2FB /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 1EADB4571A1D787900E096A5 /* Products */;
+					ProjectRef = 1EADB4411A1D771200E096A5 /* ObjectiveGitFramework.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				DD09CBE11989A46C002DD2FB /* XCAssetGenerator */,
@@ -241,6 +293,30 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		1EADB4611A1D787A00E096A5 /* ObjectiveGit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ObjectiveGit.framework;
+			remoteRef = 1EADB4601A1D787A00E096A5 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1EADB4631A1D787A00E096A5 /* ObjectiveGit-MacTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "ObjectiveGit-MacTests.xctest";
+			remoteRef = 1EADB4621A1D787A00E096A5 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		1EADB4651A1D787A00E096A5 /* ObjectiveGit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = ObjectiveGit.framework;
+			remoteRef = 1EADB4641A1D787A00E096A5 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		DD09CBE01989A46C002DD2FB /* Resources */ = {
