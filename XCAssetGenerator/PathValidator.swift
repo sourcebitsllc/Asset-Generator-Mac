@@ -61,4 +61,14 @@ class PathValidator {
         return isDirectory.boolValue
     }
     
+    class func directoryContainsImages(#path: String) -> Bool {
+        let generator = NSFileManager.defaultManager().enumeratorAtPath(path)
+        while let element = generator!.nextObject() as? String {
+            if element.hasSuffix(".png") || element.hasSuffix(".jpg") {
+                return true
+            }
+        }
+        return false
+    }
+    
 }
