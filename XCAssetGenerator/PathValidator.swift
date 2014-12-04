@@ -55,7 +55,7 @@ class PathValidator {
     
     class func directoryExists(#path: String) -> Bool {
         var isDirectory: ObjCBool = ObjCBool(false)
-        if path.rangeOfString("/.Trash") == nil || path.isEmpty {
+        if path.rangeOfString("/.Trash") == nil || !path.isEmpty {
             NSFileManager.defaultManager().fileExistsAtPath(path, isDirectory: &isDirectory)
         }
         return isDirectory.boolValue
@@ -63,11 +63,12 @@ class PathValidator {
     
     class func directoryContainsImages(#path: String) -> Bool {
         let generator = NSFileManager.defaultManager().enumeratorAtPath(path)
-        while let element = generator!.nextObject() as? String {
+        while let element = generator?.nextObject() as? String {
             if element.hasSuffix(".png") || element.hasSuffix(".jpg") {
                 return true
             }
         }
+        
         return false
     }
     
