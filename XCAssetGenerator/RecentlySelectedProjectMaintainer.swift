@@ -73,6 +73,7 @@ class RecentlySelectedProjectMaintainer : NSObject {
                 recentProjects!.removeAtIndex(index)
             }
         }
+        self.storeRecentProjects()
     }
     
     func cullStaleProjectsAndAssets() -> Void {
@@ -133,7 +134,7 @@ extension RecentlySelectedProjectMaintainer {
         })
     }
     
-    
+    // Returns the most recent project matching the predicate indicated in the closure.
     private func recentProject(closure: (project: XCProject) -> Bool) -> XCProject? {
         let matches = self.recentProjects?.filter(closure)
         if matches?.count > 1 {
@@ -170,7 +171,7 @@ extension RecentlySelectedProjectMaintainer {
     
     private func loadRecentProjects() {
         let projectDicts = NSUserDefaults.standardUserDefaults().objectForKey(kRecentProjectsKey) as? [[String: NSData]]
-//        if projectDicts?.count > 0 {
+
         let validProjectDicts = projectDicts?.filter({ (dictionary: [String: NSData]) -> Bool in
             return PathBookmarkResolver.isBookmarkValid(dictionary[pathKey]! as Bookmark)
         })
@@ -178,11 +179,10 @@ extension RecentlySelectedProjectMaintainer {
         self.recentProjects = validProjectDicts?.map({ (a: [String: NSData]) -> XCProject in
             return XCProject.projectFromDictionary(a as [String: NSData])
         })
-        
+
         //        self.cullStaleProjectsAndAssets()
         self.cullStaleAssets()
         self.storeRecentProjects()
-//        }
     }
     
     private func __flushStoredProjects() {
