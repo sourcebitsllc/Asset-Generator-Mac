@@ -163,7 +163,6 @@ extension ProjectToolbarController {
             switch operation {
                 
             case .DirectoryRenamed:
-                
                 // Stop observing the old path, and observe the new path using the same callback.
                 self.directoryObserver.updatePathForObserver(oldPath: oldPath, newPath: newPath)
                 self.updateDropdownListTitles()

@@ -31,6 +31,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         println(b)
         println("the string = \(string11)")
+        
+        println(PathValidator.directoryContainsImages(path: "/Users/Bader/Downloads/Testz/"))
+        
     }
 
     func applicationWillTerminate(aNotification: NSNotification?) {

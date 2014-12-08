@@ -45,7 +45,7 @@ class PathValidator {
         
         // If we find a directory name which contains a dot, invalid paht found = return false
         for directoryName: String in array {
-            if contains(directoryName, ".") {
+            if contains(directoryName, ".") || contains(directoryName, ":") {
                 return true
             }
         }
@@ -68,7 +68,6 @@ class PathValidator {
                 return true
             }
         }
-        
         return false
     }
     

@@ -36,6 +36,7 @@ class AssetGeneratorWindowController: NSWindowController  {
         self.assetGeneratorController.parametersDelegate = self
         
         self.buttonSetup()
+        self.handleKeyboardHotkeys()
     }
     
     func buttonSetup() {
@@ -65,6 +66,7 @@ class AssetGeneratorWindowController: NSWindowController  {
         // Generate1x Radio button Setup
         self.generate1xButton.title                 = "Generate Missing Assets"
         self.generate1xButton.state                 = 0
+        self.generate1xButton.hidden                = true // Hide the button for 1.0 release.
         self.generate1xButton.target                = self
         self.generate1xButton.bordered              = false
         self.generate1xButton.bezelStyle            = NSBezelStyle.RoundRectBezelStyle
@@ -82,6 +84,36 @@ class AssetGeneratorWindowController: NSWindowController  {
         self.window?.contentView?.addConstraints(Hcontraint)
         self.window?.contentView?.addConstraints(Vcontraint)
         
+    }
+    
+    func handleKeyboardHotkeys() -> Void {
+        NSEvent.addLocalMonitorForEventsMatchingMask(NSEventMask.KeyDownMask) { (event :NSEvent!) -> NSEvent! in
+            // o = 31, g = 5, 37
+            let flags = event.modifierFlags & NSEventModifierFlags.DeviceIndependentModifierFlagsMask
+            
+            if (flags == NSEventModifierFlags.CommandKeyMask) {
+                switch (event.keyCode) {
+                case 31: // O
+                    self.browseButtonPressed(nil)
+                    return nil
+                
+                case 5: // G
+                    if self.generateButton.enabled {
+                        self.generateButtonPressed()
+                        return nil
+                    }
+                
+                case 37: // L
+                    println("[+] CMD + L pressed")
+//                    var logWindow = NSWindow(contentRect: self.window!.frame, styleMask: 9, backing: NSBackingStoreType.Buffered, defer: false)
+                    // logWindow.makeKeyAndOrderFront(self)
+                
+                default:
+                    break
+                }
+            }
+            return event
+        }
     }
     
     func updateGenerateButton() -> Void {
