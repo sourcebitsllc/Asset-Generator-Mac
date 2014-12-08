@@ -14,33 +14,6 @@ dotAlt="_"
 spaceAlt="_"
 
 
-# while getopts ":g:" opt; do
-# 	  case $opt in
-# 	    g)
-# 	      echo "-a was triggered!"
-# 	      ;;
-# 	    g ) echo "-g was tizzaz"
-# 		;;
-# 	    \?)
-# 	      echo "Invalid option: -$OPTARG"
-# 	      ;;
-# 	  esac
-# 	done
-
-	
-	while getopts "g:" opt; do
-	  case $opt in
-	    g)
-	      echo "2-a was triggered!"
-	      ;;
-	    g ) echo "2-g was tizzaz"
-		;;
-	    \?)
-	      echo "Invalid option: -$OPTARG"
-	      ;;
-	  esac
-	done
-
 deleteTempDirectory() {
 
 	if [ -d "$TEMPFULLPATH" ] ; then   # do we need full path? or is TEMPDIR enough? + Make sure permission are clean.
@@ -476,6 +449,7 @@ if [[ ! -d "$destinationPath" ]] ; then
 fi
 shift;
 
+## Parse other input flags
 while getopts g opt; do
 	  case $opt in
 	    g)
