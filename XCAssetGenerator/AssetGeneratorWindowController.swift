@@ -55,13 +55,13 @@ class AssetGeneratorWindowController: NSWindowController  {
         
         self.generateButton.setButtonType(NSButtonType.MomentaryLightButton)
         self.updateGenerateButton()
-        self.window!.contentView!.addSubview(self.generateButton)
+        self.window!.contentView.addSubview(self.generateButton)
         
         let contraintH = NSLayoutConstraint.constraintsWithVisualFormat("H:[generateButton(buttonWidth)]-offsetLeft-|", options: nil, metrics: ["offsetLeft": 10,"buttonWidth": 90], views: ["generateButton": generateButton])
         let contraintV = NSLayoutConstraint.constraintsWithVisualFormat("V:[generateButton]-offsetBottom-|", options: nil, metrics: ["offsetBottom": 8], views: ["generateButton": generateButton])
         
-        self.window?.contentView?.addConstraints(contraintH)
-        self.window?.contentView?.addConstraints(contraintV)
+        self.window?.contentView.addConstraints(contraintH)
+        self.window?.contentView.addConstraints(contraintV)
         
         // Generate1x Radio button Setup
         self.generate1xButton.title                 = "Generate Missing Assets"
@@ -76,13 +76,13 @@ class AssetGeneratorWindowController: NSWindowController  {
         self.generate1xButton.translatesAutoresizingMaskIntoConstraints = false
         self.generate1xButton.setButtonType(NSButtonType.SwitchButton)
         
-        self.window!.contentView!.addSubview(self.generate1xButton)
+        self.window!.contentView.addSubview(self.generate1xButton)
         
         let Hcontraint = NSLayoutConstraint.constraintsWithVisualFormat("H:|-offsetLeft-[generate1xButton(buttonWidth)]", options: nil, metrics: ["offsetLeft": 20,"buttonWidth": 180], views: ["generate1xButton": generate1xButton])
         let Vcontraint = NSLayoutConstraint.constraintsWithVisualFormat("V:[generate1xButton]-offsetBottom-|", options: nil, metrics: ["offsetBottom": 8,"buttonHeight": 30], views: ["generate1xButton": generate1xButton])
         
-        self.window?.contentView?.addConstraints(Hcontraint)
-        self.window?.contentView?.addConstraints(Vcontraint)
+        self.window?.contentView.addConstraints(Hcontraint)
+        self.window?.contentView.addConstraints(Vcontraint)
         
     }
     
