@@ -9,10 +9,14 @@ generateMissingAssets="0";
 TEMPDIR=".XCAssetTemp"
 TEMPFULLPATH="$sourcePath$TEMPDIR"
 VERBOSE="1"
+supportedExtensions="png|jpg|jpeg"
 # The character we replace the dot and space with.
 dotAlt="_"
 spaceAlt="_"
 
+
+## Notes:
+## [1] We need to leave the trailing dot for -name due to "find" semantics (to eliminate directory heads)
 
 deleteTempDirectory() {
 
@@ -29,8 +33,8 @@ setupTempDirectory() {
 	# Create temp directory.
 	mkdir -m 777 "$TEMPFULLPATH"; ## TODO: Find better permissions
 	
-	# Find all PNGs in directory and copy them into temp.
-	find "$sourcePath" -name "*.png" -print0 | while read -d $'\0' -r i ; do
+	# Find all images in directory and copy them into temp.
+	find -E "$sourcePath" -regex ".*\.($supportedExtensions)" -print0 | while read -d $'\0' -r i ; do
 		
 		name=`basename "$i"`;
 		relativePath=${i#$sourcePath/};
@@ -55,8 +59,8 @@ setupTempDirectory() {
 }
 
 createAppIcon() {
-	
-	find "$TEMPFULLPATH" -name "AppIcon*.png" -print0 | while read -d $'\0' -r i ; do 
+	# We need to leave the trailing dot for -name due to "find" semantics (to eliminate directory heads) [1]
+	find "$TEMPFULLPATH" -name "AppIcon*.*" -print0 | while read -d $'\0' -r i ; do 
 	
 		imagePath=`dirname "$i"`;
         if [[ ! -d "$imagePath/AppIcon.appiconset" ]] ; then
@@ -69,8 +73,8 @@ createAppIcon() {
 
 createLaunchImage() {
 
-	find "$TEMPFULLPATH" \( -name "LaunchImage*.png" -o -name "Default*.png" \) -print0 | while read -d $'\0' -r i ; do 
-		echo "$i"
+	find "$TEMPFULLPATH" \( -name "LaunchImage*.*" -o -name "Default*.*" \) -print0 | while read -d $'\0' -r i ; do 
+		
 		imagePath=`dirname "$i"`;			
         if [[ ! -d "$imagePath/LaunchImage.launchimage" ]] ; then
 			mkdir "$imagePath/LaunchImage.launchimage";
@@ -82,24 +86,24 @@ createLaunchImage() {
 
 
 createImagesets() {
-
-	find "$TEMPFULLPATH" -name "*.png" ! -name "LaunchImage*" ! -name "Default*" ! -name "AppIcon*" -print0 | while read -d $'\0' -r i ; do 
+	
+	find -E "$TEMPFULLPATH" -regex ".*\.($supportedExtensions)" ! -name "LaunchImage*" ! -name "Default*" ! -name "AppIcon*" -print0 | while read -d $'\0' -r i ; do 
 		
 		a=`basename "$i"`;
 		imagePath=${i%$a};
 		
 		case "$a" in
-			*@2x*.png )
-				dirname=${a%@2x*.png};
+			*@2x*.* )
+				dirname=${a%@2x*.*};
 				dirname=${dirname%~ip*}".imageset";
 				;;
-			*@3x*.png )
-				dirname=${a%@3x*.png};
+			*@3x*.* )
+				dirname=${a%@3x*.*};
 				dirname=${dirname%~ip*}".imageset";
 				;;
-			* )	## 1x
+			* )	# 1x
 				dirname=${a%~ip*};			
-				dirname=${dirname%.png}".imageset";
+				dirname=${dirname%.*}".imageset";
 				;;
 		esac
 
@@ -112,16 +116,15 @@ createImagesets() {
 }
 
 generateAssets() {
-	find "$TEMPFULLPATH" \( -name "*@2x*.png" -o -name "*@3x*.png" \) -print0 | while read -d $'\0' -r i ; do
-		# echo "$i"
+	find "$TEMPFULLPATH" \( -name "*@2x*.*" -o -name "*@3x*.*" \) -print0 | while read -d $'\0' -r i ; do
+		
 		imageName=`basename "$i"`
 		imagePath=`dirname "$i"`
-        echo
+        
 		if [[ "$imageName" == *@3x* ]] ; then
 			name2x=${imageName/@3x/@2x}
 			name1x=${imageName/@3x/}
-			# echo "$name2x"
-			# echo "$imagePath"
+			
 			if [[ ! -f "$imagePath/$name2x" ]] ; then 
 				# echo "2x doesnt exist"
 				generate2xFrom3x "$i"
@@ -148,7 +151,7 @@ generate1xFrom2x() {
 	# Make a copy of the file.
 	a=${d/@2x/};
 	cp "$d" "$a";
-	# echo "$a"
+	
 	# Get the images' dimensions, half them, then create new image with new dimensions.
 	width=`sips -g pixelWidth "$a" | tail -n1 | cut -d' ' -f4`;
     height=`sips -g pixelHeight "$a" | tail -n1 | cut -d' ' -f4`;
@@ -200,8 +203,7 @@ create_json_content() {
 	echo "{
   \"images\" : [" >> "$JSONFile";
 
-	find "$1"/* -name "*.png" -prune -print0 | while read -d $'\0' -r imagePath ; do
- 	
+	find -E "$1"/* -regex ".*\.($supportedExtensions)" -print0 | while read -d $'\0' -r imagePath ; do
  		imageName=`basename "$imagePath"`;
 		orientation="invalid";
 		subtype="invalid";
@@ -226,7 +228,7 @@ create_json_content() {
 			 fi
 		fi
 
-		if [[ "$imageName" == AppIcon*.png ]] ; then
+		if [[ "$imageName" == AppIcon*.* ]] ; then
 			width=`sips -g pixelWidth "$imagePath" | tail -n1 | cut -d' ' -f4`;
 
 			case "$width" in
@@ -262,7 +264,7 @@ create_json_content() {
 			esac
 		fi
 		
-		if [[ "$imageName" == LaunchImage*.png ]] || [[ "$imageName" == Default*.png ]] ; then
+		if [[ "$imageName" == LaunchImage*.* ]] || [[ "$imageName" == Default*.* ]] ; then
 			width=`sips -g pixelWidth "$imagePath" | tail -n1 | cut -d' ' -f4`;
 
 			case "$width" in
@@ -342,7 +344,7 @@ create_json_content() {
       \"idiom\" : \"$idiom\",
       \"scale\" : \"$scale\",";
 
-      if [[ "$imageName" == LaunchImage*.png ]] || [[ "$imageName" == Default*.png ]] ; then
+      if [[ "$imageName" == LaunchImage*.* ]] || [[ "$imageName" == Default*.* ]] ; then
 	      echo "      \"orientation\" : \"$orientation\",
 	    \"extent\" : \"$extent\",
       \"minimum-system-version\" : \"$minimumVersion\",";
@@ -352,7 +354,7 @@ create_json_content() {
       	fi
 
 	  fi
-	  if [[ "$imageName" == AppIcon*.png ]] ; then
+	  if [[ "$imageName" == AppIcon*.* ]] ; then
 		 echo "      \"size\" : \"$size\",";
 	  fi
       
@@ -381,7 +383,7 @@ create_json_content() {
 
 integrateToDestination() {
 
-	find "$TEMPFULLPATH" \( -name "*.png" \) -print0 | while read -d $'\0' -r a ; do
+	find -E "$TEMPFULLPATH" -regex ".*\.($supportedExtensions)" -print0 | while read -d $'\0' -r a ; do
 		name=`basename "$a"`;
 		folderPath=${a%$name};
 		folderName=${folderPath#$TEMPFULLPATH/};
@@ -421,10 +423,7 @@ display_usage() {
 
 
 ## Entry Point. ##
-##################
-echo "hello"
-
-	
+##################	
 
 ## Parse script inputs.
 ## alright screw it, adding some usage directions. *growl growl*
@@ -508,6 +507,6 @@ echo "progress:95"
 # Cull the temp directory after finishing.
 echo "7: Delete Temp";
  deleteTempDirectory;
-
+#
 echo "progress:100"
 
