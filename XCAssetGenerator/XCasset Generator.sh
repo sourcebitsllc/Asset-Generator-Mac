@@ -69,8 +69,8 @@ createAppIcon() {
 
 createLaunchImage() {
 
-	find "$TEMPFULLPATH" -name "LaunchImage*.png" -print0 | while read -d $'\0' -r i ; do 
-
+	find "$TEMPFULLPATH" \( -name "LaunchImage*.png" -o -name "Default*.png" \) -print0 | while read -d $'\0' -r i ; do 
+		echo "$i"
 		imagePath=`dirname "$i"`;			
         if [[ ! -d "$imagePath/LaunchImage.launchimage" ]] ; then
 			mkdir "$imagePath/LaunchImage.launchimage";
@@ -82,8 +82,8 @@ createLaunchImage() {
 
 
 createImagesets() {
-	
-	find "$TEMPFULLPATH" -name "*.png" ! -name "LaunchImage*" ! -name "AppIcon*" -print0 | while read -d $'\0' -r i ; do 
+
+	find "$TEMPFULLPATH" -name "*.png" ! -name "LaunchImage*" ! -name "Default*" ! -name "AppIcon*" -print0 | while read -d $'\0' -r i ; do 
 		
 		a=`basename "$i"`;
 		imagePath=${i%$a};
@@ -262,7 +262,7 @@ create_json_content() {
 			esac
 		fi
 		
-		if [[ "$imageName" == LaunchImage*.png ]] ; then
+		if [[ "$imageName" == LaunchImage*.png ]] || [[ "$imageName" == Default*.png ]] ; then
 			width=`sips -g pixelWidth "$imagePath" | tail -n1 | cut -d' ' -f4`;
 
 			case "$width" in
@@ -342,9 +342,9 @@ create_json_content() {
       \"idiom\" : \"$idiom\",
       \"scale\" : \"$scale\",";
 
-      if [[ "$imageName" == LaunchImage*.png ]] ; then
+      if [[ "$imageName" == LaunchImage*.png ]] || [[ "$imageName" == Default*.png ]] ; then
 	      echo "      \"orientation\" : \"$orientation\",
-	  \"extent\" : \"$extent\",
+	    \"extent\" : \"$extent\",
       \"minimum-system-version\" : \"$minimumVersion\",";
 
       	if [[ "$subtype" != invalid ]] ; then
