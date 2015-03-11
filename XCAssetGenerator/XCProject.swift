@@ -50,13 +50,13 @@ extension XCProject {
     
     func dictionaryRepresentation() -> [String: Bookmark] {
         if let assets = xcassets {
-            var assetsAsDataArray: [Bookmark] = assets.map({ (asset: XCAsset) -> Bookmark in
-                return asset.data
+            var assetsAsBookmarksArray: [Bookmark] = assets.map({ (asset: XCAsset) -> Bookmark in
+                return asset.bookmark
             })
-            var assetsData = NSKeyedArchiver.archivedDataWithRootObject(assetsAsDataArray)
-            return [pathKey: self.pathBookmark, assetPathKey: assetsData]
+            var assetsData = NSKeyedArchiver.archivedDataWithRootObject(assetsAsBookmarksArray)
+            return [pathKey: self.bookmark, assetPathKey: assetsData]
         } else {
-            return [pathKey: self.pathBookmark, assetPathKey: Bookmark() ]
+            return [pathKey: self.bookmark, assetPathKey: Bookmark() ]
         }
         
     }
@@ -66,27 +66,27 @@ extension XCProject {
     }
     
     static func projectFromDictionary(dictionary: [String: Bookmark]) -> XCProject {
-        let path = dictionary[pathKey]!
+        let bookmarks = dictionary[pathKey]!
         
-        if let assetsData: Bookmark = dictionary[assetPathKey] {
+        if let assetsBookmarks: Bookmark = dictionary[assetPathKey] {
             // TODO: Hack.
             // the data can be initialized but empty -> should be equivelant to nil data.
             // If asset data is not empty, process it. else, ignore it.
             let emptyDataTester = Bookmark()
             
-            if assetsData.isEqualToData(emptyDataTester) == false {
-                let assetsAsData = NSKeyedUnarchiver.unarchiveObjectWithData(assetsData) as [Bookmark]
-                let XCAssets = assetsAsData.map({ (data: Bookmark) -> XCAsset in
-                    return XCAsset(data: data)
+            if assetsBookmarks.isEqualToData(emptyDataTester) == false {
+                let assetsAsData = NSKeyedUnarchiver.unarchiveObjectWithData(assetsBookmarks) as [Bookmark]
+                let XCAssets = assetsAsData.map({ (bookmark: Bookmark) -> XCAsset in
+                    return XCAsset(bookmark: bookmark)
                 })
-                return XCProject(data: path, xcassets: XCAssets)
+                return XCProject(bookmark: bookmarks, xcassets: XCAssets)
             
             } else {
-                return XCProject(data: path)
+                return XCProject(bookmark: bookmarks)
             }
         
         } else {
-            return XCProject(data: path)
+            return XCProject(bookmark: bookmarks)
         }
     }
     
@@ -97,49 +97,49 @@ extension XCProject {
 // MARK:-
 struct XCProject: Equatable {
     
-    var path: String {
+    var path: Path {
         get {
-            var url = NSURL(byResolvingBookmarkData: self.pathBookmark, options: NSURLBookmarkResolutionOptions.WithoutMounting, relativeToURL: nil, bookmarkDataIsStale: nil, error: nil)
+            var url = NSURL(byResolvingBookmarkData: self.bookmark, options: NSURLBookmarkResolutionOptions.WithoutMounting, relativeToURL: nil, bookmarkDataIsStale: nil, error: nil)
             
             return url!.path! // This cannot be nil. If it is, catastrophe. It doesnt make sense for a project to not have a valid path -- else it shouldnt exist
         }
     }
-    var pathBookmark : Bookmark
+    var bookmark : Bookmark
     private var xcassets: [XCAsset]?
     
     
     // MARK:- Initializers
     
     
-    internal init(data: Bookmark) {
-        self.pathBookmark = data
+    internal init(bookmark: Bookmark) {
+        self.bookmark = bookmark
         self.xcassets = retrieveAssets(directory: self.XCProjectDirectoryPath())
     }
 
-    internal init(data: Bookmark, xcassetData: [Bookmark]?) {
+    internal init(bookmark: Bookmark, xcassetBookmarks: [Bookmark]?) {
         var assets: [XCAsset]? = nil
         
-        if let assetsData = xcassetData {
+        if let assetsData = xcassetBookmarks {
             var validBookmarks: [BookmarkResolver.ResolvedBookmark] = BookmarkResolver.resolveValidPathsFromBookmarks(assetsData)
 
             if validBookmarks.count > 0 {
                 assets = validBookmarks.map { rb -> XCAsset in
-                    return XCAsset(data: rb.bookmark, path: rb.path)
+                    return XCAsset(bookmark: rb.bookmark, path: rb.path)
                 }
             }
         }
         
         self.xcassets = assets
-        self.pathBookmark = data
+        self.bookmark = bookmark
     }
     
-    internal init(data: Bookmark, xcassets: [XCAsset]?) {
-        self.pathBookmark = data
+    internal init(bookmark: Bookmark, xcassets: [XCAsset]?) {
+        self.bookmark = bookmark
     
         self.xcassets = xcassets ?? nil
     }
     
-    private func XCProjectDirectoryPath() -> String {
+    private func XCProjectDirectoryPath() -> Path {
         return self.path.stringByDeletingLastPathComponent + ("/") // .extend
     }
     
@@ -168,7 +168,7 @@ struct XCProject: Equatable {
         
         if let path = assetPath {
             var data: Bookmark = BookmarkResolver.resolveBookmarkFromPath(path)
-            return [XCAsset(data: data)]
+            return [XCAsset(bookmark: data)]
         } else {
             return nil
         }
@@ -180,22 +180,22 @@ struct XCProject: Equatable {
 
 // MARK:- XCProject Assets Public Query Interface
 extension XCProject {
-    func assetDirectoryTitle() -> String {
+    func assetDirectoryTitle() -> Path {
         return self.xcassets?.first?.title ?? invalidAssetTitleDisplay
     }
     
-    func assetDirectoryPath() -> String? {
+    func assetDirectoryPath() -> Path? {
         return self.xcassets?.first?.path
     }
     
     func assetDirectoryBookmark() -> Bookmark? {
-        return self.xcassets?.first?.data
+        return self.xcassets?.first?.bookmark
     }
     
     // A project will have a valid assets path if it contains an asset and if the asset path is not empty.
     func hasValidAssetsPath() -> Bool {
         if (self.xcassets?.first != nil) {
-            return BookmarkResolver.isBookmarkValid(self.xcassets!.first!.data) && !self.xcassets!.first!.path.isEmpty
+            return BookmarkResolver.isBookmarkValid(self.xcassets!.first!.bookmark) && !self.xcassets!.first!.path.isEmpty
         }
         
         return false

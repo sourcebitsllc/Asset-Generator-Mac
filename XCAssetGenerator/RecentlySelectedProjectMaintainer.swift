@@ -25,12 +25,13 @@ class RecentlySelectedProjectMaintainer : NSObject {
     
     // Return whether the selected project is suitable for script execution
     func isSelectedProjectValid() -> Bool {
-        return (self.selectedProject()? != nil) ? self.isProjectValid(self.selectedProject()!) && self.selectedProject()!.hasValidAssetsPath() : false
+        return (self.selectedProject()? != nil) ? self.isProjectValid(self.selectedProject()!) && self.selectedProject()!.hasValidAssetsPath()
+                                                : false
     }
     
     // Returns whether a project _can_ exist.
     private func isProjectValid(project: XCProject) -> Bool {
-        return BookmarkResolver.isBookmarkValid(project.pathBookmark)
+        return BookmarkResolver.isBookmarkValid(project.bookmark)
     }
     
     
@@ -62,8 +63,8 @@ class RecentlySelectedProjectMaintainer : NSObject {
 
     
     func addProject(#url: NSURL) {
-        var data: NSData = BookmarkResolver.resolveBookmarkFromURL(url)
-        addProject(project: XCProject(data: data))
+        var bookmark: Bookmark = BookmarkResolver.resolveBookmarkFromURL(url)
+        addProject(project: XCProject(bookmark: bookmark))
     }
     
     func removeProject(#project: XCProject) {
@@ -92,7 +93,7 @@ class RecentlySelectedProjectMaintainer : NSObject {
     private func cullStaleAssets() -> Void {
         self.recentProjects = self.recentProjects?.map({ (project: XCProject) -> XCProject in
             if !project.hasValidAssetsPath() {
-                return XCProject(data: project.pathBookmark)
+                return XCProject(bookmark: project.bookmark)
             } else {
                 return project
             }
