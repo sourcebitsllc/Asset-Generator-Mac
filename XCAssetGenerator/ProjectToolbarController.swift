@@ -203,7 +203,7 @@ extension ProjectToolbarController {
                     if let p = project {
                         
                         // Find the affected project and update it.
-                        var newProject = XCProject(data: PathBookmarkResolver.resolveBookmarkFromPath(p.path))
+                        var newProject = XCProject(data: BookmarkResolver.resolveBookmarkFromPath(p.path))
                         let indexOfProject = self.recentListMaintainer.indexOfProject(p)! // If project exists -> this cannot be nil.
                         
                         if (self.recentListMaintainer.selectedProject()? == p) {

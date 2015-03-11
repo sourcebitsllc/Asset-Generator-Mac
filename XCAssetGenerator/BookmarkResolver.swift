@@ -1,5 +1,5 @@
 //
-//  PathBookmarkResolver.swift
+//  BookmarkResolver.swift
 //  XCAssetGenerator
 //
 //  Created by Bader on 10/30/14.
@@ -8,10 +8,10 @@
 
 import Foundation
 
-
+typealias Path = String
 typealias Bookmark = NSData
 
-class PathBookmarkResolver {
+class BookmarkResolver {
     
     class func resolvePathFromBookmark(data: Bookmark) -> String? {
         let url = NSURL(byResolvingBookmarkData: data, options: NSURLBookmarkResolutionOptions.WithoutMounting, relativeToURL: nil, bookmarkDataIsStale: nil, error: nil)
@@ -24,7 +24,7 @@ class PathBookmarkResolver {
         return resolveBookmarkFromURL(url)
     }
     
-    
+    // TODO: Potential bugs here. Reduce the amount
     class func resolveBookmarkFromURL(url: NSURL) -> Bookmark {
         var data: Bookmark = url.bookmarkDataWithOptions(NSURLBookmarkCreationOptions.SuitableForBookmarkFile, includingResourceValuesForKeys: nil, relativeToURL: nil, error: nil)!
         
@@ -32,18 +32,21 @@ class PathBookmarkResolver {
     }
 }
 
-extension PathBookmarkResolver {
+extension BookmarkResolver {
     
-    typealias PathBookmark = (path: String, bookmark: Bookmark)
-    
-    class func resolveValidPathsFromBookmarks(data: [Bookmark]) -> [PathBookmark] {
+    // Find better name for struct
+    struct ResolvedBookmark {
+        let bookmark: Bookmark
+        let path: Path
+    }
+    class func resolveValidPathsFromBookmarks(bookmarks: [Bookmark]) -> [ResolvedBookmark] {
         
-        var valid: [PathBookmark] = [PathBookmark]()
+        var valid: [ResolvedBookmark] = [ResolvedBookmark]()
         
-        for d in data {
-            let path: String? = self.resolvePathFromBookmark(d)
+        for bookmark in bookmarks {
+            let path: Path? = self.resolvePathFromBookmark(bookmark)
             if let p = path {
-                valid.insert((p,d), atIndex: 0)
+                valid.append(ResolvedBookmark(bookmark: bookmark, path: p))
             }
         }
         return valid
@@ -52,7 +55,7 @@ extension PathBookmarkResolver {
 
 protocol BookmarkValidator {}
     
-extension PathBookmarkResolver: BookmarkValidator {
+extension BookmarkResolver: BookmarkValidator {
     
     class func isBookmarkValid(bookmark: Bookmark) -> Bool {
         let path: String? = self.resolvePathFromBookmark(bookmark)

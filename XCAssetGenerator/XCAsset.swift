@@ -46,7 +46,7 @@ struct XCAsset: Equatable {
     internal private(set) var path: String {
         get {
             // This may be not ideal; we can just access the string property. But its better to get the "truth" directly from its source.
-            return PathBookmarkResolver.resolvePathFromBookmark(self.data)!
+            return BookmarkResolver.resolvePathFromBookmark(self.data)!
         }
         
         set {

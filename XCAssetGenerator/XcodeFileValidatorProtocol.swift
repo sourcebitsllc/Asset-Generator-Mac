@@ -31,12 +31,12 @@ extension String: XcodeFileValidator {
 extension Bookmark: XcodeFileValidator {
     
     func isXCProject() -> Bool {
-        let path: String? = PathBookmarkResolver.resolvePathFromBookmark(self)
+        let path: String? = BookmarkResolver.resolvePathFromBookmark(self)
         return (path != nil) ? path!.isXCProject() : false
     }
     
     func isXCAsset() -> Bool {
-        let path: String? = PathBookmarkResolver.resolvePathFromBookmark(self)
+        let path: String? = BookmarkResolver.resolvePathFromBookmark(self)
         return (path != nil) ? path!.isXCAsset() : false
     }
     

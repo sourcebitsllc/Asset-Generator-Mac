@@ -69,7 +69,7 @@ extension XCProject {
         let path = dictionary[pathKey]!
         
         if let assetsData: Bookmark = dictionary[assetPathKey] {
-            
+            // TODO: Hack.
             // the data can be initialized but empty -> should be equivelant to nil data.
             // If asset data is not empty, process it. else, ignore it.
             let emptyDataTester = Bookmark()
@@ -117,24 +117,20 @@ struct XCProject: Equatable {
     }
 
     internal init(data: Bookmark, xcassetData: [Bookmark]?) {
-        self.pathBookmark = data
+        var assets: [XCAsset]? = nil
         
         if let assetsData = xcassetData {
-            var validBookmarks: [PathBookmarkResolver.PathBookmark] = PathBookmarkResolver.resolveValidPathsFromBookmarks(assetsData)
-            
-            var assets: [XCAsset]? = nil
-            
-            // If no valid bookmarks available, just skip them and set assets to nil.
+            var validBookmarks: [BookmarkResolver.ResolvedBookmark] = BookmarkResolver.resolveValidPathsFromBookmarks(assetsData)
+
             if validBookmarks.count > 0 {
-                assets = validBookmarks.map({ (aPathBookmark: PathBookmarkResolver.PathBookmark ) -> XCAsset in
-                    return XCAsset(data: aPathBookmark.bookmark, path: aPathBookmark.path)
-                })
+                assets = validBookmarks.map { rb -> XCAsset in
+                    return XCAsset(data: rb.bookmark, path: rb.path)
+                }
             }
-            self.xcassets = assets
-            
-        } else {
-            self.xcassets = nil
         }
+        
+        self.xcassets = assets
+        self.pathBookmark = data
     }
     
     internal init(data: Bookmark, xcassets: [XCAsset]?) {
@@ -153,7 +149,7 @@ struct XCProject: Equatable {
         self.xcassets = nil
     }
     
-
+    
     mutating private func retrieveAssets(#directory: String) -> [XCAsset]? {
         var task: NSTask = NSTask()
         var pipe = NSPipe()
@@ -171,7 +167,7 @@ struct XCProject: Equatable {
         
         
         if let path = assetPath {
-            var data: Bookmark = PathBookmarkResolver.resolveBookmarkFromPath(path)
+            var data: Bookmark = BookmarkResolver.resolveBookmarkFromPath(path)
             return [XCAsset(data: data)]
         } else {
             return nil
@@ -199,7 +195,7 @@ extension XCProject {
     // A project will have a valid assets path if it contains an asset and if the asset path is not empty.
     func hasValidAssetsPath() -> Bool {
         if (self.xcassets?.first != nil) {
-            return PathBookmarkResolver.isBookmarkValid(self.xcassets!.first!.data) && !self.xcassets!.first!.path.isEmpty
+            return BookmarkResolver.isBookmarkValid(self.xcassets!.first!.data) && !self.xcassets!.first!.path.isEmpty
         }
         
         return false

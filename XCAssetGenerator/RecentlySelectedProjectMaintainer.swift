@@ -30,7 +30,7 @@ class RecentlySelectedProjectMaintainer : NSObject {
     
     // Returns whether a project _can_ exist.
     private func isProjectValid(project: XCProject) -> Bool {
-        return PathBookmarkResolver.isBookmarkValid(project.pathBookmark)
+        return BookmarkResolver.isBookmarkValid(project.pathBookmark)
     }
     
     
@@ -62,7 +62,7 @@ class RecentlySelectedProjectMaintainer : NSObject {
 
     
     func addProject(#url: NSURL) {
-        var data: NSData = PathBookmarkResolver.resolveBookmarkFromURL(url)
+        var data: NSData = BookmarkResolver.resolveBookmarkFromURL(url)
         addProject(project: XCProject(data: data))
     }
     
@@ -173,7 +173,7 @@ extension RecentlySelectedProjectMaintainer {
         let projectDicts = NSUserDefaults.standardUserDefaults().objectForKey(kRecentProjectsKey) as? [[String: NSData]]
 
         let validProjectDicts = projectDicts?.filter({ (dictionary: [String: NSData]) -> Bool in
-            return PathBookmarkResolver.isBookmarkValid(dictionary[pathKey]! as Bookmark)
+            return BookmarkResolver.isBookmarkValid(dictionary[pathKey]! as Bookmark)
         })
         
         self.recentProjects = validProjectDicts?.map({ (a: [String: NSData]) -> XCProject in
