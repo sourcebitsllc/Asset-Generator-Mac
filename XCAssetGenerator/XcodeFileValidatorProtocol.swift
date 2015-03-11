@@ -31,7 +31,7 @@ extension String: XcodeFileValidator {
 extension Bookmark: XcodeFileValidator {
     
     func isXCProject() -> Bool {
-        let path: String? = BookmarkResolver.resolvePathFromBookmark(self)
+        let path: Path? = BookmarkResolver.resolvePathFromBookmark(self)
         return (path != nil) ? path!.isXCProject() : false
     }
     

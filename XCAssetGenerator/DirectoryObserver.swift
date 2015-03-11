@@ -27,7 +27,7 @@ class SourceObserver: FileSystemObserverType {
     }
     
     
-    func observeSource(path: String) -> Void {
+    func observeSource(path: Path) -> Void {
         if let previousPath = self.observedPath {
             self.directoryObserver.removeObserverForPath(previousPath, restartStream: false)
         }
@@ -37,7 +37,7 @@ class SourceObserver: FileSystemObserverType {
     }
     
     
-    func stopObservingPath(path: String) {
+    func stopObservingPath(path: Path) {
         self.observedPath = nil
         self.directoryObserver.removeObserverForPath(path)
     }
@@ -77,11 +77,11 @@ class ProjectObserver: FileSystemObserverType {
         }
     }
     
-    func observePath(path: String) {
+    func observePath(path: Path) {
         self.directoryObserver.addObserverForPath(path, handler: self.destinationClosure)
     }
     
-    func stopObservingPath(path: String) {
+    func stopObservingPath(path: Path) {
         self.directoryObserver.removeObserverForPath(path)
     }
     

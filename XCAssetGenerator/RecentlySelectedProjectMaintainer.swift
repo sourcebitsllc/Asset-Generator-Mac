@@ -145,13 +145,13 @@ extension RecentlySelectedProjectMaintainer {
         return matches?.first
     }
     
-    func recentProjectWithAsset(path: String) -> XCProject? {
+    func recentProjectWithAsset(path: Path) -> XCProject? {
         return recentProject({ (project) -> Bool in
             return project.assetDirectoryPath() == path
         })
     }
     
-    func recentProjectWithPath(path: String) -> XCProject? {
+    func recentProjectWithPath(path: Path) -> XCProject? {
         return recentProject({ (project) -> Bool in
             return project.path == path
         })

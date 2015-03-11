@@ -13,7 +13,7 @@ let kBottomBarHeight: CGFloat = 30
 
 
 protocol FileDropControllerDelegate {
-    func fileDropControllerDidSetSourcePath(controller: FileDropViewController, path: String, previousPath: String?)
+    func fileDropControllerDidSetSourcePath(controller: FileDropViewController, path: Path, previousPath: String?)
     func fileDropControllerDidRemoveSourcePath(controller: FileDropViewController, removedPath: String)
 }
 

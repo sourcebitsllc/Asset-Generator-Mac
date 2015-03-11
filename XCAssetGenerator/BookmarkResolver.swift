@@ -19,7 +19,7 @@ class BookmarkResolver {
         return url?.path ?? nil
     }
     
-    class func resolveBookmarkFromPath(path: String) -> Bookmark {
+    class func resolveBookmarkFromPath(path: Path) -> Bookmark {
         let url: NSURL = NSURL(fileURLWithPath: path, isDirectory: true)!
         return resolveBookmarkFromURL(url)
     }
@@ -58,7 +58,7 @@ protocol BookmarkValidator {}
 extension BookmarkResolver: BookmarkValidator {
     
     class func isBookmarkValid(bookmark: Bookmark) -> Bool {
-        let path: String? = self.resolvePathFromBookmark(bookmark)
+        let path: Path? = self.resolvePathFromBookmark(bookmark)
         return (path != nil) ? PathValidator.directoryExists(path: path!) : false
     }
 }

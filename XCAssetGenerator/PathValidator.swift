@@ -16,7 +16,7 @@ import Foundation
 class PathValidator {
 
     // The renaming should be done directly from the main bash script (ScriptExecutor)
-    class func directoryContainsInvalidCharacters(#path: String, options: AnyObject?) -> Bool {
+    class func directoryContainsInvalidCharacters(#path: Path, options: AnyObject?) -> Bool {
         NSLog("Checking if directory contains invalid characters")
         
         var task: NSTask = NSTask()
@@ -53,7 +53,7 @@ class PathValidator {
         return false
     }
     
-    class func directoryExists(#path: String) -> Bool {
+    class func directoryExists(#path: Path) -> Bool {
         var isDirectory: ObjCBool = ObjCBool(false)
         if path.rangeOfString("/.Trash") == nil || !path.isEmpty {
             NSFileManager.defaultManager().fileExistsAtPath(path, isDirectory: &isDirectory)
@@ -61,7 +61,7 @@ class PathValidator {
         return isDirectory.boolValue
     }
     
-    class func directoryContainsImages(#path: String) -> Bool {
+    class func directoryContainsImages(#path: Path) -> Bool {
         let generator = NSFileManager.defaultManager().enumeratorAtPath(path)
         while let element = generator?.nextObject() as? String {
             if element.hasSuffix(".png") || element.hasSuffix(".jpg") {
