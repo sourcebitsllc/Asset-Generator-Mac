@@ -11,7 +11,6 @@ import Cocoa
 let kBottomBarHeight: CGFloat = 30
 
 
-
 protocol FileDropControllerDelegate {
     func fileDropControllerDidSetSourcePath(controller: FileDropViewController, path: Path, previousPath: String?)
     func fileDropControllerDidRemoveSourcePath(controller: FileDropViewController, removedPath: String)
@@ -66,9 +65,8 @@ class FileDropViewController: NSViewController {
         self.dropView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[imageView(imageWidth)]", options: nil, metrics: ["imageWidth": 150], views: ["imageView": self.dropImageView]))
          self.dropView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[imageView(imageHeight)]", options: nil, metrics: ["imageHeight": 150], views: ["imageView": self.dropImageView]))
         
-        // Observing the File System Setup.
-        let sourceClosure: SourceObserver.SourceDirectoryObserverClosure = self.observerClosure()
-        directoryObserver = SourceObserver(sourceObserver: sourceClosure)
+        
+        directoryObserver = SourceObserver(delegate: self)
     }
     
     
@@ -161,38 +159,24 @@ extension FileDropViewController: DropViewDelegate {
     }
 }
 
-extension FileDropViewController {
 
-    func observerClosure() -> SourceObserver.SourceDirectoryObserverClosure {
-        return { (operation: FileSystemOperation, oldPath: String!, newPath: String!) -> Void in
-            switch operation {
-                
-            case FileSystemOperation.DirectoryRenamed:
-                
-                // Stop observing the old path, and observe the new path using the same callback.
-                self.directoryObserver.updatePathForObserver(oldPath: oldPath, newPath: newPath)
-                
-                // Set the new path and update the state.
-                self.folderPath = newPath
-                self.updateDropView(state: DropViewState.SuccessfulDrop)
-                
-            case FileSystemOperation.DirectoryDeleted:
-                
-                self.updateDropView(state: DropViewState.PathNoLongerExists)
-                self.directoryObserver.stopObservingPath(oldPath)
-                self.folderPath = nil
-                self.delegate?.fileDropControllerDidRemoveSourcePath(self, removedPath: oldPath)
-                
-            case FileSystemOperation.DirectoryInitializationFailedAsPathDoesNotExist:
-                println("Initialization failed cause the path we want to observe does not exist")
-                
-            case FileSystemOperation.DirectoryUnknownOperationForUnresolvedPath:
-                println("We couldnt open the filde to process the change operation")
-                
-            default:
-                break;
-            }
-            
-        }
+extension FileDropViewController: FileSystemObserverDelegate {
+
+    func FileSystemDirectoryDeleted(path: String!) {
+        self.updateDropView(state: DropViewState.PathNoLongerExists)
+        self.directoryObserver.stopObservingPath(path)
+        self.folderPath = nil
+        self.delegate?.fileDropControllerDidRemoveSourcePath(self, removedPath: path)
+    }
+    
+    
+    func FileSystemDirectory(oldPath: String!, renamedTo newPath: String!) {
+        self.directoryObserver.updatePathForObserver(oldPath: oldPath, newPath: newPath)
+        self.folderPath = newPath
+        self.updateDropView(state: DropViewState.SuccessfulDrop)
+    }
+    
+    func FileSystemDirectoryError(error: NSError!) {
+        // TODO:
     }
 }

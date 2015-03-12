@@ -14,15 +14,13 @@ protocol FileSystemObserverType {}
 
 class SourceObserver: FileSystemObserverType {
     
-    typealias SourceDirectoryObserverClosure = FileSystemObserverBlock
-    
-    let sourceClosure: SourceDirectoryObserverClosure
     
     var directoryObserver: FileSystemObserver
     var observedPath: String?
+    var observer: FileSystemObserverDelegate
     
-    init(sourceObserver: SourceDirectoryObserverClosure) {
-        sourceClosure = sourceObserver
+    init(delegate: FileSystemObserverDelegate) {
+        self.observer = delegate
         directoryObserver = FileSystemObserver()
     }
     
@@ -33,7 +31,7 @@ class SourceObserver: FileSystemObserverType {
         }
         
         self.observedPath = path
-        self.directoryObserver.addObserverForPath(path, handler: self.sourceClosure)
+        self.directoryObserver.addObserver(self.observer, forFileSystemPath: path)
     }
     
     
@@ -49,15 +47,13 @@ class SourceObserver: FileSystemObserverType {
 }
 
 class ProjectObserver: FileSystemObserverType {
-
-    typealias ProjectObserverClosure = FileSystemObserverBlock
-    let destinationClosure: ProjectObserverClosure
     
     var directoryObserver: FileSystemObserver
+    var observer: FileSystemObserverDelegate
     
-    init(projectObserver: ProjectObserverClosure) {
+    init(delegate: FileSystemObserverDelegate) {
         directoryObserver  = FileSystemObserver()
-        destinationClosure = projectObserver
+        self.observer = delegate
     }
     
     
@@ -78,7 +74,7 @@ class ProjectObserver: FileSystemObserverType {
     }
     
     func observePath(path: Path) {
-        self.directoryObserver.addObserverForPath(path, handler: self.destinationClosure)
+        self.directoryObserver.addObserver(self.observer, forFileSystemPath: path)
     }
     
     func stopObservingPath(path: Path) {

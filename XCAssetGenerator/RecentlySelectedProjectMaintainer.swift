@@ -30,7 +30,7 @@ class RecentlySelectedProjectMaintainer : NSObject {
     }
     
     // Returns whether a project _can_ exist.
-    private func isProjectValid(project: XCProject) -> Bool {
+    func isProjectValid(project: XCProject) -> Bool {
         return BookmarkResolver.isBookmarkValid(project.bookmark)
     }
     
@@ -139,6 +139,10 @@ extension RecentlySelectedProjectMaintainer {
         }
         
         return matches?.first
+    }
+    
+    func recentProjects(filter: (project: XCProject) -> Bool) -> [XCProject]? {
+        return self.recentProjects?.filter(filter)
     }
     
     func recentProjectWithAsset(path: Path) -> XCProject? {

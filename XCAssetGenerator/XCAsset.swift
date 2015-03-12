@@ -9,7 +9,11 @@
 import Foundation
 
 func == (lhs: XCAsset, rhs: XCAsset) -> Bool {
-    return lhs.path == rhs.path
+    switch ( ProjectValidator.isAssetValid(lhs), ProjectValidator.isAssetValid(rhs) ) {
+        case (true, true): return lhs.path == rhs.path
+        case (false, false): return true
+        case (_,_): return false
+    }
 }
 
 func == (lhs: XCAsset?, rhs: XCAsset?) -> Bool {

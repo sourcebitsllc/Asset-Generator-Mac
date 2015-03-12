@@ -8,24 +8,30 @@
 
 #import <Foundation/Foundation.h>
 
-typedef NS_ENUM(NSUInteger, FileSystemOperation) {
-    FileSystemDirectoryCreated,
-    FileSystemDirectoryDeleted,
-    FileSystemDirectoryRenamed,
-    FileSystemDirectoryContentChanged,
-    FileSystemDirectoryBazookad,
-    FileSystemDirectoryInitializationFailedAsPathDoesNotExist,
-    FileSystemDirectoryUnknownOperationForUnresolvedPath
-};
+@protocol FileSystemObserverDelegate <NSObject>
 
-typedef void(^FileFileSystemObserverBlock)(FileSystemOperation);
-typedef void(^FileSystemObserverBlock)(FileSystemOperation, NSString *, NSString *);
+// Created
+@optional
+- (void)FileSystemDirectoryCreated:(NSString *)path;
+
+@required
+- (void)FileSystemDirectoryDeleted:(NSString *)path;
+- (void)FileSystemDirectory:(NSString *)oldPath renamedTo:(NSString *)newPath;
+- (void)FileSystemDirectoryError:(NSError *)error;
+// Deleted
+
+//Bamboozled
+
+// Failures
+//  - InitializationFailedAsPathDoesnotExist
+//  - UnknownOperationForUnresolvedPath
+@end
+
 
 @interface FileSystemObserver : NSObject
 
-- (void)addObserverForPath:(NSString *)path handler:(FileSystemObserverBlock)directoryBlock;
+- (void)addObserver:(id<FileSystemObserverDelegate>)observer forFileSystemPath:(NSString *)path;
 - (void)replacePathForObserversFrom:(NSString *)originalPath To:(NSString *)newPath;
-//- (NSString *)pathForBlock:(FileSystemObserverBlock)block;
 /*
     Description:
         Remove the path and continue observing the other paths.

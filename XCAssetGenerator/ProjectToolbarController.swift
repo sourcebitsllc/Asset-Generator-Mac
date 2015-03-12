@@ -49,8 +49,7 @@ class ProjectToolbarController: NSObject  {
     }
     
     private func setupProjectObserver() {
-        let destinationClosure: ProjectObserver.ProjectObserverClosure = self.observerClosure()
-        self.directoryObserver = ProjectObserver(projectObserver: destinationClosure)
+        self.directoryObserver = ProjectObserver(delegate: self)
     }
 
     // MARK:- Public toolbar controller hooks.
@@ -157,86 +156,61 @@ extension ProjectToolbarController {
 }
 
 // MARK: Directory Observer Compliance
-extension ProjectToolbarController {
-    func observerClosure() -> FileSystemObserverBlock {
-        return { (operation: FileSystemOperation, oldPath: String!, newPath: String!) -> Void in
-            switch operation {
-                
-            case .DirectoryRenamed:
-                // Stop observing the old path, and observe the new path using the same callback.
-                self.directoryObserver.updatePathForObserver(oldPath: oldPath, newPath: newPath)
-                self.updateDropdownListTitles()
-                
-            case .DirectoryBazookad:
-                if (newPath == nil) {
-                    self.directoryObserver.stopObservingPath(oldPath)
-                    // Something was forcefully deleted. (either using rm or equiv)
-                    // Turns out, its hard to detect which project this is since the Bookmark data is now corrupted
-                    // and any calls to path will crash (which makes sense since its our job to ensure all assets ARE
-                    // clean, we need to go through the projects to detemine the stale bookmarks. Thanks Apple.
-                    
-                    self.recentListMaintainer.cullStaleProjectsAndAssets()
-                    self.updateDropdownListTitles()
-                    self.delegate?.projectToolbarDidChangeProject(nil)
+extension ProjectToolbarController: FileSystemObserverDelegate {
+    
+    func FileSystemDirectory(oldPath: String!, renamedTo newPath: String!) {
+        self.directoryObserver.updatePathForObserver(oldPath: oldPath, newPath: newPath)
+        self.updateDropdownListTitles()
+    }
+
+    func FileSystemDirectoryDeleted(path: String!) {
+        
+        if path.isXCProject() {
+            let corruptedProjects = self.recentListMaintainer.recentProjects { project in
+                return !ProjectValidator.isProjectValid(project)
+            }
+            println(corruptedProjects)
+            if let projects = corruptedProjects {
+                for project in projects {
+                    self.recentListMaintainer.removeProject(project: project)
                 }
-                
-            case .DirectoryDeleted:
-                
-                self.directoryObserver.stopObservingPath(oldPath)
-                
-                if oldPath.isXCProject() {
-                    
-                    if (self.recentListMaintainer.selectedProject()?.path == newPath) {
-                        // The current selected project was deleted. Handle it.
-                        self.recentListMaintainer.removeProject(project: self.recentListMaintainer.selectedProject()!)
-                        
-                    } else {
-                        // One of the recents (but not the selected) was deleted.
-                        let proj = self.recentListMaintainer.recentProjectWithPath(newPath)! // This cannot be nil.
-                        self.recentListMaintainer.removeProject(project: proj)
-                    }
-                    
-                } else if oldPath.isXCAsset() {
-                    
-                    // Find the project whose asset path matches this.
-                    var project: XCProject? = self.recentListMaintainer.recentProjectWithAsset(newPath)
-                    if let p = project {
-                        
-                        // Find the affected project and update it.
-                        var newProject = XCProject(bookmark: BookmarkResolver.resolveBookmarkFromPath(p.path))
-                        let indexOfProject = self.recentListMaintainer.indexOfProject(p)! // If project exists -> this cannot be nil.
-                        
-                        if (self.recentListMaintainer.selectedProject()? == p) {
-                            // TODO: selected project has changed.
-                        }
-                        self.recentListMaintainer.removeProject(project: p)
-                        self.recentListMaintainer.addProject(project: newProject, index: indexOfProject)
-                        
-                    } else {
-                        // We end up here if the accompanying project for the asset path could not be located.
-                        // This case can occur when the whole project is deleted which sends 2 "FileSystem.Deleted" calls -- 1 for the project and 1 for the asset.
-                        // Ending up here means the project won the race condition and got deleted first before we get a chance to delete ourselves, which is not nice but nothing nefarious will happen.
-                        // TODO: FIND NEFARIOUS THINGS THAT COULD HAPPEN.
-                        println("This assets project was probably deleted just now.")
-                    }
-                }
-                
-                self.updateDropdownListTitles()
-                self.delegate?.projectToolbarDidChangeProject(nil)
-                
-            case .DirectoryInitializationFailedAsPathDoesNotExist:
-                println("Initialization failed cause the path we want to observe does not exist")
-                
-            case .DirectoryUnknownOperationForUnresolvedPath:
-                println("We couldnt open the filde to process the change operation")
-                
-            default:
-                println("Default")
             }
             
+        
+        } else if path.isXCAsset() {
+            
+            let corruptedProjects = self.recentListMaintainer.recentProjects { project in
+                return !ProjectValidator.isAssetValid(project)
+            }
+            
+            if let projects = corruptedProjects {
+                for project in projects {
+                    var newProject = XCProject(bookmark: BookmarkResolver.resolveBookmarkFromPath(project.path))
+                    let indexOfProject = self.recentListMaintainer.indexOfProject(project)
+                    
+                    self.recentListMaintainer.removeProject(project: project)
+                    
+                    if let idx = indexOfProject {
+                        self.recentListMaintainer.addProject(project: newProject, index: idx)
+                    }
+                    if (self.recentListMaintainer.selectedProject()? == project) {
+                        // TODO: selected project has changed.
+                    }
+                    
+                }
+            }
         }
         
+
+        self.updateDropdownListTitles()
+        self.delegate?.projectToolbarDidChangeProject(nil)
     }
+    
+    func FileSystemDirectoryError(error: NSError!) {
+        // TODO:
+    }
+    
+    
 }
 
 // MARK:- The Toolbars Embeded Progress Indicator Extenstion

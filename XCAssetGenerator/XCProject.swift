@@ -15,9 +15,12 @@ let invalidAssetTitleDisplay = ""
 
 
 // MARK:- Equatable Conformance
-
 func == (lhs: XCProject, rhs: XCProject) -> Bool {
-    return lhs.path == rhs.path && lhs.xcassets?.first? == rhs.xcassets?.first?
+    switch ( ProjectValidator.isProjectValid(lhs), ProjectValidator.isProjectValid(rhs) ) {
+        case (true, true): return lhs.path == rhs.path && lhs.xcassets?.first? == rhs.xcassets?.first?
+        case (false, false): return true
+        case (_,_): return false
+    }
 }
 // MARK: Convenience Funcion
 func == (lhs: XCProject?, rhs: XCProject?) -> Bool {

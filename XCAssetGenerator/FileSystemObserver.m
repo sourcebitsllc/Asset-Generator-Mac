@@ -18,7 +18,7 @@ NSString * const kDirectoryObserverKey = @"DirectoryObserverKey";
 
 @interface FileSystemObserver ()
 @property (nonatomic, strong) NSMutableArray *pathsToObserve;
-@property (nonatomic, strong) NSMutableDictionary *observers;
+@property (nonatomic, strong) NSMutableDictionary *observers; // dictionary of paths: Array
 @property (nonatomic, strong) NSMutableDictionary *pathFileDescriptors;
 @property FSEventStreamRef fileStream;
 
@@ -56,33 +56,30 @@ NSString * const kDirectoryObserverKey = @"DirectoryObserverKey";
 }
 
 #pragma MARK - Observers Management
-
-- (void)addObserverForPath:(NSString *)path handler:(FileSystemObserverBlock)directoryBlock
+- (void)addObserver:(id<FileSystemObserverDelegate>)observer forFileSystemPath:(NSString *)path
 {
     const char *cStringPath = [path cStringUsingEncoding:NSASCIIStringEncoding];
     int fd = open(cStringPath, 0);
     
     if (fd == -1) {
-        directoryBlock(FileSystemDirectoryInitializationFailedAsPathDoesNotExist, @"", @"");
+        // Initialization failed error.
+        [observer FileSystemDirectoryError:nil];
         return ;
     }
     if (self.fileStream != NULL)
         [self invalidateStream];
-
+    
     
     if (![self.pathsToObserve containsObject:path]) {
         [self.pathsToObserve addObject:path];
     }
     
     [self.pathFileDescriptors setObject:@(fd) forKey:path];
-    
-    
-    [self.observers setValue:@{ kDirectoryObserverKey: directoryBlock } forKey:path];
+    [self.observers setValue:@[observer] forKey:path];
     
     [self createStream];
     
 }
-
 
 - (void)removeObserverForPath:(NSString *)path
 {
@@ -194,10 +191,14 @@ NSString * const kDirectoryObserverKey = @"DirectoryObserverKey";
 
 - (void)replacePathForObserversFrom:(NSString *)originalPath To:(NSString *)newPath
 {
-    NSDictionary *observersOfOriginalPath = [self.observers objectForKey:originalPath];
+//    NSDictionary *observersOfOriginalPath = [self.observers objectForKey:originalPath];
+    NSArray *observersOfOriginalPath = [self.observers objectForKey:originalPath];
     if (observersOfOriginalPath != nil) {
         [self removeObserverForPath:originalPath restartStream:NO];
-        [self addObserverForPath:newPath handler:[observersOfOriginalPath[kDirectoryObserverKey] copy]];
+        [observersOfOriginalPath enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            [self addObserver:obj forFileSystemPath:newPath];
+        }];
+        
     }
 }
 
@@ -215,17 +216,14 @@ fs_callback(ConstFSEventStreamRef ref, void * data, size_t events, void * paths,
     for (i = 0; i < events; ++i) {
         
         if (flags[i] & kFSEventStreamEventFlagRootChanged) {
-            
-            //            NSString *thePath   = [theObserver observedPathForSubdirectory:path];
             NSString *thePath = [theObserver parentDirectoryForSubdirectory:path
                                                             fromDirectories:pathsBeingObserved];
-            
+
             int descriptor = ((NSNumber *)theObserver.pathFileDescriptors[thePath]).intValue;
             char filePath[PATH_MAX];
+            NSArray *observers = [theObserver.observers objectForKey:thePath];
             
-            FileSystemObserverBlock block = [[theObserver.observers objectForKey:thePath] objectForKey:kDirectoryObserverKey];
-            
-            if (block) {
+            if (observers) {
                 
                 if (fcntl(descriptor, F_GETPATH, filePath) != -1)
                 {
@@ -235,16 +233,22 @@ fs_callback(ConstFSEventStreamRef ref, void * data, size_t events, void * paths,
                     // No other notifications are sent except a rename with non-changed filename
                     
                     
-                    if (isOldPathEqualToNewPath)
-                        block(FileSystemDirectoryBazookad, path, nil);
-                    else if (isTrashed)
-                        block(FileSystemDirectoryDeleted, path, newPath);
-                    else
-                        block(FileSystemDirectoryRenamed, path, newPath);
-                    
+                    if (isOldPathEqualToNewPath || isTrashed) {
+                        [observers enumerateObjectsUsingBlock:^(id observer, NSUInteger idx, BOOL *stop) {
+                            [observer FileSystemDirectoryDeleted:path];
+                        }];
+                    }
+      
+                    else {
+                        [observers enumerateObjectsUsingBlock:^(id observer, NSUInteger idx, BOOL *stop) {
+                            [observer FileSystemDirectory:path renamedTo:newPath];
+                        }];
+                    }
                 } else {
                     // Cannot resolve the proper filde. Now what? BRAAAAAAPBUBUBUBUBPBRAAAAP *gun shots*
-                    block(FileSystemDirectoryUnknownOperationForUnresolvedPath, path, @"");
+                    [observers enumerateObjectsUsingBlock:^(id observer, NSUInteger idx, BOOL *stop) {
+                        [observer FileSystemDirectoryError:nil];
+                    }];
                 }
                 
             }
