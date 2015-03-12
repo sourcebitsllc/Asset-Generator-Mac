@@ -25,16 +25,10 @@ class RecentlySelectedProjectMaintainer : NSObject {
     
     // Return whether the selected project is suitable for script execution
     func isSelectedProjectValid() -> Bool {
-        return (self.selectedProject()? != nil) ? self.isProjectValid(self.selectedProject()!) && self.selectedProject()!.hasValidAssetsPath()
+        return (self.selectedProject()? != nil) ? ProjectValidator.isProjectValid(self.selectedProject()!) && self.selectedProject()!.hasValidAssetsPath()
                                                 : false
     }
-    
-    // Returns whether a project _can_ exist.
-    func isProjectValid(project: XCProject) -> Bool {
-        return BookmarkResolver.isBookmarkValid(project.bookmark)
-    }
-    
-    
+
     // TODO: Too much state manipulation. fix it buddy yea? HEY? fix it.
     // TODO: ......
     // TODO: ...... Terrible .......
@@ -77,18 +71,6 @@ class RecentlySelectedProjectMaintainer : NSObject {
         self.storeRecentProjects()
     }
     
-    func cullStaleProjectsAndAssets() -> Void {
-        self.cullStaleProjects()
-        self.cullStaleAssets()
-        self.storeRecentProjects()
-    }
-    
-    private func cullStaleProjects() -> Void {
-        self.recentProjects =  self.recentProjects?.filter { project -> Bool in
-            return self.isProjectValid(project)
-        }
-        
-    }
     
     private func cullStaleAssets() -> Void {
         self.recentProjects = self.recentProjects?.map { (project: XCProject) -> XCProject in
@@ -145,17 +127,6 @@ extension RecentlySelectedProjectMaintainer {
         return self.recentProjects?.filter(filter)
     }
     
-    func recentProjectWithAsset(path: Path) -> XCProject? {
-        return recentProject { project in
-            return project.assetDirectoryPath() == path
-        }
-    }
-    
-    func recentProjectWithPath(path: Path) -> XCProject? {
-        return recentProject { project in
-            return project.path == path
-        }
-    }
 }
 
 
@@ -169,7 +140,10 @@ extension RecentlySelectedProjectMaintainer {
         NSUserDefaults.standardUserDefaults().setObject(projects, forKey: kRecentProjectsKey)
     }
     
-    
+    /*
+        Load Recent Projects.
+        Summary: Loads projects and checks if any project bookmark or asset bookmark corruption
+    */
     private func loadRecentProjects() {
         let projectDicts = NSUserDefaults.standardUserDefaults().objectForKey(kRecentProjectsKey) as? [[String: NSData]]
 
@@ -178,11 +152,10 @@ extension RecentlySelectedProjectMaintainer {
         }
         
         self.recentProjects = validProjectDicts?.map { (a: [String: NSData]) -> XCProject in
-            return XCProject.projectFromDictionary(a as [String: NSData])
+            let project = XCProject.projectFromDictionary(a as [String: NSData])
+            return project.hasValidAssetsPath() ? project : XCProject(bookmark: project.bookmark)
         }
 
-        //        self.cullStaleProjectsAndAssets()
-        self.cullStaleAssets()
         self.storeRecentProjects()
     }
     

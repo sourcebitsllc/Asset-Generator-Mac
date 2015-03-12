@@ -45,9 +45,9 @@ class ScriptController: NSObject {
         super.init()
     }
     
-    func setProgressDelegate(delegate: ScriptProgessDelegate?) {
-        self.scriptManager.progressDelegate = delegate
-    }
+//    func setProgressDelegate(delegate: ScriptProgessDelegate?) {
+//        self.scriptManager.progressDelegate = delegate
+//    }
     
     func canExecuteScript() -> Bool {
         switch (self.sourceDelegate, self.destinationDelegate) {
