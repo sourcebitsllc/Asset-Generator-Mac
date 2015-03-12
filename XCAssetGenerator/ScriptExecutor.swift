@@ -48,7 +48,7 @@ class ScriptExecutor: NSObject {
     // TODO: maybe we should return error in here? + This should probably be private.
     func executeScript(source src: String, destination dst: String, generate1x: Bool, extraArgs args: [String]?) {
         self.running = true
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), { () -> Void in
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)) {
             
             var task = NSTask()
             var pipe = NSPipe()
@@ -62,7 +62,7 @@ class ScriptExecutor: NSObject {
             pipe.fileHandleForReading.waitForDataInBackgroundAndNotify()
             NSNotificationCenter.defaultCenter().addObserverForName(NSFileHandleDataAvailableNotification, object: pipe.fileHandleForReading, queue: nil) { (notification: NSNotification!) -> Void in
                 
-                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                dispatch_async(dispatch_get_main_queue()) {
                     var echo: String = NSString(data: pipe.fileHandleForReading.availableData, encoding: NSUTF8StringEncoding)!
                     
                     if echo.hasPrefix("progress:") {
@@ -77,23 +77,23 @@ class ScriptExecutor: NSObject {
                         println("PRogress inside: \(progress)")
                         self.progressDelegate?.scriptExecutingScript(progress.toInt()!) // FIXME: unsafe.
                     }
-                })
+                }
                 
                 pipe.fileHandleForReading.waitForDataInBackgroundAndNotify()
             }
             
-            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+            dispatch_async(dispatch_get_main_queue()) {
                 self.running = true
                 self.progressDelegate?.scriptDidStartExecutingScipt(self)
-            })
+            }
             task.launch()
             task.waitUntilExit() // This blocks.
             
             // Notify delegate in main thread.
-            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+            dispatch_async(dispatch_get_main_queue()) {
                 self.running = false
                 self.progressDelegate?.scriptFinishedExecutingScript(self)
-            })
-        })
+            }
+        }
     }
 }

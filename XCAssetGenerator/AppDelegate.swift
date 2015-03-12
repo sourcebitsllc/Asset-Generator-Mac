@@ -34,6 +34,28 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         println(PathValidator.directoryContainsImages(path: "/Users/Bader/Downloads/Testz/"))
         
+        let url = NSURL(fileURLWithPath: "/Users/Bader/Asset Generator Misc./Test/", isDirectory: true)
+        
+        let generator = NSFileManager.defaultManager().enumeratorAtURL(url!, includingPropertiesForKeys: [NSURLIsDirectoryKey], options: NSDirectoryEnumerationOptions.SkipsHiddenFiles, errorHandler: nil)
+        
+        while let element = generator?.nextObject() as? NSURL {
+            println(element)
+        }
+        
+        let url1 = NSURL(fileURLWithPath: "/Users/Bader/Asset Generator Misc./Test/", isDirectory: true)
+        
+        let generator1 = NSFileManager.defaultManager().enumeratorAtURL(url1!, includingPropertiesForKeys: [NSURLIsDirectoryKey], options: NSDirectoryEnumerationOptions.SkipsHiddenFiles, errorHandler: nil)
+        
+        while let element = generator1?.nextObject() as? NSURL {
+            //            NSNumber *isDirectory;
+            //            [theURL getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:NULL]
+            var isDirectory: AnyObject? = nil
+            element.getResourceValue(&isDirectory, forKey: NSURLIsDirectoryKey, error: nil)
+            println(isDirectory)
+            
+        }
+        
+        
     }
 
     func applicationWillTerminate(aNotification: NSNotification?) {

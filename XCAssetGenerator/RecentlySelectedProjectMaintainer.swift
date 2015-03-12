@@ -84,20 +84,16 @@ class RecentlySelectedProjectMaintainer : NSObject {
     }
     
     private func cullStaleProjects() -> Void {
-        self.recentProjects =  self.recentProjects?.filter({ (project: XCProject) -> Bool in
+        self.recentProjects =  self.recentProjects?.filter { project -> Bool in
             return self.isProjectValid(project)
-        })
+        }
         
     }
     
     private func cullStaleAssets() -> Void {
-        self.recentProjects = self.recentProjects?.map({ (project: XCProject) -> XCProject in
-            if !project.hasValidAssetsPath() {
-                return XCProject(bookmark: project.bookmark)
-            } else {
-                return project
-            }
-        })
+        self.recentProjects = self.recentProjects?.map { (project: XCProject) -> XCProject in
+            return !project.hasValidAssetsPath() ? XCProject(bookmark: project.bookmark) : project
+        }
         
     }
 }
@@ -130,9 +126,9 @@ extension RecentlySelectedProjectMaintainer {
     
     // Returns the title of the projects which will appear in the dropdown view
     func recentProjectsTitlesList() -> [String]? {
-        return self.recentProjects?.map({ (proj: XCProject) -> String in
+        return self.recentProjects?.map { proj in
             return proj.title + "  > " + proj.assetDirectoryTitle()
-        })
+        }
     }
     
     // Returns the most recent project matching the predicate indicated in the closure.
@@ -146,15 +142,15 @@ extension RecentlySelectedProjectMaintainer {
     }
     
     func recentProjectWithAsset(path: Path) -> XCProject? {
-        return recentProject({ (project) -> Bool in
+        return recentProject { project in
             return project.assetDirectoryPath() == path
-        })
+        }
     }
     
     func recentProjectWithPath(path: Path) -> XCProject? {
-        return recentProject({ (project) -> Bool in
+        return recentProject { project in
             return project.path == path
-        })
+        }
     }
 }
 
@@ -163,9 +159,9 @@ extension RecentlySelectedProjectMaintainer {
    
     // TODO: Find better hooks for these calls.
     private func storeRecentProjects() {
-        let projects = self.recentProjects?.map({ (proj: XCProject) -> [NSString: NSData] in
+        let projects = self.recentProjects?.map { (proj: XCProject) -> [NSString: NSData] in
             return proj.userDefaultsDictionaryRepresentation()
-        })
+        }
         NSUserDefaults.standardUserDefaults().setObject(projects, forKey: kRecentProjectsKey)
     }
     
@@ -173,13 +169,13 @@ extension RecentlySelectedProjectMaintainer {
     private func loadRecentProjects() {
         let projectDicts = NSUserDefaults.standardUserDefaults().objectForKey(kRecentProjectsKey) as? [[String: NSData]]
 
-        let validProjectDicts = projectDicts?.filter({ (dictionary: [String: NSData]) -> Bool in
+        let validProjectDicts = projectDicts?.filter { (dictionary: [String: NSData]) -> Bool in
             return BookmarkResolver.isBookmarkValid(dictionary[pathKey]! as Bookmark)
-        })
+        }
         
-        self.recentProjects = validProjectDicts?.map({ (a: [String: NSData]) -> XCProject in
+        self.recentProjects = validProjectDicts?.map { (a: [String: NSData]) -> XCProject in
             return XCProject.projectFromDictionary(a as [String: NSData])
-        })
+        }
 
         //        self.cullStaleProjectsAndAssets()
         self.cullStaleAssets()

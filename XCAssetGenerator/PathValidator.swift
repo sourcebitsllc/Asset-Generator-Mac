@@ -39,9 +39,9 @@ class PathValidator {
         // Store found directories into array and get the relative directory path of each entry. (to ensure the erroneous dot originates inside one of our folders - not from the absolute path.
         // e.g. /Users/Bade.r/$PATH  is fine, /Users/Bader/$PATH/Fol.der is not
         var array: [String] = string.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString: "\0"))
-        array = array.map({ (string: String) -> String in
+        array = array.map { string -> String in
             return string.stringByReplacingOccurrencesOfString(path, withString: "", options: NSStringCompareOptions.CaseInsensitiveSearch, range: nil)
-        })
+        }
         
         // If we find a directory name which contains a dot, invalid paht found = return false
         for directoryName: String in array {

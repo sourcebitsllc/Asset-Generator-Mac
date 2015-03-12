@@ -50,9 +50,9 @@ extension XCProject {
     
     func dictionaryRepresentation() -> [String: Bookmark] {
         if let assets = xcassets {
-            var assetsAsBookmarksArray: [Bookmark] = assets.map({ (asset: XCAsset) -> Bookmark in
+            var assetsAsBookmarksArray: [Bookmark] = assets.map { asset -> Bookmark in
                 return asset.bookmark
-            })
+            }
             var assetsData = NSKeyedArchiver.archivedDataWithRootObject(assetsAsBookmarksArray)
             return [pathKey: self.bookmark, assetPathKey: assetsData]
         } else {
@@ -76,9 +76,9 @@ extension XCProject {
             
             if assetsBookmarks.isEqualToData(emptyDataTester) == false {
                 let assetsAsData = NSKeyedUnarchiver.unarchiveObjectWithData(assetsBookmarks) as [Bookmark]
-                let XCAssets = assetsAsData.map({ (bookmark: Bookmark) -> XCAsset in
+                let XCAssets = assetsAsData.map { (bookmark: Bookmark) -> XCAsset in
                     return XCAsset(bookmark: bookmark)
-                })
+                }
                 return XCProject(bookmark: bookmarks, xcassets: XCAssets)
             
             } else {
