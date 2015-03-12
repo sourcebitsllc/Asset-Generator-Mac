@@ -47,7 +47,7 @@ setupTempDirectory() {
 
 			# Remove all dot occurrences in the path.
 			folderName=${folderName//[.]/$dotAlt}
-
+			
 			if [[ ! -d "$TEMPFULLPATH"/"$folderName" ]] ; then
 				mkdir -p -m 777 "$TEMPFULLPATH"/"$folderName";
 			fi
@@ -94,11 +94,12 @@ createImagesets() {
 		
 		case "$a" in
 			*@2x*.* )
-				dirname=${a%@2x*.*};
+				dirname=${a%%@2x*.*};
+				echo $dirname
 				dirname=${dirname%~ip*}".imageset";
 				;;
 			*@3x*.* )
-				dirname=${a%@3x*.*};
+				dirname=${a%%@3x*.*};
 				dirname=${dirname%~ip*}".imageset";
 				;;
 			* )	# 1x
@@ -506,7 +507,7 @@ echo "progress:95"
 
 # Cull the temp directory after finishing.
 echo "7: Delete Temp";
- deleteTempDirectory;
+ # deleteTempDirectory;
 #
 echo "progress:100"
 
