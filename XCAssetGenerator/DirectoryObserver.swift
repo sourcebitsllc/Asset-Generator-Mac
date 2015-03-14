@@ -61,7 +61,7 @@ class ProjectObserver: FileSystemObserverType {
         self.observePath(project.path)
         
         if project.hasValidAssetsPath() {
-            self.observePath(project.assetDirectoryPath()!)
+            self.observePath(project.assetPath!)
         }
     }
     
@@ -69,7 +69,7 @@ class ProjectObserver: FileSystemObserverType {
         self.stopObservingPath(project.path)
         
         if project.hasValidAssetsPath() {
-            self.stopObservingPath(project.assetDirectoryPath()!)
+            self.stopObservingPath(project.assetPath!)
         }
     }
     
@@ -91,11 +91,11 @@ class ProjectObserver: FileSystemObserverType {
         
         switch (oldProject.hasValidAssetsPath(), newProject.hasValidAssetsPath()) {
         case (true, true):
-            self.updatePathForObserver(oldPath: oldProject.assetDirectoryPath()!, newPath: newProject.assetDirectoryPath()!)
+            self.updatePathForObserver(oldPath: oldProject.assetPath!, newPath: newProject.assetPath!)
         case (true, false):
-            self.stopObservingPath(oldProject.assetDirectoryPath()!)
+            self.stopObservingPath(oldProject.assetPath!)
         case (false, true):
-            self.observePath(newProject.assetDirectoryPath()!)
+            self.observePath(newProject.assetPath!)
         case (false, false):
             fallthrough
         default:

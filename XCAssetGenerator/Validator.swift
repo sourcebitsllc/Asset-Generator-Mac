@@ -29,7 +29,7 @@ class ProjectValidator: Validator {
     }
     
     class func isAssetValid(project: XCProject) -> Bool {
-        return BookmarkResolver.isBookmarkValid(project.assetDirectoryBookmark())
+        return BookmarkResolver.isBookmarkValid(project.assetBookmark)
     }
     
     class func isAssetValid(asset: XCAsset) -> Bool {

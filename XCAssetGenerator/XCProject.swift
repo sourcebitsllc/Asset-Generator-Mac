@@ -183,17 +183,24 @@ struct XCProject: Equatable {
 
 // MARK:- XCProject Assets Public Query Interface
 extension XCProject {
-    func assetDirectoryTitle() -> Path {
-        return self.xcassets?.first?.title ?? invalidAssetTitleDisplay
+    var assetTitle: Path {
+        get {
+            return self.xcassets?.first?.title ?? invalidAssetTitleDisplay
+        }
     }
     
-    func assetDirectoryPath() -> Path? {
-        return self.xcassets?.first?.path
+    var assetPath: Path? {
+        get {
+            return self.xcassets?.first?.path
+        }
     }
     
-    func assetDirectoryBookmark() -> Bookmark? {
-        return self.xcassets?.first?.bookmark
+    var assetBookmark: Bookmark? {
+        get {
+            return self.xcassets?.first?.bookmark
+        }
     }
+
     
     // A project will have a valid assets path if it contains an asset and if the asset path is not empty.
     func hasValidAssetsPath() -> Bool {

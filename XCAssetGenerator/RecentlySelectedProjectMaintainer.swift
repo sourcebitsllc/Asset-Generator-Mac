@@ -109,7 +109,7 @@ extension RecentlySelectedProjectMaintainer {
     // Returns the title of the projects which will appear in the dropdown view
     func recentProjectsTitlesList() -> [String]? {
         return self.recentProjects?.map { proj in
-            return proj.title + "  > " + proj.assetDirectoryTitle()
+            return proj.title + "  > " + proj.assetTitle
         }
     }
     
