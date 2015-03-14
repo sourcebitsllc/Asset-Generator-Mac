@@ -113,10 +113,9 @@ struct XCProject: Equatable {
     
     // MARK:- Initializers
     
-    
     internal init(bookmark: Bookmark) {
         self.bookmark = bookmark
-        self.xcassets = retrieveAssets(directory: self.XCProjectDirectoryPath())
+        self.xcassets = fetchAssets(directory: self.XCProjectDirectoryPath())
     }
 
     internal init(bookmark: Bookmark, xcassetBookmarks: [Bookmark]?) {
@@ -153,29 +152,30 @@ struct XCProject: Equatable {
     }
     
     
-    mutating private func retrieveAssets(#directory: String) -> [XCAsset]? {
-        var task: NSTask = NSTask()
-        var pipe = NSPipe()
+    mutating private func fetchAssets(#directory: Path) -> [XCAsset]? {
         
-        task.launchPath = "/usr/bin/find"
-        task.arguments = [directory, "-name", "*.xcassets"]
-        task.standardOutput = pipe
+        var assets: [XCAsset]?
+        let url = NSURL(fileURLWithPath: directory, isDirectory: true)
         
-        task.launch()
+        let generator = NSFileManager.defaultManager().enumeratorAtURL(url!, includingPropertiesForKeys: [NSURLIsDirectoryKey], options: NSDirectoryEnumerationOptions.SkipsHiddenFiles, errorHandler: nil)
         
-        var string: String = NSString(data: pipe.fileHandleForReading.readDataToEndOfFile(), encoding: NSUTF8StringEncoding)!
-        
-        // If string not empty, convert it into an array and get the first value.
-        let assetPath: String? = string.isEmpty ? nil : string.componentsSeparatedByCharactersInSet(NSCharacterSet(charactersInString: "\n")).first
-        
-        
-        if let path = assetPath {
-            var data: Bookmark = BookmarkResolver.resolveBookmarkFromPath(path)
-            return [XCAsset(bookmark: data)]
-        } else {
-            return nil
+        while let element = generator?.nextObject() as? NSURL {
+            var isDirectory: AnyObject? = nil
+            element.getResourceValue(&isDirectory, forKey: NSURLIsDirectoryKey, error: nil)
+            let isD: Bool = (isDirectory as Bool?) ?? false
+
+            if isD {
+                if let asset = element.path? {
+                    if asset.isXCAsset() {
+                        assets = assets ?? []
+                        var data: Bookmark = BookmarkResolver.resolveBookmarkFromPath(asset)
+                        assets?.append(XCAsset(bookmark: data))
+                    }
+                }
+            }
         }
         
+        return assets
     }
     
 }
