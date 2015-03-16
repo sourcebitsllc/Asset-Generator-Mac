@@ -8,90 +8,61 @@
 
 import Cocoa
 
-// TODO: Basically this class and the whole MacOSX API is a big practical joke. Why else wouldnt NSPopUpButton inherit form NSVIew? ucksake. Everything in this drawrect is fragile and hard-coded which will probably break in the near future.
-// FIXME: This whole dump
 class ProgressPopUpButton: NSPopUpButton {
-    
-    var progress: CGFloat = 0
-    var maxValue: CGFloat
-    var minValue: CGFloat
-    
-    var progressColor: NSColor!
-    var clearColor: NSColor
-    var line : LineProgressIndicator!
 
+    var line: NSView!
+    // TODO: let color be property
     
     // MARK:- Initializers.
     
     required init?(coder: NSCoder) {
-        println("Coder init")
-        maxValue = 100
-        minValue = 0
-        progress = 0
-        clearColor = NSColor(calibratedRed: 250/255, green: 250/255, blue: 250/255, alpha: 1)
         super.init(coder: coder)
-//        setup()
-        
+        setup()
     }
-    
-    
-//    func setup() {
-//        self.maxValue = 100
-//        self.minValue = 0
-//        self.progress = self.minValue
-//        
-//        self.clearColor = NSColor(calibratedRed: 250/255, green: 250/255, blue: 250/255, alpha: 1)
-//        var lineRect = NSRect(x: 0, y: self.frame.height - 5, width: self.frame.width, height: 3)
-//        
-//        let clippingRect = NSRect(x: 0.3, y: 2, width: self.frame.width - 0, height: self.frame.height-5)
-//        var clippingPath = NSBezierPath(roundedRect: clippingRect , xRadius: 3, yRadius: 3)
-//        
-//        //        line = LineProgressIndicator(frame: lineRect, progressColor: NSColor.blueColor(), clearColor: NSColor.brownColor(), clippingMask: clippingPath)
-//        //        self.addSubview(line)
-//        //        line.doubleValue = 50
-//        
-//    }
-    
-    override func drawRect(dirtyRect: NSRect) {
-        super.drawRect(dirtyRect)
-        self.wantsLayer = true
 
-        let clippingRect = NSRect(x: 0.3, y: 2, width: self.frame.width - 0, height: self.frame.height-5)
-        NSBezierPath(roundedRect: clippingRect , xRadius: 3, yRadius: 3).addClip()
-//        NSColor.greenColor().set()
-//        NSBezierPath(roundedRect: clippingRect , xRadius: 3, yRadius: 3).stroke()
+    func setup() {
+        var maskFrame = self.bounds
+        maskFrame.size.height = maskFrame.size.height - 4
+        maskFrame.size.width = maskFrame.size.width + 51
         
-        // Clear background color
-        var progressLineRect = NSRect(x: 0, y: self.frame.height - 5, width: self.frame.width, height: 2)
-        NSColor.clearColor().set()
-        self.clearColor.set()
-        NSRectFill(progressLineRect)
-//
-//        
-        // Draw progress line
-        var activeRect: NSRect = progressLineRect
-        self.progressColor.set()
-        activeRect.size.width = floor(activeRect.size.width * (self.progress / self.maxValue))
-        NSRectFill(activeRect)
-//
-//        // Drawing code here.
+        var outerClip = NSView(frame: maskFrame)
+        outerClip.wantsLayer = true
+        outerClip.layer?.cornerRadius = 3
+        
+        line = NSView(frame: NSRect(x: 0, y: 0, width:0, height: 2))
+        line.wantsLayer = true
+        line.layer?.masksToBounds = true
+        
+        outerClip.addSubview(line)
+        self.addSubview(outerClip)
     }
     
-    func setProgress(progress p : CGFloat) {
-        progress = p
-        self.setNeedsDisplay()
+
+    
+    func setProgress(#progress : CGFloat) {
+        let width = ( line.superview!.bounds.size.width * (progress / 100) )
+        self.line.animator().frame.size.width = width
+       
     }
     
-    func setProgressColor(color: NSColor) {
-        progressColor = color
-        self.setNeedsDisplay()
+    func resetProgress() {
+        let width = line.superview!.bounds.size.width
+        NSAnimationContext.runAnimationGroup({ (context: NSAnimationContext!) -> Void in
+            self.line.animator().frame.size.width = width
+            
+            }, completionHandler: { () -> Void in
+               
+                NSAnimationContext.runAnimationGroup({ (context: NSAnimationContext!) -> Void in
+                    self.line.animator().alphaValue = 0
+                }, completionHandler: { () -> Void in
+                    self.line.frame.size.width = 0
+                    self.line.alphaValue = 1
+                })
+       })
+        
     }
     
-    
-//    override func layoutSubtreeIfNeeded() {
-//        println("layout")
-//        self.setup()
-//        println()
-//    }
-    
+    func setProgressColor(color: NSColor = NSColor(calibratedRed: 0.047, green: 0.261, blue: 0.993, alpha: 1)) {
+        self.line.layer!.backgroundColor = color.CGColor
+    }
 }

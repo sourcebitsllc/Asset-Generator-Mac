@@ -124,11 +124,7 @@ extension AssetGeneratorViewController: FileDropControllerDelegate {
 // MARK:- Script Progress Delegate
 extension AssetGeneratorViewController: ScriptProgessDelegate {
     func scriptDidStartExecutingScipt(executor: ScriptExecutor) {
-        // This is just a tmeporary h4x. Fix progress bar and remove it.
-        self.timer = NSTimer(timeInterval: 0.1, target: self, selector: Selector("moveProgressSmoothly") , userInfo: nil, repeats: true)
-        
-        NSRunLoop.currentRunLoop().addTimer(self.timer, forMode: NSDefaultRunLoopMode)
-        self.timer.fire()
+        self.projectToolbarController.setToolbarProgress(progress: 2)
     }
     
     func scriptExecutingScript(progress: Int?) {
@@ -143,11 +139,7 @@ extension AssetGeneratorViewController: ScriptProgessDelegate {
         
         self.parametersDelegate?.scriptParametersChanged(self)
     }
-    
-    // MARK: H4X. Fix.
-    func moveProgressSmoothly() {
-        self.projectToolbarController.setToolbarProgress(progress: self.projectToolbarController.toolbarProgress + 0.05)
-    }
+
 }
 
 

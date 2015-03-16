@@ -103,7 +103,7 @@ extension ProjectToolbarController {
     
     private func dropdownListSetup() {
         self.recentProjectsDropdownListView.preferredEdge = NSMaxYEdge
-        self.recentProjectsDropdownListView.progressColor = NSColor(calibratedRed: 0.047, green: 0.261, blue: 0.993, alpha: 1)
+        self.recentProjectsDropdownListView.setProgressColor(color: NSColor(calibratedRed: 0.047, green: 0.261, blue: 0.993, alpha: 1))
         
         if (self.recentListMaintainer.recentProjectsCount() <= 0) {
             self.disableDropdownList()
@@ -216,17 +216,22 @@ extension ProjectToolbarController: FileSystemObserverDelegate {
 // MARK:- The Toolbars Embeded Progress Indicator Extenstion
 extension ProjectToolbarController {
     
-    var toolbarProgress: CGFloat  {
-        get {
-            return self.recentProjectsDropdownListView.progress
+//    var toolbarProgress: CGFloat  {
+//        get {
+//            return self.recentProjectsDropdownListView.progress
+//        }
+//    }
+//    
+    func setToolbarProgress(#progress: CGFloat) {
+        println("setToolbarProgress: \(progress)")
+        if progress > 0 {
+            self.recentProjectsDropdownListView.setProgress(progress: progress)
+        } else {
+            self.recentProjectsDropdownListView.resetProgress()
         }
     }
     
-    func setToolbarProgress(#progress: CGFloat) {
-        self.recentProjectsDropdownListView.setProgress(progress: progress)
-    }
-    
     func setToolbarProgressColor(#color: NSColor) {
-        self.recentProjectsDropdownListView.setProgressColor(color)
+        self.recentProjectsDropdownListView.setProgressColor(color: color)
     }
 }
