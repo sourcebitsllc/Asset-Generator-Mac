@@ -62,8 +62,6 @@ class ProjectToolbarController: NSObject  {
     
     
     func browseButtonPressed() {
-        println("**** Pritning Stuff")
-        println("Project: \(self.recentListMaintainer.selectedProject())")
         panel.beginWithCompletionHandler() { (handler: Int) -> Void in
             if handler == NSFileHandlingPanelOKButton {
                 
@@ -159,48 +157,53 @@ extension ProjectToolbarController {
 extension ProjectToolbarController: FileSystemObserverDelegate {
     
     func FileSystemDirectory(oldPath: String!, renamedTo newPath: String!) {
+        
+        let project = self.recentListMaintainer.recentProjects { (project) -> Bool in
+            return oldPath.isXCProject() ? project.path == oldPath : oldPath.isXCAsset() ? project.assetPath == oldPath : false
+        }?.first
+        
+        if let proj = project {
+            let index = self.recentListMaintainer.indexOfProject(proj)
+                
+            if let idx = index {
+                self.recentListMaintainer.removeProject(project: proj)
+                self.recentListMaintainer.addProject(project: XCProject(bookmark: proj.bookmark), index: idx)
+                
+            }
+        }
+        
         self.directoryObserver.updatePathForObserver(oldPath: oldPath, newPath: newPath)
         self.updateDropdownListTitles()
     }
 
     func FileSystemDirectoryDeleted(path: String!) {
-        
+
         if path.isXCProject() {
-            let corruptedProjects = self.recentListMaintainer.recentProjects { project in
-                return !ProjectValidator.isProjectValid(project)
-            }
-            println(corruptedProjects)
-            if let projects = corruptedProjects {
-                for project in projects {
-                    self.recentListMaintainer.removeProject(project: project)
-                }
+            
+            let project = self.recentListMaintainer.recentProjects { (project) -> Bool in
+                return project.path == path
+            }?.first
+            
+            if let proj = project {
+                self.recentListMaintainer.removeProject(project: proj)
             }
             
         
         } else if path.isXCAsset() {
             
-            let corruptedProjects = self.recentListMaintainer.recentProjects { project in
-                return !ProjectValidator.isAssetValid(project)
-            }
+            let project = self.recentListMaintainer.recentProjects { (project) -> Bool in
+                return project.assetPath == path
+            }?.first
             
-            if let projects = corruptedProjects {
-                for project in projects {
-                    var newProject = XCProject(bookmark: BookmarkResolver.resolveBookmarkFromPath(project.path))
-                    let indexOfProject = self.recentListMaintainer.indexOfProject(project)
-                    
-                    self.recentListMaintainer.removeProject(project: project)
-                    
-                    if let idx = indexOfProject {
-                        self.recentListMaintainer.addProject(project: newProject, index: idx)
-                    }
-                    if (self.recentListMaintainer.selectedProject()? == project) {
-                        // TODO: selected project has changed.
-                    }
-                    
+            if let proj = project {
+                let indexOfProject = self.recentListMaintainer.indexOfProject(proj)
+                self.recentListMaintainer.removeProject(project: proj)
+                if let idx = indexOfProject {
+                    self.recentListMaintainer.addProject(project: XCProject(bookmark: proj.bookmark))
                 }
             }
-        }
         
+        }
 
         self.updateDropdownListTitles()
         self.delegate?.projectToolbarDidChangeProject(nil)
@@ -216,14 +219,7 @@ extension ProjectToolbarController: FileSystemObserverDelegate {
 // MARK:- The Toolbars Embeded Progress Indicator Extenstion
 extension ProjectToolbarController {
     
-//    var toolbarProgress: CGFloat  {
-//        get {
-//            return self.recentProjectsDropdownListView.progress
-//        }
-//    }
-//    
     func setToolbarProgress(#progress: CGFloat) {
-        println("setToolbarProgress: \(progress)")
         if progress > 0 {
             self.recentProjectsDropdownListView.setProgress(progress: progress)
         } else {

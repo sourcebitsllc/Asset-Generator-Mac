@@ -86,7 +86,7 @@ class AssetGeneratorViewController: NSViewController {
 extension AssetGeneratorViewController: ProjectToolbarDelegate {
     
     func projectToolbarDidChangeProject(project: XCProject?) {
-        println("projectToolbarDidChangeProject: \(project)")
+//        println("projectToolbarDidChangeProject: \(project)")
         if let p = project {
             self.parametersDelegate?.scriptParametersChanged(self)
             if !p.hasValidAssetsPath() {

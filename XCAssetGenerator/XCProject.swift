@@ -16,7 +16,10 @@ let invalidAssetTitleDisplay = ""
 
 // MARK:- Equatable Conformance
 func == (lhs: XCProject, rhs: XCProject) -> Bool {
-    switch ( ProjectValidator.isProjectValid(lhs), ProjectValidator.isProjectValid(rhs) ) {
+    // TODO: This needs a rethink.
+    if lhs.bookmark == rhs.bookmark { return true }
+    
+    switch (ProjectValidator.isProjectValid(lhs), ProjectValidator.isProjectValid(rhs)) {
         case (true, true): return lhs.path == rhs.path && lhs.xcassets?.first? == rhs.xcassets?.first?
         case (false, false): return true
         case (_,_): return false
@@ -100,14 +103,8 @@ extension XCProject {
 // MARK:-
 struct XCProject: Equatable {
     
-    var path: Path {
-        get {
-            var url = NSURL(byResolvingBookmarkData: self.bookmark, options: NSURLBookmarkResolutionOptions.WithoutMounting, relativeToURL: nil, bookmarkDataIsStale: nil, error: nil)
-            
-            return url!.path! // This cannot be nil. If it is, catastrophe. It doesnt make sense for a project to not have a valid path -- else it shouldnt exist
-        }
-    }
     var bookmark : Bookmark
+    let path: Path
     private var xcassets: [XCAsset]?
     
     
@@ -115,6 +112,7 @@ struct XCProject: Equatable {
     
     internal init(bookmark: Bookmark) {
         self.bookmark = bookmark
+        self.path = BookmarkResolver.resolvePathFromBookmark(bookmark)!
         self.xcassets = fetchAssets(directory: self.XCProjectDirectoryPath())
     }
 
@@ -133,11 +131,12 @@ struct XCProject: Equatable {
         
         self.xcassets = assets
         self.bookmark = bookmark
+        self.path = BookmarkResolver.resolvePathFromBookmark(bookmark)!
     }
     
     internal init(bookmark: Bookmark, xcassets: [XCAsset]?) {
         self.bookmark = bookmark
-    
+        self.path = BookmarkResolver.resolvePathFromBookmark(bookmark)!
         self.xcassets = xcassets ?? nil
     }
     

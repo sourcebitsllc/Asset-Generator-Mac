@@ -108,9 +108,17 @@ extension RecentlySelectedProjectMaintainer {
     
     // Returns the title of the projects which will appear in the dropdown view
     func recentProjectsTitlesList() -> [String]? {
-        return self.recentProjects?.map { proj in
-            return proj.title + "  > " + proj.assetTitle
-        }
+//        return self.recentProjects?.filter { project: XCProject -> Bool
+//                return ProjectValidator.isProjectValid(project)
+//            }.map { proj in
+//                return proj.title + "  > " + proj.assetTitle
+//        }
+        return self.recentProjects { (project) -> Bool in
+            return ProjectValidator.isProjectValid(project)
+            }?.map({ (project: XCProject) -> String in
+                return project.title + "  > " + project.assetTitle
+        })
+        
     }
     
     // Returns the most recent project matching the predicate indicated in the closure.
@@ -129,6 +137,20 @@ extension RecentlySelectedProjectMaintainer {
     
 }
 
+extension RecentlySelectedProjectMaintainer {
+    func renameRecentProject(project: XCProject, name: Path) {
+        if let projects = self.recentProjects {
+            let index = self.indexOfProject(project)
+            
+            if let idx = index {
+                self.recentProjects?.removeAtIndex(idx)
+                self.recentProjects?.insert(XCProject(bookmark: project.bookmark), atIndex: idx)
+                
+                self.storeRecentProjects()
+            }
+        }
+    }
+}
 
 extension RecentlySelectedProjectMaintainer {
    
