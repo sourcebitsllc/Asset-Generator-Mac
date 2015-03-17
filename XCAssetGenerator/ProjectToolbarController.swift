@@ -199,7 +199,9 @@ extension ProjectToolbarController: FileSystemObserverDelegate {
                 let indexOfProject = self.recentListMaintainer.indexOfProject(proj)
                 self.recentListMaintainer.removeProject(project: proj)
                 if let idx = indexOfProject {
-                    self.recentListMaintainer.addProject(project: XCProject(bookmark: proj.bookmark))
+                    if (ProjectValidator.isProjectValid(proj)) {
+                        self.recentListMaintainer.addProject(project: XCProject(bookmark: proj.bookmark))
+                    }
                 }
             }
         
