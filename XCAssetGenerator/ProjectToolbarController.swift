@@ -64,17 +64,46 @@ class ProjectToolbarController: NSObject  {
     func browseButtonPressed() {
         panel.beginWithCompletionHandler() { (handler: Int) -> Void in
             if handler == NSFileHandlingPanelOKButton {
+                /* 
+                    1 - Check if path is project
+                    2 - If project, proceed normally.
+                    3 - If not, Search for internals to find project. (deep search or just one level? or even the current window only.)
+                    4 - If project found, proceeed normally.
+                    5 - Else, nothing found. Display error.
+                */
                 
-                self.addNewProject(url: self.panel.URL!)
+                let url = self.panel.URL!
+                let path = url.path!
+                
+                if path.isXCProject() {
+                    self.addNewProject(url: self.panel.URL!)
+                
+                } else {
+                    let projectURL = PathValidator.retreiveProject(url)
+                    
+                    if let pURL = projectURL {
+                        self.addNewProject(url: pURL)
+                    } else {
+                        self.displayError()
+                    }
+                
+                }
             }
         }
     }
     
-
+    private func displayError() {
+        let alert = NSAlert()
+        alert.addButtonWithTitle("OK")
+        alert.messageText = "The selected folder does not contain an Xcode Project //TODO:"
+        alert.alertStyle = NSAlertStyle.CriticalAlertStyle
+        alert.runModal()
+    }
+    
     private func openPanelSetup() {
         self.panel.canChooseFiles            = true
         self.panel.allowedFileTypes          = ["xcodeproj"]
-        self.panel.canChooseDirectories      = false
+        self.panel.canChooseDirectories      = true
         self.panel.allowsMultipleSelection   = false
     }
    
@@ -152,6 +181,7 @@ extension ProjectToolbarController {
     }
     
 }
+
 
 // MARK: Directory Observer Compliance
 extension ProjectToolbarController: FileSystemObserverDelegate {

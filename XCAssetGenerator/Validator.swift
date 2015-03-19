@@ -38,12 +38,11 @@ class ProjectValidator: Validator {
 }
 
 
-// The purpose of this class is to check if ∃ a directory which contains a dot in its name.
-// However, it does not fix the issue. Just a way to indicate that a problem exists, then
-// have the "fix" be applied directly from the main script (ScriptExecutor)
 class PathValidator: Validator {
     
-    // The renaming should be done directly from the main bash script (ScriptExecutor)
+    /* 
+        NOTE: The renaming should be done directly from the main bash script (ScriptExecutor)
+    */
     class func directoryContainsInvalidCharacters(#path: Path, options: AnyObject?) -> Bool {
 
         let url = NSURL(fileURLWithPath: path, isDirectory: true)
@@ -57,9 +56,7 @@ class PathValidator: Validator {
             
             if isD {
                 if let directory = element.path? {
-                    if contains(directory, ".") || contains(directory, ":") {
-                        return true
-                    }
+                    if contains(directory, ".") || contains(directory, ":") { return true }
                 }
             }
         }
@@ -67,6 +64,26 @@ class PathValidator: Validator {
         return false
         
     }
+    
+    class func retreiveProject(url: NSURL) -> NSURL? {
+        
+        let generator = NSFileManager.defaultManager().enumeratorAtURL(url, includingPropertiesForKeys: [NSURLIsDirectoryKey], options: NSDirectoryEnumerationOptions.SkipsSubdirectoryDescendants, errorHandler: nil)
+        
+        while let element = generator?.nextObject() as? NSURL {
+            
+            var isDirectory: AnyObject? = nil
+            element.getResourceValue(&isDirectory, forKey: NSURLIsDirectoryKey, error: nil)
+            let isD: Bool = (isDirectory as Bool?) ?? false
+            
+            if isD {
+                if let path = element.path? {
+                    if path.isXCProject() { return element }
+                }
+            }
+        }
+        return nil
+    }
+    
     
     class func directoryExists(#path: Path) -> Bool {
         var isDirectory: ObjCBool = ObjCBool(false)
