@@ -207,7 +207,7 @@ extension ProjectToolbarController: FileSystemObserverDelegate {
     }
 
     func FileSystemDirectoryDeleted(path: String!) {
-
+        
         if path.isXCProject() {
             
             let project = self.recentListMaintainer.recentProjects { (project) -> Bool in
@@ -230,14 +230,14 @@ extension ProjectToolbarController: FileSystemObserverDelegate {
                 self.recentListMaintainer.removeProject(project: proj)
                 if let idx = indexOfProject {
                     if (ProjectValidator.isProjectValid(proj)) {
-                        self.recentListMaintainer.addProject(project: XCProject(bookmark: proj.bookmark))
+                        self.recentListMaintainer.addProject(project: XCProject(bookmark: proj.bookmark), index: idx)
                     }
                 }
             }
         
         }
 
-        self.updateDropdownListTitles()
+        self.updateDropdownListTitles()        
         self.delegate?.projectToolbarDidChangeProject(nil)
     }
     
