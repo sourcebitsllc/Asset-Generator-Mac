@@ -103,4 +103,27 @@ class PathValidator: Validator {
         return false
     }
     
+    class func directoryContainsXCAsset(#directory: Path) -> Bool {
+        let url = NSURL(fileURLWithPath: directory, isDirectory: true)
+        
+        let generator = NSFileManager.defaultManager().enumeratorAtURL(url!, includingPropertiesForKeys: [NSURLIsDirectoryKey], options: NSDirectoryEnumerationOptions.SkipsHiddenFiles, errorHandler: nil)
+        
+        while let element = generator?.nextObject() as? NSURL {
+            var isDirectory: AnyObject? = nil
+            element.getResourceValue(&isDirectory, forKey: NSURLIsDirectoryKey, error: nil)
+            let isD: Bool = (isDirectory as Bool?) ?? false
+            
+            if isD {
+                if let asset = element.path? {
+                    if asset.isXCAsset() {
+                        return true
+                    }
+                }
+            }
+        }
+        
+        return false
+    }
+    
+    
 }
