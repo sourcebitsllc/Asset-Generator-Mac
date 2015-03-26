@@ -43,44 +43,63 @@ class PathValidator: Validator {
     /* 
         NOTE: The renaming should be done directly from the main bash script (ScriptExecutor)
     */
+    
     class func directoryContainsInvalidCharacters(#path: Path, options: AnyObject?) -> Bool {
-
-        let url = NSURL(fileURLWithPath: path, isDirectory: true)
-        
-        let generator = NSFileManager.defaultManager().enumeratorAtURL(url!, includingPropertiesForKeys: [NSURLIsDirectoryKey], options: NSDirectoryEnumerationOptions.SkipsHiddenFiles, errorHandler: nil)
-        
-        while let element = generator?.nextObject() as? NSURL {
-            var isDirectory: AnyObject? = nil
-            element.getResourceValue(&isDirectory, forKey: NSURLIsDirectoryKey, error: nil)
-            let isD: Bool = (isDirectory as Bool?) ?? false
-            
-            if isD {
-                if let directory = element.path? {
-                    if contains(directory, ".") || contains(directory, ":") { return true }
-                }
-            }
-        }
-        
-        return false
-        
+        return directoryWith(path, searchOption: NSDirectoryEnumerationOptions.SkipsHiddenFiles) { (url, isDirectory) -> Bool? in
+            if isDirectory && (contains(url.path!, ".") || contains(url.path!, ":")) { return true }
+            return nil
+        } ?? false
     }
     
+    class func directoryContainsXCAsset(#directory: Path) -> Bool {
+        return directoryWith(directory, searchOption: NSDirectoryEnumerationOptions.SkipsHiddenFiles) { (url, isDirectory) -> Bool? in
+            if isDirectory && url.path!.isXCAsset() { return true }
+            return nil
+        } ?? false
+    }
+    
+    
     class func retreiveProject(url: NSURL) -> NSURL? {
+        return directoryWith(url.path!, searchOption: NSDirectoryEnumerationOptions.SkipsSubdirectoryDescendants) { (url, isDirectory) -> NSURL? in
+            if isDirectory && url.path!.isXCProject() { return url }
+            return nil
+        }
+    }
+    
+    
+    class func directoryContainsImages(#path: Path) -> Bool {
+        return directoryWith(path, searchOption: NSDirectoryEnumerationOptions.SkipsHiddenFiles) { (url, isDirectory) -> Bool? in
+            let isImage = url.path!.hasSuffix(".png") || url.path!.hasSuffix(".jpg") || url.path!.hasSuffix(".jpeg")
+            if !isDirectory && isImage { return true }
+            else { return nil }
+        } ?? false
+    }
+    
+    /*
+        @param:
+            f: (NSURL) -> T?  ;; If result of applying closure is nil, we will not return it but will skip instead and proceed with the generator loop.
+                                Additionally, accessing the path component of the NSURL is always safe. (Kinda unintuitive API right now though)
+                                We use the optional return type to be able to skip non-satisfying results and still be able to proceed with loop.
+        @return type
+            We use an optional return type to encompass all our return needs.
+    */
+    private class func directoryWith<T>(path: Path, searchOption: NSDirectoryEnumerationOptions,  f: (NSURL, Bool) -> T?) -> T? {
+        let url = NSURL(fileURLWithPath: path, isDirectory: true)
         
-        let generator = NSFileManager.defaultManager().enumeratorAtURL(url, includingPropertiesForKeys: [NSURLIsDirectoryKey], options: NSDirectoryEnumerationOptions.SkipsSubdirectoryDescendants, errorHandler: nil)
+        let generator = NSFileManager.defaultManager().enumeratorAtURL(url!, includingPropertiesForKeys: [NSURLIsDirectoryKey], options: searchOption, errorHandler: nil)
         
         while let element = generator?.nextObject() as? NSURL {
             
-            var isDirectory: AnyObject? = nil
-            element.getResourceValue(&isDirectory, forKey: NSURLIsDirectoryKey, error: nil)
-            let isD: Bool = (isDirectory as Bool?) ?? false
+            var d: AnyObject? = nil
+            element.getResourceValue(&d, forKey: NSURLIsDirectoryKey, error: nil)
+            let isDirectory: Bool = (d as Bool?) ?? false
             
-            if isD {
-                if let path = element.path? {
-                    if path.isXCProject() { return element }
-                }
+            if let asset = element.path? {
+                let t = f(element, isDirectory)
+                if (t != nil) { return t }
             }
         }
+        
         return nil
     }
     
@@ -91,38 +110,6 @@ class PathValidator: Validator {
             NSFileManager.defaultManager().fileExistsAtPath(path, isDirectory: &isDirectory)
         }
         return isDirectory.boolValue
-    }
-    
-    class func directoryContainsImages(#path: Path) -> Bool {
-        let generator = NSFileManager.defaultManager().enumeratorAtPath(path)
-        while let element = generator?.nextObject() as? String {
-            if element.hasSuffix(".png") || element.hasSuffix(".jpg") {
-                return true
-            }
-        }
-        return false
-    }
-    
-    class func directoryContainsXCAsset(#directory: Path) -> Bool {
-        let url = NSURL(fileURLWithPath: directory, isDirectory: true)
-        
-        let generator = NSFileManager.defaultManager().enumeratorAtURL(url!, includingPropertiesForKeys: [NSURLIsDirectoryKey], options: NSDirectoryEnumerationOptions.SkipsHiddenFiles, errorHandler: nil)
-        
-        while let element = generator?.nextObject() as? NSURL {
-            var isDirectory: AnyObject? = nil
-            element.getResourceValue(&isDirectory, forKey: NSURLIsDirectoryKey, error: nil)
-            let isD: Bool = (isDirectory as Bool?) ?? false
-            
-            if isD {
-                if let asset = element.path? {
-                    if asset.isXCAsset() {
-                        return true
-                    }
-                }
-            }
-        }
-        
-        return false
     }
     
     
