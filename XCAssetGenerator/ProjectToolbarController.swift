@@ -15,7 +15,7 @@ protocol ProjectToolbarDelegate {
 // MARK:- ScriptDestinationPath Delegate
 extension ProjectToolbarController: ScriptDestinationPathDelegate {
     func destinationPath() -> String? {
-        return self.recentListMaintainer.selectedProject()?.assetPath
+        return self.recentListMaintainer.selectedProject?.assetPath
     }
 
     func hasValidDestinationProject() -> Bool {
@@ -51,15 +51,25 @@ class ProjectToolbarController: NSObject  {
     private func setupProjectObserver() {
         self.directoryObserver = ProjectObserver(delegate: self)
     }
-
-    // MARK:- Public toolbar controller hooks.
-    func recentProjectsListChanged(sender: NSPopUpButton) {
-        // If we select a new project, proceed.
-        if sender.indexOfSelectedItem != SelectedItemIndex {
-            self.updateRecentProjectsList(index: sender.indexOfSelectedItem)
-        }
+    
+    private func openPanelSetup() {
+        self.panel.canChooseFiles            = true
+        self.panel.allowedFileTypes          = ["xcodeproj"]
+        self.panel.canChooseDirectories      = true
+        self.panel.allowsMultipleSelection   = false
     }
     
+    
+    private func setupError(message: String) -> NSAlert {
+        let alert = NSAlert()
+        alert.messageText = message
+        alert.addButtonWithTitle("OK")
+        alert.alertStyle = NSAlertStyle.CriticalAlertStyle
+        return alert
+    }
+    
+
+    // MARK:- Public toolbar controller hooks.
     
     func browseButtonPressed() {
         panel.beginWithCompletionHandler() { (handler: Int) -> Void in
@@ -75,16 +85,37 @@ class ProjectToolbarController: NSObject  {
                 let url = self.panel.URL!
                 let path = url.path!
                 
+                
                 if path.isXCProject() {
-                    self.addNewProject(url: self.panel.URL!)
+                    let directory = self.panel.URL!.path!.stringByDeletingLastPathComponent + ("/")
+                    let hasAsset = PathValidator.directoryContainsXCAsset(directory: directory)
+                    
+                    if hasAsset {
+                        self.addNewProject(url: self.panel.URL!)
+                    } else {
+                      // Throw No valid assets error
+                        let name = path.lastPathComponent
+                        self.setupError(ProjectSelectionError.AssetNoFound(name).message).runModal()
+                    }
                 
                 } else {
                     let projectURL = PathValidator.retreiveProject(url)
                     
+                    
                     if let pURL = projectURL {
-                        self.addNewProject(url: pURL)
+                        let directory = pURL.path!.stringByDeletingLastPathComponent + ("/")
+                        let hasAsset = PathValidator.directoryContainsXCAsset(directory: directory)
+                        
+                        if hasAsset {
+                            self.addNewProject(url: pURL)
+                        } else {
+                            // Throw no valid assets error
+                            let name = pURL.lastPathComponent!
+                            self.setupError(ProjectSelectionError.AssetNoFound(name).message).runModal()
+                        }
+                        
                     } else {
-                        self.displayError()
+                        self.setupError(ProjectSelectionError.NoProjectFound.message).runModal()
                     }
                 
                 }
@@ -92,26 +123,27 @@ class ProjectToolbarController: NSObject  {
         }
     }
     
-    private func displayError() {
-        let alert = NSAlert()
-        alert.addButtonWithTitle("OK")
-        alert.messageText = "The selected folder does not contain an Xcode Project //TODO:"
-        alert.alertStyle = NSAlertStyle.CriticalAlertStyle
-        alert.runModal()
-    }
-    
-    private func openPanelSetup() {
-        self.panel.canChooseFiles            = true
-        self.panel.allowedFileTypes          = ["xcodeproj"]
-        self.panel.canChooseDirectories      = true
-        self.panel.allowsMultipleSelection   = false
-    }
    
+    func recentProjectsListChanged(sender: NSPopUpButton) {
+        // If we select a new project, proceed.
+        if sender.indexOfSelectedItem != SelectedItemIndex {
+            self.updateRecentProjectsList(index: sender.indexOfSelectedItem)
+        }
+    }
     
 }
 
 // MARK:- Dropdown list Management.
 extension ProjectToolbarController {
+    
+    
+    private func updateRecentProjectsList(#index: Int){
+        let idx = (self.recentListMaintainer.selectedProject != nil) ? index : index - 1 // This will never be called on index = 0
+        self.recentListMaintainer.addProject(project: self.recentListMaintainer.projectAtIndex(idx)!)
+        self.updateDropdownListTitles()
+        self.delegate?.projectToolbarDidChangeProject(self.recentListMaintainer.selectedProject)
+    }
+    
     
     private func enableDropdownList() {
         self.recentProjectsDropdownListView.enabled     = true
@@ -144,8 +176,12 @@ extension ProjectToolbarController {
                 self.directoryObserver.observeProject(proj)
             }
             
+            if (self.recentListMaintainer.selectedProject == nil) {
+                self.insertPlaceholderProject()
+            }
+            
         }
-        self.delegate?.projectToolbarDidChangeProject(self.recentListMaintainer.selectedProject())
+        self.delegate?.projectToolbarDidChangeProject(self.recentListMaintainer.selectedProject)
 
     }
     
@@ -156,15 +192,8 @@ extension ProjectToolbarController {
         if !self.recentProjectsDropdownListView.enabled {
             self.enableDropdownList() // We dont need to really call it after each addition. just the first one.
         }
-        self.directoryObserver.observeProject(self.recentListMaintainer.selectedProject()!)
-        self.delegate?.projectToolbarDidChangeProject(self.recentListMaintainer.selectedProject())
-    }
-    
-    
-    private func updateRecentProjectsList(#index: Int){
-        self.recentListMaintainer.addProject(project: self.recentListMaintainer.projectAtIndex(index)!)
-        self.updateDropdownListTitles()
-        self.delegate?.projectToolbarDidChangeProject(self.recentListMaintainer.selectedProject())
+        self.directoryObserver.observeProject(self.recentListMaintainer.selectedProject!)
+        self.delegate?.projectToolbarDidChangeProject(self.recentListMaintainer.selectedProject)
     }
     
     
@@ -174,10 +203,15 @@ extension ProjectToolbarController {
         if self.recentListMaintainer.recentProjectsCount() > 0 {
             let titles = self.recentListMaintainer.recentProjectsTitlesList()!
             self.recentProjectsDropdownListView.addItemsWithTitles(titles)
-            self.recentProjectsDropdownListView.selectItemAtIndex(0)
+            self.recentProjectsDropdownListView.selectItemAtIndex(SelectedItemIndex)
         } else {
             self.disableDropdownList()
         }
+    }
+    
+    private func insertPlaceholderProject() {
+        self.recentProjectsDropdownListView.insertItemWithTitle("               -- Select A Project -- " /* lol */, atIndex: SelectedItemIndex)
+        self.recentProjectsDropdownListView.selectItemAtIndex(SelectedItemIndex)
     }
     
 }
@@ -206,39 +240,29 @@ extension ProjectToolbarController: FileSystemObserverDelegate {
         self.updateDropdownListTitles()
     }
 
+    
     func FileSystemDirectoryDeleted(path: String!) {
         
-        if path.isXCProject() {
-            
-            let project = self.recentListMaintainer.recentProjects { (project) -> Bool in
-                return project.path == path
-            }?.first
-            
-            if let proj = project {
-                self.recentListMaintainer.removeProject(project: proj)
-            }
-            
+        let project = self.recentListMaintainer.recentProjects { (project) -> Bool in
+            return (path.isXCProject()) ? project.path == path : (path.isXCAsset()) ? project.assetPath == path : false
+        }?.first
         
-        } else if path.isXCAsset() {
-            
-            let project = self.recentListMaintainer.recentProjects { (project) -> Bool in
-                return project.assetPath == path
-            }?.first
-            
-            if let proj = project {
-                let indexOfProject = self.recentListMaintainer.indexOfProject(proj)
-                self.recentListMaintainer.removeProject(project: proj)
-                if let idx = indexOfProject {
-                    if (ProjectValidator.isProjectValid(proj)) {
-                        self.recentListMaintainer.addProject(project: XCProject(bookmark: proj.bookmark), index: idx)
-                    }
-                }
-            }
+        let wasSelected = project == self.recentListMaintainer.selectedProject
         
+        if let proj = project {
+            self.recentListMaintainer.removeProject(project: proj)
         }
-
-        self.updateDropdownListTitles()        
-        self.delegate?.projectToolbarDidChangeProject(nil)
+        
+        self.updateDropdownListTitles()
+       
+        
+        if wasSelected {
+            self.insertPlaceholderProject()
+            self.recentListMaintainer.resetSelectedProject()
+        }
+        
+        
+         self.delegate?.projectToolbarDidChangeProject(nil)
     }
     
     func FileSystemDirectoryError(error: NSError!) {

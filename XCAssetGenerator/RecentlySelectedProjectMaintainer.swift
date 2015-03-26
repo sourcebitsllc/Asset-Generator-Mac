@@ -8,13 +8,16 @@
 
 import Foundation
 
-let kRecentProjectsKey: String = "XCAssetGeneratorRecentProjects"
+let kRecentProjectsKey = "XCAssetGeneratorRecentProjects"
+let kSelectionStateKey = "XCAssetGeneratorSetProject"
 let MaximumCacheCapacity: Int = 10
 
 
 class RecentlySelectedProjectMaintainer : NSObject {
     
     private var recentProjects: [XCProject]?
+    
+    var didSetProject: Bool = false
     
     required override init() {
         super.init()
@@ -25,7 +28,7 @@ class RecentlySelectedProjectMaintainer : NSObject {
     
     // Return whether the selected project is suitable for script execution
     func isSelectedProjectValid() -> Bool {
-        return (self.selectedProject()? != nil) ? ProjectValidator.isProjectValid(self.selectedProject()!) && self.selectedProject()!.hasValidAssetsPath()
+        return (self.selectedProject? != nil) ? ProjectValidator.isProjectValid(self.selectedProject!) && self.selectedProject!.hasValidAssetsPath()
                                                 : false
     }
 
@@ -51,7 +54,7 @@ class RecentlySelectedProjectMaintainer : NSObject {
         } else {
             recentProjects = [newProject]
         }
-        
+        didSetProject = true
         self.storeRecentProjects()
     }
 
@@ -84,6 +87,11 @@ class RecentlySelectedProjectMaintainer : NSObject {
 // MARK:- Recent Project Queries Interface
 extension RecentlySelectedProjectMaintainer {
     
+    
+    func resetSelectedProject() {
+        didSetProject = false
+        self.storeSelectionState()
+    }
     func recentProjectsCount() -> Int {
         return self.recentProjects?.count ?? 0
     }
@@ -93,11 +101,12 @@ extension RecentlySelectedProjectMaintainer {
         return self.recentProjects
     }
     
-    // Returns the currenly selected Project/most recently used project. nil if "cache" empty.
-    func selectedProject() -> XCProject? {
-        return recentProjects?.first
+    var selectedProject: XCProject? {
+        get {
+            return (didSetProject) ? recentProjects?.first : nil
+        }
     }
-    
+
     func projectAtIndex(index: Int) -> XCProject? {
         return recentProjects?[index]
     }
@@ -111,12 +120,6 @@ extension RecentlySelectedProjectMaintainer {
         return self.recentProjects?.map { proj in
                 return proj.title + "  > " + proj.assetTitle
         }
-//        return self.recentProjects { (project) -> Bool in
-//            return ProjectValidator.isProjectValid(project)
-//            }?.map({ (project: XCProject) -> String in
-//                return project.title + "  > " + project.assetTitle
-//        })
-        
     }
     
     // Returns the most recent project matching the predicate indicated in the closure.
@@ -142,7 +145,13 @@ extension RecentlySelectedProjectMaintainer {
         let projects = self.recentProjects?.map { (proj: XCProject) -> [NSString: NSData] in
             return proj.userDefaultsDictionaryRepresentation()
         }
+        
         NSUserDefaults.standardUserDefaults().setObject(projects, forKey: kRecentProjectsKey)
+        self.storeSelectionState()
+    }
+    
+    private func storeSelectionState() {
+        NSUserDefaults.standardUserDefaults().setBool(self.didSetProject, forKey: kSelectionStateKey)
     }
     
     /*
@@ -160,7 +169,9 @@ extension RecentlySelectedProjectMaintainer {
             let project = XCProject.projectFromDictionary(a as [String: NSData])
             return project.hasValidAssetsPath() ? project : XCProject(bookmark: project.bookmark)
         }
-
+        
+        didSetProject = NSUserDefaults.standardUserDefaults().boolForKey(kSelectionStateKey)
+        
         self.storeRecentProjects()
     }
     

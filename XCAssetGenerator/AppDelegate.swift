@@ -12,7 +12,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     func applicationDidFinishLaunching(aNotification: NSNotification?) {
         // Insert code here to initialize your application
-        PathValidator.directoryContainsInvalidCharacters(path: "/Users/Bader/Downloads/test a/", options: nil)
+        let az = PathValidator.directoryContainsImages(path: "/Users/Bader/Downloads/Testz")
+        println("contains: \(az)")
         var string1 = "a"
         var string2 = "b"
         var data1 = NSKeyedArchiver.archivedDataWithRootObject(string1)
@@ -32,30 +33,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         println(b)
         println("the string = \(string11)")
         
-        println(PathValidator.directoryContainsImages(path: "/Users/Bader/Downloads/Testz/"))
-        
-        let url = NSURL(fileURLWithPath: "/Users/Bader/Asset Generator Misc./Test/", isDirectory: true)
-        
-        let generator = NSFileManager.defaultManager().enumeratorAtURL(url!, includingPropertiesForKeys: [NSURLIsDirectoryKey], options: NSDirectoryEnumerationOptions.SkipsHiddenFiles, errorHandler: nil)
-        
-        while let element = generator?.nextObject() as? NSURL {
-            println(element)
-        }
-        
-        let url1 = NSURL(fileURLWithPath: "/Users/Bader/Asset Generator Misc./Test/", isDirectory: true)
-        
-        let generator1 = NSFileManager.defaultManager().enumeratorAtURL(url1!, includingPropertiesForKeys: [NSURLIsDirectoryKey], options: NSDirectoryEnumerationOptions.SkipsHiddenFiles, errorHandler: nil)
-        
-        while let element = generator1?.nextObject() as? NSURL {
-            //            NSNumber *isDirectory;
-            //            [theURL getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:NULL]
-            var isDirectory: AnyObject? = nil
-            element.getResourceValue(&isDirectory, forKey: NSURLIsDirectoryKey, error: nil)
-            println(isDirectory)
-            
-        }
-        
-        
+        println(PathValidator.directoryContainsInvalidCharacters(path: "/Users/Bader/Downloads/Testz", options: nil))
+   
+        let d = PathValidator.directoryContainsInvalidCharacters(path: "/Users/Bader/Downloads/Testz", options: nil)
+        println("d: \(d)")
     }
 
     func applicationWillTerminate(aNotification: NSNotification?) {

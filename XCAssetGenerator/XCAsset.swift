@@ -32,7 +32,7 @@ extension XCAsset: Printable {
     
     var description: String {
         get {
-            return "\(self.path)"
+            return self.path
         }
     }
     
