@@ -104,11 +104,13 @@ class FileDropViewController: NSViewController {
 // MARK:- ScriptSourcePath Delegate
 extension FileDropViewController: ScriptSourcePathDelegate {
     
-    func sourcePath() -> String? {
-        if let sourcePath = self.folderPath {
-            return sourcePath + "/"
-        } else {
-            return self.folderPath
+    var sourcePath: String? {
+        get {
+            if let sourcePath = self.folderPath {
+                return sourcePath + "/"
+            } else {
+                return self.folderPath
+            }
         }
     }
     

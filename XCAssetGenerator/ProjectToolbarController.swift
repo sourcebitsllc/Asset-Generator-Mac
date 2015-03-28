@@ -14,10 +14,13 @@ protocol ProjectToolbarDelegate {
 
 // MARK:- ScriptDestinationPath Delegate
 extension ProjectToolbarController: ScriptDestinationPathDelegate {
-    func destinationPath() -> String? {
-        return self.recentListMaintainer.selectedProject?.assetPath
+    
+    var destinationPath: String? {
+        get {
+            return self.recentListMaintainer.selectedProject?.assetPath
+        }
     }
-
+    
     func hasValidDestinationProject() -> Bool {
         return self.recentListMaintainer.isSelectedProjectValid() //&& self.recentListMaintainer.selectedProject()!.hasValidAssetsPath()
     }

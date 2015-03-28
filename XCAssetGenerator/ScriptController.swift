@@ -10,12 +10,13 @@ import Cocoa
 
 // TODO: hmm to functionally-identical protocols.... You know what to do.
 protocol ScriptSourcePathDelegate {
-    func sourcePath() -> String?
+//    func sourcePath() -> String?
+    var sourcePath: String? { get }
     func hasValidSourceProject() -> Bool
 }
 
 protocol ScriptDestinationPathDelegate {
-    func destinationPath() -> String?
+    var destinationPath: String? { get }
     func hasValidDestinationProject() -> Bool
 }
 
@@ -70,11 +71,11 @@ class ScriptController: NSObject {
     private func executeScript() {
 //        let dest = createNewAsset(project: self.destinationDelegate!.destinationPath()!)
 //        self.scriptManager.executeScript(source: self.sourceDelegate!.sourcePath()!, destination: dest, generate1x: false, extraArgs: nil)
-        self.scriptManager.executeScript(source: self.sourceDelegate!.sourcePath()!, destination: self.destinationDelegate!.destinationPath()!, generate1x: false, extraArgs: nil)
+        self.scriptManager.executeScript(source: self.sourceDelegate!.sourcePath!, destination: self.destinationDelegate!.destinationPath!, generate1x: false, extraArgs: nil)
     }
     
     private func executeScript(#generate1x: Bool, extraArgs args: [String]?) {
-        self.scriptManager.executeScript(source: self.sourceDelegate!.sourcePath()!, destination: self.destinationDelegate!.destinationPath()!, generate1x: generate1x, extraArgs: args)
+        self.scriptManager.executeScript(source: self.sourceDelegate!.sourcePath!, destination: self.destinationDelegate!.destinationPath!, generate1x: generate1x, extraArgs: args)
     }
     
     

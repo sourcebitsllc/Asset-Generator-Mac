@@ -15,10 +15,6 @@ protocol ScriptProgessDelegate {
     
 }
 
-enum ScriptDestinationValidator {
-    
-}
-
 // TODO: make the script safer to use.
 
 class ScriptExecutor: NSObject {
