@@ -74,27 +74,27 @@ class FileDropViewController: NSViewController {
         switch state {
         case .Initial:
             self.dropImageView.image     = NSImage(named: "DropfileInitialState")
-            self.pathLabel.stringValue   = "Initial State"
-            self.detailLabel.stringValue = "Initial Detail Label"
+            self.pathLabel.stringValue   = NSLocalizedString("Initial State", comment: "")
+            self.detailLabel.stringValue = NSLocalizedString("Initial Detail Label", comment: "")
         case .Hovering:
             self.dropImageView.image     = NSImage(named: "DropfileHoverState")
-            self.pathLabel.stringValue   = "Hovering State"
-            self.detailLabel.stringValue = "Hovering Detail Label"
+            self.pathLabel.stringValue   = NSLocalizedString("Hovering State", comment: "")
+            self.detailLabel.stringValue = NSLocalizedString("Hovering Detail Label", comment: "")
         case .SuccessfulDrop:
             self.dropImageView.image     = NSImage(named: "DropfileSuccessState")
             self.pathLabel.stringValue   = self.folderPath?.lastPathComponent ?? ""
-            self.detailLabel.stringValue = "Successful Drop Detail Label"
+            self.detailLabel.stringValue = NSLocalizedString("Successful Drop Detail Label", comment: "")
         case .SuccessfulButEmptyDrop:
             self.dropImageView.image     = NSImage(named: "DropfileInitialState")
             self.pathLabel.stringValue   = self.folderPath?.lastPathComponent ?? ""
-            self.detailLabel.stringValue = "Directory does not contian any images"
+            self.detailLabel.stringValue = NSLocalizedString("Drop Has No Images Detail Label", comment: "")
         case .InvalidDrop:
-            self.pathLabel.stringValue   = "Invalid Drop"
-            self.detailLabel.stringValue = "Invalid Drop Detail Label"
+            self.pathLabel.stringValue   = NSLocalizedString("Invalid Drop", comment: "")
+            self.detailLabel.stringValue = NSLocalizedString("Invalid Drop Detail Label", comment: "")
         case .PathNoLongerExists:
             self.dropImageView.image     = nil
             self.pathLabel.stringValue   = self.folderPath ?? "Directory no longer exists"
-            self.detailLabel.stringValue = "Directory no longer exists Detail Label"
+            self.detailLabel.stringValue = NSLocalizedString("Directory No Longer Exists Detail Label", comment: "")
         }
     }
     

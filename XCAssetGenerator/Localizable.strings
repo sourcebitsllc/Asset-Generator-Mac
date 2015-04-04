@@ -1,0 +1,35 @@
+/* 
+  Localizable.strings
+  XCAssetGenerator
+
+  Created by Bader on 4/4/15.
+  Copyright (c) 2015 Bader. All rights reserved.
+*/
+
+/* Generate button. */
+"Generate" = "Generate";
+
+/* File Drop Initial State. */
+"Initial State" = "Main";
+"Initial Detail Label" = "Detail";
+
+/* File Drop Hovering State. */
+"Hovering State" = "Main";
+"Hovering Detail Label" = "Detail";
+
+/* File Drop Successful Drop State. */
+"Successful Drop Detail Label" = "Detail";
+
+/* File Drop Does Not Contains Images State. */
+"Drop Has No Images Detail Label" = "Detail";
+
+/* File Drop Invalid State. */
+"Invalid Drop" = "Main";
+"Invalid Drop Detail Label" = "Detail";
+
+/* File Drop Deleted State. */
+"Directory No Longer Exists Detail Label" = "Detail";
+
+/* Recent project list. */
+"Selected Project Was Deleted" = "Select a project...";
+"Recent List Empty" = "Recent Projects";
