@@ -82,8 +82,8 @@ extension XCProject {
             
             if assetsBookmarks.isEqualToData(emptyDataTester) == false {
                 let assetsAsData = NSKeyedUnarchiver.unarchiveObjectWithData(assetsBookmarks) as [Bookmark]
-                let XCAssets = assetsAsData.map { (bookmark: Bookmark) -> XCAsset in
-                    return XCAsset(bookmark: bookmark)
+                let XCAssets = assetsAsData.map { (bookmark: Bookmark) -> AssetFolder in
+                    return AssetFolder(bookmark: bookmark)
                 }
                 return XCProject(bookmark: bookmarks, xcassets: XCAssets)
             
@@ -105,7 +105,7 @@ struct XCProject: Equatable {
     
     var bookmark : Bookmark
     let path: Path
-    private var xcassets: [XCAsset]?
+    private var xcassets: [AssetFolder]?
     
     
     // MARK:- Initializers
@@ -117,14 +117,14 @@ struct XCProject: Equatable {
     }
 
     internal init(bookmark: Bookmark, xcassetBookmarks: [Bookmark]?) {
-        var assets: [XCAsset]? = nil
+        var assets: [AssetFolder]? = nil
         
         if let assetsData = xcassetBookmarks {
             var validBookmarks: [BookmarkResolver.ResolvedBookmark] = BookmarkResolver.resolveValidPathsFromBookmarks(assetsData)
 
             if validBookmarks.count > 0 {
-                assets = validBookmarks.map { rb -> XCAsset in
-                    return XCAsset(bookmark: rb.bookmark, path: rb.path)
+                assets = validBookmarks.map { rb -> AssetFolder in
+                    return AssetFolder(bookmark: rb.bookmark, path: rb.path)
                 }
             }
         }
@@ -134,7 +134,7 @@ struct XCProject: Equatable {
         self.path = BookmarkResolver.resolvePathFromBookmark(bookmark)!
     }
     
-    internal init(bookmark: Bookmark, xcassets: [XCAsset]?) {
+    internal init(bookmark: Bookmark, xcassets: [AssetFolder]?) {
         self.bookmark = bookmark
         self.path = BookmarkResolver.resolvePathFromBookmark(bookmark)!
         self.xcassets = xcassets ?? nil
@@ -151,9 +151,9 @@ struct XCProject: Equatable {
     }
     
     
-    mutating private func fetchAssets(#directory: Path) -> [XCAsset]? {
+    mutating private func fetchAssets(#directory: Path) -> [AssetFolder]? {
         
-        var assets: [XCAsset]?
+        var assets: [AssetFolder]?
         let url = NSURL(fileURLWithPath: directory, isDirectory: true)
         
         let generator = NSFileManager.defaultManager().enumeratorAtURL(url!, includingPropertiesForKeys: [NSURLIsDirectoryKey], options: NSDirectoryEnumerationOptions.SkipsHiddenFiles, errorHandler: nil)
@@ -168,7 +168,7 @@ struct XCProject: Equatable {
                     if asset.isXCAsset() {
                         assets = assets ?? []
                         var data: Bookmark = BookmarkResolver.resolveBookmarkFromPath(asset)
-                        assets?.append(XCAsset(bookmark: data))
+                        assets?.append(AssetFolder(bookmark: data))
                     }
                 }
             }

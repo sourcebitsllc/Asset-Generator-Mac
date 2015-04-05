@@ -32,7 +32,7 @@ class ProjectValidator: Validator {
         return BookmarkResolver.isBookmarkValid(project.assetBookmark)
     }
     
-    class func isAssetValid(asset: XCAsset) -> Bool {
+    class func isAssetValid(asset: AssetFolder) -> Bool {
         return BookmarkResolver.isBookmarkValid(asset.bookmark)
     }
 }
@@ -58,6 +58,37 @@ class PathValidator: Validator {
         } ?? false
     }
     
+    class func images(path: Path) -> [Path] {
+        let url = NSURL(fileURLWithPath: path, isDirectory: true)
+        
+        let generator = NSFileManager.defaultManager().enumeratorAtURL(url!, includingPropertiesForKeys: [NSURLIsDirectoryKey], options: NSDirectoryEnumerationOptions.SkipsHiddenFiles , errorHandler: nil)
+        
+        var foundImages = [Path]()
+        while let element = generator?.nextObject() as? NSURL {
+            let isImage = element.path!.hasSuffix(".png") || element.path!.hasSuffix(".jpg") || element.path!.hasSuffix(".jpeg")
+
+            if isImage { foundImages.append(element.path!) }
+        }
+        
+        return foundImages
+    }
+    
+    
+    class func xcassetFolders(path: Path) -> [Path] {
+        let url = NSURL(fileURLWithPath: path, isDirectory: true)
+        
+        let generator = NSFileManager.defaultManager().enumeratorAtURL(url!, includingPropertiesForKeys: [NSURLIsDirectoryKey], options: NSDirectoryEnumerationOptions.SkipsPackageDescendants , errorHandler: nil)
+        
+        var foundFolders = [Path]()
+        while let element = generator?.nextObject() as? NSURL {
+            let isAssetFolder = element.path!.hasSuffix(".imageset") || element.path!.hasSuffix(".appiconset") || element.path!.hasSuffix(".launchimage")
+            
+            if isAssetFolder { foundFolders.append(element.path!) }
+        }
+        
+        return foundFolders
+    }
+    
     
     class func retreiveProject(url: NSURL) -> NSURL? {
         return directoryWith(url.path!, searchOption: NSDirectoryEnumerationOptions.SkipsSubdirectoryDescendants) { (url, isDirectory) -> NSURL? in
@@ -66,7 +97,7 @@ class PathValidator: Validator {
         }
     }
     
-    
+
     class func directoryContainsImages(#path: Path) -> Bool {
         return directoryWith(path, searchOption: NSDirectoryEnumerationOptions.SkipsHiddenFiles) { (url, isDirectory) -> Bool? in
             let isImage = url.path!.hasSuffix(".png") || url.path!.hasSuffix(".jpg") || url.path!.hasSuffix(".jpeg")
