@@ -102,7 +102,7 @@ class FileDropViewController: NSViewController {
 
 
 // MARK:- ScriptSourcePath Delegate
-extension FileDropViewController: ScriptSourcePathDelegate {
+extension FileDropViewController: AssetGeneratorSource {
     
     var sourcePath: String? {
         get {

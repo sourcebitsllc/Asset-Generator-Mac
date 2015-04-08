@@ -119,7 +119,7 @@ extension AssetGeneratorViewController: FileDropControllerDelegate {
 
 
 // MARK:- Script Progress Delegate
-extension AssetGeneratorViewController: ScriptProgessDelegate {
+extension AssetGeneratorViewController: AssetGeneratorProgessDelegate {
     func scriptDidStartExecutingScipt() {
         projectToolbarController.setToolbarProgress(progress: 2)
         parametersDelegate?.scriptParametersChanged(self)

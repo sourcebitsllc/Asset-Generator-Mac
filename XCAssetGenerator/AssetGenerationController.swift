@@ -9,12 +9,12 @@
 import Cocoa
 
 // TODO: hmm to functionally-identical protocols.... You know what to do.
-protocol ScriptSourcePathDelegate {
+protocol AssetGeneratorSource {
     var sourcePath: String? { get }
     func hasValidSourceProject() -> Bool
 }
 
-protocol ScriptDestinationPathDelegate {
+protocol AssetGeneratorDestination {
     var destinationPath: String? { get }
     func hasValidDestinationProject() -> Bool
 }
@@ -27,9 +27,9 @@ enum ScriptOptions {
 class AssetGenerationController: NSObject {
 
     let assetGenerator: AssetGenerator
-    var sourceDelegate: ScriptSourcePathDelegate?
-    var destinationDelegate: ScriptDestinationPathDelegate?
-    var progressDelegate: ScriptProgessDelegate? {
+    var sourceDelegate: AssetGeneratorSource?
+    var destinationDelegate: AssetGeneratorDestination?
+    var progressDelegate: AssetGeneratorProgessDelegate? {
         set {
             assetGenerator.progressDelegate = newValue
         }

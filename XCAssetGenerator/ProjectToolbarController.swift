@@ -13,7 +13,7 @@ protocol ProjectToolbarDelegate {
 }
 
 // MARK:- ScriptDestinationPath Delegate
-extension ProjectToolbarController: ScriptDestinationPathDelegate {
+extension ProjectToolbarController: AssetGeneratorDestination {
     
     var destinationPath: String? {
         get {

@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol ScriptProgessDelegate {
+protocol AssetGeneratorProgessDelegate {
     func scriptDidStartExecutingScipt()
     func scriptFinishedExecutingScript()
     func scriptExecutingScript(progress: Int?)
@@ -24,7 +24,7 @@ enum AssetGenerationStatus {
 class AssetGenerator {
     
     var running: Bool
-    var progressDelegate: ScriptProgessDelegate?
+    var progressDelegate: AssetGeneratorProgessDelegate?
     
     init() {
         running = false
