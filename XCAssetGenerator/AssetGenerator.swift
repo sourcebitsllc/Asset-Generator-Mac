@@ -128,13 +128,15 @@ class AssetGenerator {
                     
                     // If we find a "matching" entry for image, update its name to new image. If not, add new image to json.
                     let comparator = image.comparator
-                    var entry = (existingJSONImages as [SerializedAssetAttribute]).filter(comparator).first
+                    let entry = (existingJSONImages as [SerializedAssetAttribute]).filter(comparator).first
                     
-                    if var entry = entry {
-                        entry["filename"] = attributes.filename
+                    if let entry = entry {
                         let index = find(newJSON as [JSONDictionary], entry)!
                         newJSON.removeAtIndex(index)
-                        newJSON.insert(entry, atIndex: index)
+                        
+                        var newEntry = entry
+                        newEntry[SerializedAssetAttributeKeys.Filename] = attributes.filename
+                        newJSON.insert(newEntry, atIndex: index)
                     } else {
                         newJSON.append(attributes.serialized)
                     }
