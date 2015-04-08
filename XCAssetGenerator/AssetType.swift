@@ -38,24 +38,26 @@ struct AssetAttribute {
     var serialized: SerializedAssetAttribute {
         get {
             var s = [SerializedAssetAttributeKeys.Filename: filename, SerializedAssetAttributeKeys.Scale: scale, SerializedAssetAttributeKeys.Idiom: idiom]
-            if let size = size { s.updateValue(size, forKey: SerializedAssetAttributeKeys.Size) }
-            if let extent = extent { s.updateValue(extent, forKey: SerializedAssetAttributeKeys.Extent) }
-            if let subtype = subtype { s.updateValue(subtype, forKey: SerializedAssetAttributeKeys.Subtype) }
-            if let orientation = orientation { s.updateValue(orientation, forKey: SerializedAssetAttributeKeys.Orientation) }
-            if let minimumSystemVersion = minimumSystemVersion { s.updateValue(minimumSystemVersion, forKey: SerializedAssetAttributeKeys.MinimumSystemVersion) }
+            if let size = size {
+                s.updateValue(size, forKey: SerializedAssetAttributeKeys.Size)
+            }
+            if let extent = extent {
+                s.updateValue(extent, forKey: SerializedAssetAttributeKeys.Extent)
+            }
+            if let subtype = subtype {
+                s.updateValue(subtype, forKey: SerializedAssetAttributeKeys.Subtype)
+            }
+            if let orientation = orientation {
+                s.updateValue(orientation, forKey: SerializedAssetAttributeKeys.Orientation)
+            }
+            if let minimumSystemVersion = minimumSystemVersion {
+                s.updateValue(minimumSystemVersion, forKey: SerializedAssetAttributeKeys.MinimumSystemVersion)
+            }
             return s
         }
     }
 }
 
-// TODO:
-private enum DeviceType {
-    case iPhone
-    case iPad
-    case Universal
-    case Mac
-    case Watch
-}
 
 enum AssetType {
     case Image
@@ -165,7 +167,7 @@ struct AssetAttributeProcessor {
     static func withAsset(path: Path) -> AssetAttribute {
         let name = path.lastPathComponent
         
-        let is2x = name.rangeOfString(GenerationKeywords.PPI1x) != nil
+        let is2x = name.rangeOfString(GenerationKeywords.PPI2x) != nil
         let is3x = name.rangeOfString(GenerationKeywords.PPI3x) != nil
         let scale = is2x ? "2x" : is3x ? "3x" : "1x"
         
@@ -262,5 +264,14 @@ struct AssetAttributeProcessor {
         return AssetAttribute(filename: name, scale: scale, idiom: idiom, extent: extent, subtype: subtype, orientation: orientation, minimumSystemVersion: minimumVersion)
     }
 
+}
+
+// TODO:
+private enum DeviceType {
+    case iPhone
+    case iPad
+    case Universal
+    case Mac
+    case Watch
 }
 
