@@ -20,17 +20,23 @@ func == (lhs: XCProject, rhs: XCProject) -> Bool {
     if lhs.bookmark == rhs.bookmark { return true }
     
     switch (ProjectValidator.isProjectValid(lhs), ProjectValidator.isProjectValid(rhs)) {
-        case (true, true): return lhs.path == rhs.path && lhs.xcassets?.first? == rhs.xcassets?.first?
-        case (false, false): return true
-        case (_,_): return false
+    case (true, true):
+        return lhs.path == rhs.path && lhs.xcassets?.first? == rhs.xcassets?.first?
+    case (false, false):
+        return true
+    case (_,_):
+        return false
     }
 }
 // MARK: Convenience Funcion
 func == (lhs: XCProject?, rhs: XCProject?) -> Bool {
     switch (lhs, rhs) {
-        case (.Some(let a), .Some(let b)) : return a == b
-        case (.None,.None): return true
-        case (_,_): return false
+    case (.Some(let a), .Some(let b)):
+        return a == b
+    case (.None,.None):
+        return true
+    case (_,_):
+        return false
     }
 }
 
@@ -39,13 +45,13 @@ extension XCProject: Printable {
     
     var description: String {
         get {
-            return "path: \(path) -> assets: \(self.xcassets?.first?)"
+            return "path: \(path) -> assets: \(xcassets?.first?)"
         }
     }
     
     var title: String {
         get {
-            return self.path.lastPathComponent
+            return path.lastPathComponent
         }
     }
 }
@@ -60,15 +66,15 @@ extension XCProject {
                 return asset.bookmark
             }
             var assetsData = NSKeyedArchiver.archivedDataWithRootObject(assetsAsBookmarksArray)
-            return [pathKey: self.bookmark, assetPathKey: assetsData]
+            return [pathKey: bookmark, assetPathKey: assetsData]
         } else {
-            return [pathKey: self.bookmark, assetPathKey: Bookmark() ]
+            return [pathKey: bookmark, assetPathKey: Bookmark() ]
         }
         
     }
     
     func userDefaultsDictionaryRepresentation() -> [NSString: Bookmark] {
-        return self.dictionaryRepresentation()
+        return dictionaryRepresentation()
     }
     
     static func projectFromDictionary(dictionary: [String: Bookmark]) -> XCProject {
@@ -82,8 +88,8 @@ extension XCProject {
             
             if assetsBookmarks.isEqualToData(emptyDataTester) == false {
                 let assetsAsData = NSKeyedUnarchiver.unarchiveObjectWithData(assetsBookmarks) as [Bookmark]
-                let XCAssets = assetsAsData.map { (bookmark: Bookmark) -> AssetFolder in
-                    return AssetFolder(bookmark: bookmark)
+                let XCAssets = assetsAsData.map { (bookmark: Bookmark) -> AssetsFolder in
+                    return AssetsFolder(bookmark: bookmark)
                 }
                 return XCProject(bookmark: bookmarks, xcassets: XCAssets)
             
@@ -105,7 +111,7 @@ struct XCProject: Equatable {
     
     var bookmark : Bookmark
     let path: Path
-    private var xcassets: [AssetFolder]?
+    private var xcassets: [AssetsFolder]?
     
     
     // MARK:- Initializers
@@ -113,18 +119,18 @@ struct XCProject: Equatable {
     internal init(bookmark: Bookmark) {
         self.bookmark = bookmark
         self.path = BookmarkResolver.resolvePathFromBookmark(bookmark)!
-        self.xcassets = fetchAssets(directory: self.XCProjectDirectoryPath())
+        self.xcassets = fetchAssets(directory: XCProjectDirectoryPath())
     }
 
     internal init(bookmark: Bookmark, xcassetBookmarks: [Bookmark]?) {
-        var assets: [AssetFolder]? = nil
+        var assets: [AssetsFolder]? = nil
         
         if let assetsData = xcassetBookmarks {
             var validBookmarks: [BookmarkResolver.ResolvedBookmark] = BookmarkResolver.resolveValidPathsFromBookmarks(assetsData)
 
             if validBookmarks.count > 0 {
-                assets = validBookmarks.map { rb -> AssetFolder in
-                    return AssetFolder(bookmark: rb.bookmark, path: rb.path)
+                assets = validBookmarks.map { rb -> AssetsFolder in
+                    return AssetsFolder(bookmark: rb.bookmark, path: rb.path)
                 }
             }
         }
@@ -134,26 +140,26 @@ struct XCProject: Equatable {
         self.path = BookmarkResolver.resolvePathFromBookmark(bookmark)!
     }
     
-    internal init(bookmark: Bookmark, xcassets: [AssetFolder]?) {
+    internal init(bookmark: Bookmark, xcassets: [AssetsFolder]?) {
         self.bookmark = bookmark
         self.path = BookmarkResolver.resolvePathFromBookmark(bookmark)!
         self.xcassets = xcassets ?? nil
     }
     
     private func XCProjectDirectoryPath() -> Path {
-        return self.path.stringByDeletingLastPathComponent + ("/") // .extend
+        return path.stringByDeletingLastPathComponent + ("/") // .extend
     }
     
     
     // MARK - Mutating Functions
     mutating func invalidateAssets() {
-        self.xcassets = nil
+        xcassets = nil
     }
     
     
-    mutating private func fetchAssets(#directory: Path) -> [AssetFolder]? {
+    mutating private func fetchAssets(#directory: Path) -> [AssetsFolder]? {
         
-        var assets: [AssetFolder]?
+        var assets: [AssetsFolder]?
         let url = NSURL(fileURLWithPath: directory, isDirectory: true)
         
         let generator = NSFileManager.defaultManager().enumeratorAtURL(url!, includingPropertiesForKeys: [NSURLIsDirectoryKey], options: NSDirectoryEnumerationOptions.SkipsHiddenFiles, errorHandler: nil)
@@ -168,7 +174,7 @@ struct XCProject: Equatable {
                     if asset.isXCAsset() {
                         assets = assets ?? []
                         var data: Bookmark = BookmarkResolver.resolveBookmarkFromPath(asset)
-                        assets?.append(AssetFolder(bookmark: data))
+                        assets?.append(AssetsFolder(bookmark: data))
                     }
                 }
             }
@@ -184,27 +190,26 @@ struct XCProject: Equatable {
 extension XCProject {
     var assetTitle: Path {
         get {
-            return self.xcassets?.first?.title ?? invalidAssetTitleDisplay
+            return xcassets?.first?.title ?? invalidAssetTitleDisplay
         }
     }
     
     var assetPath: Path? {
         get {
-            return self.xcassets?.first?.path
+            return xcassets?.first?.path
         }
     }
     
     var assetBookmark: Bookmark? {
         get {
-            return self.xcassets?.first?.bookmark
+            return xcassets?.first?.bookmark
         }
     }
-
     
     // A project will have a valid assets path if it contains an asset and if the asset path is not empty.
     func hasValidAssetsPath() -> Bool {
-        if (self.xcassets?.first != nil) {
-            return BookmarkResolver.isBookmarkValid(self.xcassets!.first!.bookmark) && !self.xcassets!.first!.path.isEmpty
+        if (xcassets?.first != nil) {
+            return BookmarkResolver.isBookmarkValid(xcassets!.first!.bookmark) && !xcassets!.first!.path.isEmpty
         }
         
         return false
