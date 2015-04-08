@@ -120,7 +120,7 @@ struct XCProject: Equatable {
         self.bookmark = bookmark
         self.path = BookmarkResolver.resolvePathFromBookmark(bookmark)!
      //   self.xcassets = fetchAssets(directory: XCProjectDirectoryPath())
-        self.xcassets = PathQuery.availableAssetFolders(from: XCProjectDirectoryPath()).map {
+        self.xcassets = PathQuery.availableAssetFolders(from: projectCurrentWorkingDirectory).map {
             let bookmark = BookmarkResolver.resolveBookmarkFromPath($0)
             return AssetsFolder(bookmark: bookmark)
         }
@@ -149,12 +149,13 @@ struct XCProject: Equatable {
         self.path = BookmarkResolver.resolvePathFromBookmark(bookmark)!
         self.xcassets = xcassets ?? nil
     }
-    
-    private func XCProjectDirectoryPath() -> Path {
-        return path.stringByDeletingLastPathComponent + ("/") // .extend
+
+    private var projectCurrentWorkingDirectory: Path {
+        get {
+            return path.stringByDeletingLastPathComponent + ("/")
+        }
     }
     
-
     // MARK - Mutating Functions
     mutating func invalidateAssets() {
         xcassets = nil
