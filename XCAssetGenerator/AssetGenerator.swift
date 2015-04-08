@@ -20,17 +20,6 @@ enum AssetGenerationStatus {
     case Ongoing(Int)
 }
 
-extension String {
-    func replace(characters: [Character], withCharacter character: Character) -> String {
-        return String(map(self) {
-            if find(characters, $0) == nil {
-                return $0
-            } else {
-                return character
-            }
-        })
-    }
-}
 
 class AssetGenerator {
     

@@ -37,12 +37,12 @@ struct AssetAttribute {
     
     var serialized: SerializedAssetAttribute {
         get {
-            var s = ["filename": filename, "scale": scale, "idiom": idiom]
-            if let size = size { s.updateValue(size, forKey: "size") }
-            if let extent = extent { s.updateValue(extent, forKey: "extent") }
-            if let subtype = subtype { s.updateValue(subtype, forKey: "sub-type") }
-            if let orientation = orientation { s.updateValue(orientation, forKey: "orientation") }
-            if let minimumSystemVersion = minimumSystemVersion { s.updateValue(minimumSystemVersion, forKey: "minimum-system-version") }
+            var s = [SerializedAssetAttributeKeys.Filename: filename, SerializedAssetAttributeKeys.Scale: scale, SerializedAssetAttributeKeys.Idiom: idiom]
+            if let size = size { s.updateValue(size, forKey: SerializedAssetAttributeKeys.Size) }
+            if let extent = extent { s.updateValue(extent, forKey: SerializedAssetAttributeKeys.Extent) }
+            if let subtype = subtype { s.updateValue(subtype, forKey: SerializedAssetAttributeKeys.Subtype) }
+            if let orientation = orientation { s.updateValue(orientation, forKey: SerializedAssetAttributeKeys.Orientation) }
+            if let minimumSystemVersion = minimumSystemVersion { s.updateValue(minimumSystemVersion, forKey: SerializedAssetAttributeKeys.MinimumSystemVersion) }
             return s
         }
     }
@@ -116,23 +116,23 @@ struct Asset {
             switch type {
             case .Image:
                 return { dict in
-                    let sameIdiom = dict["idiom"] as String? == attribute.idiom
-                    let sameScale = dict["scale"] as String? == attribute.scale
+                    let sameIdiom = dict[SerializedAssetAttributeKeys.Idiom] as String? == attribute.idiom
+                    let sameScale = dict[SerializedAssetAttributeKeys.Scale] as String? == attribute.scale
                     return sameIdiom && sameScale
                 }
             case .Icon:
                 return { dict in
-                    let sameIdiom = dict["idiom"] as String? == attribute.idiom
-                    let sameScale = dict["scale"] as String? == attribute.scale
-                    let sameSize  = dict["size"]  as String? == attribute.size
+                    let sameIdiom = dict[SerializedAssetAttributeKeys.Idiom] as String? == attribute.idiom
+                    let sameScale = dict[SerializedAssetAttributeKeys.Scale] as String? == attribute.scale
+                    let sameSize  = dict[SerializedAssetAttributeKeys.Size]  as String? == attribute.size
                     return sameIdiom && sameScale && sameSize
                 }
             case .LaunchImage:
                 return { dict in
-                    let sameIdiom = dict["idiom"] as String? == attribute.idiom
-                    let sameScale = dict["scale"] as String? == attribute.scale
-                    let sameSubtype = dict["sub-type"] as String? == attribute.subtype
-                    let sameOrientation = dict["orientation"] as String? == attribute.orientation
+                    let sameIdiom = dict[SerializedAssetAttributeKeys.Idiom] as String? == attribute.idiom
+                    let sameScale = dict[SerializedAssetAttributeKeys.Scale] as String? == attribute.scale
+                    let sameSubtype = dict[SerializedAssetAttributeKeys.Subtype] as String? == attribute.subtype
+                    let sameOrientation = dict[SerializedAssetAttributeKeys.Orientation] as String? == attribute.orientation
                     return sameIdiom && sameScale && sameOrientation && sameSubtype
                 }
             }
@@ -149,16 +149,11 @@ struct Asset {
     /// * extention: .png, .jpg, etc.
     private func stripKeywords(path: Path) -> Path {
         var name = path.lastPathComponent.stringByDeletingPathExtension
-        
-        let scale = name.rangeOfString("@2x") ?? name.rangeOfString("@3x") ?? name.rangeOfString("@1x") ?? nil
-        if let scale = scale {
-            name.removeRange(scale)
-        }
-        
-        let idiom = name.rangeOfString("~iphone") ?? name.rangeOfString("~ipad") ?? nil
-        if let idiom = idiom {
-            name.removeRange(idiom)
-        }
+        name = name.remove([GenerationKeywords.PPI2x,
+                            GenerationKeywords.PPI3x,
+                            GenerationKeywords.PPI1x,
+                            GenerationKeywords.iPhone,
+                            GenerationKeywords.iPad ])
         return name
     }
     
@@ -170,12 +165,12 @@ struct AssetAttributeProcessor {
     static func withAsset(path: Path) -> AssetAttribute {
         let name = path.lastPathComponent
         
-        let is2x = name.rangeOfString("@2x") != nil
-        let is3x = name.rangeOfString("@3x") != nil
+        let is2x = name.rangeOfString(GenerationKeywords.PPI1x) != nil
+        let is3x = name.rangeOfString(GenerationKeywords.PPI3x) != nil
         let scale = is2x ? "2x" : is3x ? "3x" : "1x"
         
-        let isiPhone = name.rangeOfString("~iphone") != nil
-        let isiPad = name.rangeOfString("~ipad") != nil
+        let isiPhone = name.rangeOfString(GenerationKeywords.iPhone) != nil
+        let isiPad = name.rangeOfString(GenerationKeywords.iPad) != nil
         let idiom = isiPhone ? "iphone" : isiPad ? "ipad": is3x ? "iphone" : "universal"
         
         return AssetAttribute(filename: name, scale: scale, idiom: idiom)
