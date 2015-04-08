@@ -41,28 +41,26 @@ class ProgressPopUpButton: NSPopUpButton {
     
     func setProgress(#progress : CGFloat) {
         let width = ( line.superview!.bounds.size.width * (progress / 100) )
-        self.line.animator().frame.size.width = width
-       
+        line.animator().frame.size.width = width
     }
     
     func resetProgress() {
         let width = line.superview!.bounds.size.width
         NSAnimationContext.runAnimationGroup({ (context: NSAnimationContext!) -> Void in
             self.line.animator().frame.size.width = width
-            
             }, completionHandler: { () -> Void in
-               
+                
                 NSAnimationContext.runAnimationGroup({ (context: NSAnimationContext!) -> Void in
                     self.line.animator().alphaValue = 0
-                }, completionHandler: { () -> Void in
-                    self.line.frame.size.width = 0
-                    self.line.alphaValue = 1
+                    }, completionHandler: { () -> Void in
+                        self.line.frame.size.width = 0
+                        self.line.alphaValue = 1
                 })
-       })
+        })
         
     }
     
     func setProgressColor(color: NSColor = NSColor(calibratedRed: 0.047, green: 0.261, blue: 0.993, alpha: 1)) {
-        self.line.layer!.backgroundColor = color.CGColor
+        line.layer!.backgroundColor = color.CGColor
     }
 }

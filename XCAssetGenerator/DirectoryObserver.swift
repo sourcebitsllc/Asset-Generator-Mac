@@ -26,23 +26,23 @@ class SourceObserver: FileSystemObserverType {
     
     
     func observeSource(path: Path) -> Void {
-        if let previousPath = self.observedPath {
-            self.directoryObserver.removeObserverForPath(previousPath, restartStream: false)
+        if let previousPath = observedPath {
+            directoryObserver.removeObserverForPath(previousPath, restartStream: false)
         }
         
-        self.observedPath = path
-        self.directoryObserver.addObserver(self.observer, forFileSystemPath: path)
+        observedPath = path
+        directoryObserver.addObserver(observer, forFileSystemPath: path)
     }
     
     
     func stopObservingPath(path: Path) {
-        self.observedPath = nil
-        self.directoryObserver.removeObserverForPath(path)
+        observedPath = nil
+        directoryObserver.removeObserverForPath(path)
     }
     
     
     func updatePathForObserver(#oldPath: String, newPath: String) -> Void {
-        self.directoryObserver.replacePathForObserversFrom(oldPath, to: newPath)
+        directoryObserver.replacePathForObserversFrom(oldPath, to: newPath)
     }
 }
 
@@ -58,44 +58,44 @@ class ProjectObserver: FileSystemObserverType {
     
     
     func observeProject(project: XCProject) -> Void {
-        self.observePath(project.path)
+        observePath(project.path)
         
         if project.hasValidAssetsPath() {
-            self.observePath(project.assetPath!)
+            observePath(project.assetPath!)
         }
     }
     
     func stopObservingProject(project: XCProject) {
-        self.stopObservingPath(project.path)
+        stopObservingPath(project.path)
         
         if project.hasValidAssetsPath() {
-            self.stopObservingPath(project.assetPath!)
+            stopObservingPath(project.assetPath!)
         }
     }
     
     func observePath(path: Path) {
-        self.directoryObserver.addObserver(self.observer, forFileSystemPath: path)
+        directoryObserver.addObserver(observer, forFileSystemPath: path)
     }
     
     func stopObservingPath(path: Path) {
-        self.directoryObserver.removeObserverForPath(path)
+        directoryObserver.removeObserverForPath(path)
     }
     
     
     func updatePathForObserver(#oldPath: String, newPath: String) -> Void {
-        self.directoryObserver.replacePathForObserversFrom(oldPath, to: newPath)
+        directoryObserver.replacePathForObserversFrom(oldPath, to: newPath)
     }
     
     func updateProjectForObserver(#oldProject: XCProject, newProject: XCProject) -> Void {
-        self.updatePathForObserver(oldPath: oldProject.path, newPath: newProject.path)
+        updatePathForObserver(oldPath: oldProject.path, newPath: newProject.path)
         
         switch (oldProject.hasValidAssetsPath(), newProject.hasValidAssetsPath()) {
         case (true, true):
-            self.updatePathForObserver(oldPath: oldProject.assetPath!, newPath: newProject.assetPath!)
+            updatePathForObserver(oldPath: oldProject.assetPath!, newPath: newProject.assetPath!)
         case (true, false):
-            self.stopObservingPath(oldProject.assetPath!)
+            stopObservingPath(oldProject.assetPath!)
         case (false, true):
-            self.observePath(newProject.assetPath!)
+            observePath(newProject.assetPath!)
         case (false, false):
             fallthrough
         default:

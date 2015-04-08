@@ -21,14 +21,14 @@ class RecentlySelectedProjectMaintainer : NSObject {
     
     required override init() {
         super.init()
-//        self.__flushStoredProjects()
-        self.loadRecentProjects()
+//        __flushStoredProjects()
+        loadRecentProjects()
     }
     
     
     // Return whether the selected project is suitable for script execution
     func isSelectedProjectValid() -> Bool {
-        return (self.selectedProject? != nil) ? ProjectValidator.isProjectValid(self.selectedProject!) && self.selectedProject!.hasValidAssetsPath()
+        return (selectedProject? != nil) ? ProjectValidator.isProjectValid(selectedProject!) && selectedProject!.hasValidAssetsPath()
                                                 : false
     }
 
@@ -37,7 +37,7 @@ class RecentlySelectedProjectMaintainer : NSObject {
     // TODO: ...... Terrible .......
     // FIXME:
     func addProject(project newProject: XCProject) {
-        self.addProject(project: newProject, index: 0)
+        addProject(project: newProject, index: 0)
     }
     
     func addProject(project newProject: XCProject, index: Int) {
@@ -55,7 +55,7 @@ class RecentlySelectedProjectMaintainer : NSObject {
             recentProjects = [newProject]
         }
         didSetProject = true
-        self.storeRecentProjects()
+        storeRecentProjects()
     }
 
     
@@ -71,12 +71,12 @@ class RecentlySelectedProjectMaintainer : NSObject {
                 recentProjects!.removeAtIndex(index)
             }
         }
-        self.storeRecentProjects()
+        storeRecentProjects()
     }
     
     
     private func cullStaleAssets() -> Void {
-        self.recentProjects = self.recentProjects?.map { (project: XCProject) -> XCProject in
+        recentProjects = recentProjects?.map { (project: XCProject) -> XCProject in
             return !project.hasValidAssetsPath() ? XCProject(bookmark: project.bookmark) : project
         }
         
@@ -87,18 +87,18 @@ class RecentlySelectedProjectMaintainer : NSObject {
 // MARK:- Recent Project Queries Interface
 extension RecentlySelectedProjectMaintainer {
     
-    
     func resetSelectedProject() {
         didSetProject = false
-        self.storeSelectionState()
+        storeSelectionState()
     }
+    
     func recentProjectsCount() -> Int {
-        return self.recentProjects?.count ?? 0
+        return recentProjects?.count ?? 0
     }
     
     // TODO: If i can remove this function, it would make alot more sense.
     func projects() -> [XCProject]? {
-        return self.recentProjects
+        return recentProjects
     }
     
     var selectedProject: XCProject? {
@@ -112,19 +112,19 @@ extension RecentlySelectedProjectMaintainer {
     }
     
     func indexOfProject(project: XCProject) -> Int? {
-        return (self.recentProjects != nil) ? find(self.recentProjects!,project) : nil
+        return (recentProjects != nil) ? find(recentProjects!,project) : nil
     }
     
     // Returns the title of the projects which will appear in the dropdown view
     func recentProjectsTitlesList() -> [String]? {
-        return self.recentProjects?.map { proj in
+        return recentProjects?.map { proj in
                 return proj.title + "  > " + proj.assetTitle
         }
     }
     
     // Returns the most recent project matching the predicate indicated in the closure.
     private func recentProject(closure: (project: XCProject) -> Bool) -> XCProject? {
-        let matches = self.recentProjects?.filter(closure)
+        let matches = recentProjects?.filter(closure)
         if matches?.count > 1 {
             println("[XCAssetGenerator] Houston, we have a problem. Found multiple projects for a check that should return one.")
         }
@@ -133,7 +133,7 @@ extension RecentlySelectedProjectMaintainer {
     }
     
     func recentProjects(filter: (project: XCProject) -> Bool) -> [XCProject]? {
-        return self.recentProjects?.filter(filter)
+        return recentProjects?.filter(filter)
     }
     
 }
@@ -142,16 +142,16 @@ extension RecentlySelectedProjectMaintainer {
    
     // TODO: Find better hooks for these calls.
     private func storeRecentProjects() {
-        let projects = self.recentProjects?.map { (proj: XCProject) -> [NSString: NSData] in
+        let projects = recentProjects?.map { (proj: XCProject) -> [NSString: NSData] in
             return proj.userDefaultsDictionaryRepresentation()
         }
         
         NSUserDefaults.standardUserDefaults().setObject(projects, forKey: kRecentProjectsKey)
-        self.storeSelectionState()
+        storeSelectionState()
     }
     
     private func storeSelectionState() {
-        NSUserDefaults.standardUserDefaults().setBool(self.didSetProject, forKey: kSelectionStateKey)
+        NSUserDefaults.standardUserDefaults().setBool(didSetProject, forKey: kSelectionStateKey)
     }
     
     /*
@@ -165,14 +165,14 @@ extension RecentlySelectedProjectMaintainer {
             return BookmarkResolver.isBookmarkValid(dictionary[pathKey]! as Bookmark)
         }
         
-        self.recentProjects = validProjectDicts?.map { (a: [String: NSData]) -> XCProject in
+        recentProjects = validProjectDicts?.map { (a: [String: NSData]) -> XCProject in
             let project = XCProject.projectFromDictionary(a as [String: NSData])
             return project.hasValidAssetsPath() ? project : XCProject(bookmark: project.bookmark)
         }
         
         didSetProject = NSUserDefaults.standardUserDefaults().boolForKey(kSelectionStateKey)
         
-        self.storeRecentProjects()
+        storeRecentProjects()
     }
     
     private func __flushStoredProjects() {

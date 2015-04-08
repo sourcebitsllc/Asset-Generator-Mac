@@ -46,24 +46,24 @@ class FileDropViewController: NSViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.dropView.delegate = self
+        dropView.delegate = self
     
-        self.dropImageView = NSImageView()
-        self.dropImageView.translatesAutoresizingMaskIntoConstraints = false
+        dropImageView = NSImageView()
+        dropImageView.translatesAutoresizingMaskIntoConstraints = false
         
-        self.dropImageView.unregisterDraggedTypes() // otherwise, the subview will intercept the dropView calls.
-        self.updateDropView(state: DropViewState.Initial)
+        dropImageView.unregisterDraggedTypes() // otherwise, the subview will intercept the dropView calls.
+        updateDropView(state: DropViewState.Initial)
         
-        self.dropView.addSubview(self.dropImageView)
+        dropView.addSubview(dropImageView)
         
-        let centerX: NSLayoutConstraint = NSLayoutConstraint(item: self.dropImageView, attribute: NSLayoutAttribute.CenterX, relatedBy: NSLayoutRelation.Equal, toItem: self.dropView, attribute: NSLayoutAttribute.CenterX, multiplier: 1, constant: 0)
+        let centerX: NSLayoutConstraint = NSLayoutConstraint(item: dropImageView, attribute: NSLayoutAttribute.CenterX, relatedBy: NSLayoutRelation.Equal, toItem: dropView, attribute: NSLayoutAttribute.CenterX, multiplier: 1, constant: 0)
        
-        let centerY: NSLayoutConstraint = NSLayoutConstraint(item: self.dropImageView, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: self.dropView, attribute: NSLayoutAttribute.CenterY, multiplier: 0.8, constant: 0)
+        let centerY: NSLayoutConstraint = NSLayoutConstraint(item: dropImageView, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: dropView, attribute: NSLayoutAttribute.CenterY, multiplier: 0.8, constant: 0)
         
-        self.dropView.addConstraint(centerX)
-        self.dropView.addConstraint(centerY)
-        self.dropView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[imageView(imageWidth)]", options: nil, metrics: ["imageWidth": 150], views: ["imageView": self.dropImageView]))
-         self.dropView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[imageView(imageHeight)]", options: nil, metrics: ["imageHeight": 150], views: ["imageView": self.dropImageView]))
+        dropView.addConstraint(centerX)
+        dropView.addConstraint(centerY)
+        dropView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[imageView(imageWidth)]", options: nil, metrics: ["imageWidth": 150], views: ["imageView": dropImageView]))
+         dropView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[imageView(imageHeight)]", options: nil, metrics: ["imageHeight": 150], views: ["imageView": dropImageView]))
         
         
         directoryObserver = SourceObserver(delegate: self)
@@ -73,28 +73,28 @@ class FileDropViewController: NSViewController {
     func updateDropView(#state: DropViewState) {
         switch state {
         case .Initial:
-            self.dropImageView.image     = NSImage(named: "DropfileInitialState")
-            self.pathLabel.stringValue   = NSLocalizedString("Initial State", comment: "")
-            self.detailLabel.stringValue = NSLocalizedString("Initial Detail Label", comment: "")
+            dropImageView.image     = NSImage(named: "DropfileInitialState")
+            pathLabel.stringValue   = NSLocalizedString("Initial State", comment: "")
+            detailLabel.stringValue = NSLocalizedString("Initial Detail Label", comment: "")
         case .Hovering:
-            self.dropImageView.image     = NSImage(named: "DropfileHoverState")
-            self.pathLabel.stringValue   = NSLocalizedString("Hovering State", comment: "")
-            self.detailLabel.stringValue = NSLocalizedString("Hovering Detail Label", comment: "")
+            dropImageView.image     = NSImage(named: "DropfileHoverState")
+            pathLabel.stringValue   = NSLocalizedString("Hovering State", comment: "")
+            detailLabel.stringValue = NSLocalizedString("Hovering Detail Label", comment: "")
         case .SuccessfulDrop:
-            self.dropImageView.image     = NSImage(named: "DropfileSuccessState")
-            self.pathLabel.stringValue   = self.folderPath?.lastPathComponent ?? ""
-            self.detailLabel.stringValue = NSLocalizedString("Successful Drop Detail Label", comment: "")
+            dropImageView.image     = NSImage(named: "DropfileSuccessState")
+            pathLabel.stringValue   = folderPath?.lastPathComponent ?? ""
+            detailLabel.stringValue = NSLocalizedString("Successful Drop Detail Label", comment: "")
         case .SuccessfulButEmptyDrop:
-            self.dropImageView.image     = NSImage(named: "DropfileInitialState")
-            self.pathLabel.stringValue   = self.folderPath?.lastPathComponent ?? ""
-            self.detailLabel.stringValue = NSLocalizedString("Drop Has No Images Detail Label", comment: "")
+            dropImageView.image     = NSImage(named: "DropfileInitialState")
+            pathLabel.stringValue   = folderPath?.lastPathComponent ?? ""
+            detailLabel.stringValue = NSLocalizedString("Drop Has No Images Detail Label", comment: "")
         case .InvalidDrop:
-            self.pathLabel.stringValue   = NSLocalizedString("Invalid Drop", comment: "")
-            self.detailLabel.stringValue = NSLocalizedString("Invalid Drop Detail Label", comment: "")
+            pathLabel.stringValue   = NSLocalizedString("Invalid Drop", comment: "")
+            detailLabel.stringValue = NSLocalizedString("Invalid Drop Detail Label", comment: "")
         case .PathNoLongerExists:
-            self.dropImageView.image     = nil
-            self.pathLabel.stringValue   = self.folderPath ?? "Directory no longer exists"
-            self.detailLabel.stringValue = NSLocalizedString("Directory No Longer Exists Detail Label", comment: "")
+            dropImageView.image     = nil
+            pathLabel.stringValue   = folderPath ?? "Directory no longer exists"
+            detailLabel.stringValue = NSLocalizedString("Directory No Longer Exists Detail Label", comment: "")
         }
     }
     
@@ -106,16 +106,16 @@ extension FileDropViewController: ScriptSourcePathDelegate {
     
     var sourcePath: String? {
         get {
-            if let sourcePath = self.folderPath {
+            if let sourcePath = folderPath {
                 return sourcePath + "/"
             } else {
-                return self.folderPath
+                return folderPath
             }
         }
     }
     
     func hasValidSourceProject() -> Bool {
-        return (self.folderPath? != nil) ? PathValidator.directoryContainsImages(path: self.folderPath!) : false
+        return (folderPath? != nil) ? PathValidator.directoryContainsImages(path: folderPath!) : false
     }
 }
 
@@ -129,34 +129,34 @@ extension FileDropViewController: DropViewDelegate {
     }
     
     func dropViewDidDropFileToView(dropView: DropView, filePath: String) {
-        let old = self.folderPath
-        self.folderPath = filePath
+        let old = folderPath
+        folderPath = filePath
         if PathValidator.directoryContainsImages(path: filePath) {
-            self.updateDropView(state: DropViewState.SuccessfulDrop)
+            updateDropView(state: DropViewState.SuccessfulDrop)
         } else {
-            self.updateDropView(state: DropViewState.SuccessfulButEmptyDrop)
+            updateDropView(state: DropViewState.SuccessfulButEmptyDrop)
         }
         
-        self.directoryObserver.observeSource(filePath)
-        self.delegate?.fileDropControllerDidSetSourcePath(self,path: self.folderPath!, previousPath: old)
+        directoryObserver.observeSource(filePath)
+        delegate?.fileDropControllerDidSetSourcePath(self,path: folderPath!, previousPath: old)
     }
     
     
     func dropViewDidDragValidFileIntoView(dropView: DropView) {
-        if !self.hasValidSourceProject() {
-            self.updateDropView(state: DropViewState.Hovering)
+        if !hasValidSourceProject() {
+            updateDropView(state: DropViewState.Hovering)
         }
     }
     
     func dropViewDidDragInvalidFileIntoView(dropView: DropView) {
-        self.updateDropView(state: DropViewState.InvalidDrop)
+        updateDropView(state: DropViewState.InvalidDrop)
     }
     
     func dropViewDidDragFileOutOfView(dropView: DropView) {
-        if !self.hasValidSourceProject() {
-            self.updateDropView(state: DropViewState.Initial)
+        if !hasValidSourceProject() {
+            updateDropView(state: DropViewState.Initial)
         } else {
-            self.updateDropView(state: DropViewState.SuccessfulDrop)
+            updateDropView(state: DropViewState.SuccessfulDrop)
         }
     }
 }
@@ -165,17 +165,17 @@ extension FileDropViewController: DropViewDelegate {
 extension FileDropViewController: FileSystemObserverDelegate {
 
     func FileSystemDirectoryDeleted(path: String!) {
-        self.updateDropView(state: DropViewState.PathNoLongerExists)
-        self.directoryObserver.stopObservingPath(path)
-        self.folderPath = nil
-        self.delegate?.fileDropControllerDidRemoveSourcePath(self, removedPath: path)
+        updateDropView(state: DropViewState.PathNoLongerExists)
+        directoryObserver.stopObservingPath(path)
+        folderPath = nil
+        delegate?.fileDropControllerDidRemoveSourcePath(self, removedPath: path)
     }
     
     
     func FileSystemDirectory(oldPath: String!, renamedTo newPath: String!) {
-        self.directoryObserver.updatePathForObserver(oldPath: oldPath, newPath: newPath)
-        self.folderPath = newPath
-        self.updateDropView(state: DropViewState.SuccessfulDrop)
+        directoryObserver.updatePathForObserver(oldPath: oldPath, newPath: newPath)
+        folderPath = newPath
+        updateDropView(state: DropViewState.SuccessfulDrop)
     }
     
     func FileSystemDirectoryError(error: NSError!) {

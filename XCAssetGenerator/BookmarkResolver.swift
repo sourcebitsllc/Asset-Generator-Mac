@@ -42,7 +42,7 @@ extension BookmarkResolver {
     class func resolveValidPathsFromBookmarks(bookmarks: [Bookmark]) -> [ResolvedBookmark] {
         var valid: [ResolvedBookmark] = [ResolvedBookmark]()
         for bookmark in bookmarks {
-            let path: Path? = self.resolvePathFromBookmark(bookmark)
+            let path: Path? = resolvePathFromBookmark(bookmark)
             if let p = path {
                 valid.append(ResolvedBookmark(bookmark: bookmark, path: p))
             }

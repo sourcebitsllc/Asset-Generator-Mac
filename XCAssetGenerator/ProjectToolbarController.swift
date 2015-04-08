@@ -17,12 +17,12 @@ extension ProjectToolbarController: ScriptDestinationPathDelegate {
     
     var destinationPath: String? {
         get {
-            return self.recentListMaintainer.selectedProject?.assetPath
+            return recentListMaintainer.selectedProject?.assetPath
         }
     }
     
     func hasValidDestinationProject() -> Bool {
-        return self.recentListMaintainer.isSelectedProjectValid() //&& self.recentListMaintainer.selectedProject()!.hasValidAssetsPath()
+        return recentListMaintainer.isSelectedProjectValid() //&& recentListMaintainer.selectedProject()!.hasValidAssetsPath()
     }
 }
 
@@ -45,21 +45,21 @@ class ProjectToolbarController: NSObject  {
         
         super.init()
         
-        self.setupProjectObserver()
-        self.dropdownListSetup()
-        self.openPanelSetup()
+        setupProjectObserver()
+        dropdownListSetup()
+        openPanelSetup()
         
     }
     
     private func setupProjectObserver() {
-        self.directoryObserver = ProjectObserver(delegate: self)
+        directoryObserver = ProjectObserver(delegate: self)
     }
     
     private func openPanelSetup() {
-        self.panel.canChooseFiles            = true
-        self.panel.allowedFileTypes          = ["xcodeproj"]
-        self.panel.canChooseDirectories      = true
-        self.panel.allowsMultipleSelection   = false
+        panel.canChooseFiles            = true
+        panel.allowedFileTypes          = ["xcodeproj"]
+        panel.canChooseDirectories      = true
+        panel.allowsMultipleSelection   = false
     }
     
     
@@ -130,7 +130,7 @@ class ProjectToolbarController: NSObject  {
     func recentProjectsListChanged(sender: NSPopUpButton) {
         // If we select a new project, proceed.
         if sender.indexOfSelectedItem != SelectedItemIndex {
-            self.updateRecentProjectsList(index: sender.indexOfSelectedItem)
+            updateRecentProjectsList(index: sender.indexOfSelectedItem)
         }
     }
     
@@ -141,80 +141,80 @@ extension ProjectToolbarController {
     
     
     private func updateRecentProjectsList(#index: Int){
-        let idx = (self.recentListMaintainer.selectedProject != nil) ? index : index - 1 // This will never be called on index = 0
-        self.recentListMaintainer.addProject(project: self.recentListMaintainer.projectAtIndex(idx)!)
-        self.updateDropdownListTitles()
-        self.delegate?.projectToolbarDidChangeProject(self.recentListMaintainer.selectedProject)
+        let idx = (recentListMaintainer.selectedProject != nil) ? index : index - 1 // This will never be called on index = 0
+        recentListMaintainer.addProject(project: recentListMaintainer.projectAtIndex(idx)!)
+        updateDropdownListTitles()
+        delegate?.projectToolbarDidChangeProject(recentListMaintainer.selectedProject)
     }
     
     
     private func enableDropdownList() {
-        self.recentProjectsDropdownListView.enabled     = true
-        self.recentProjectsDropdownListView.alignment   = NSTextAlignment.LeftTextAlignment
-        self.recentProjectsDropdownListView.alphaValue  = 1.0
+        recentProjectsDropdownListView.enabled     = true
+        recentProjectsDropdownListView.alignment   = NSTextAlignment.LeftTextAlignment
+        recentProjectsDropdownListView.alphaValue  = 1.0
     }
     
     private func disableDropdownList() {
-        self.recentProjectsDropdownListView.removeAllItems()
-        self.recentProjectsDropdownListView.addItemWithTitle("Recent Projects")
+        recentProjectsDropdownListView.removeAllItems()
+        recentProjectsDropdownListView.addItemWithTitle(NSLocalizedString("Recent List Empty", comment: ""))
         
-        self.recentProjectsDropdownListView.enabled     = false
-        self.recentProjectsDropdownListView.alignment   = NSTextAlignment.CenterTextAlignment
-        self.recentProjectsDropdownListView.alphaValue  = 0.5 // lul.
+        recentProjectsDropdownListView.enabled     = false
+        recentProjectsDropdownListView.alignment   = NSTextAlignment.CenterTextAlignment
+        recentProjectsDropdownListView.alphaValue  = 0.5 // lul.
     }
     
     private func dropdownListSetup() {
-        self.recentProjectsDropdownListView.preferredEdge = NSMaxYEdge
-        self.recentProjectsDropdownListView.setProgressColor(color: NSColor(calibratedRed: 0.047, green: 0.261, blue: 0.993, alpha: 1))
+        recentProjectsDropdownListView.preferredEdge = NSMaxYEdge
+        recentProjectsDropdownListView.setProgressColor(color: NSColor(calibratedRed: 0.047, green: 0.261, blue: 0.993, alpha: 1))
         
-        if (self.recentListMaintainer.recentProjectsCount() <= 0) {
-            self.disableDropdownList()
+        if (recentListMaintainer.recentProjectsCount() <= 0) {
+            disableDropdownList()
         
         } else {
             // If we have recent projects, set it up and observe them.
-            self.enableDropdownList()
-            self.recentProjectsDropdownListView.addItemsWithTitles(self.recentListMaintainer.recentProjectsTitlesList()!)
+            enableDropdownList()
+            recentProjectsDropdownListView.addItemsWithTitles(recentListMaintainer.recentProjectsTitlesList()!)
             
-            for proj in self.recentListMaintainer.projects()! {
-                self.directoryObserver.observeProject(proj)
+            for proj in recentListMaintainer.projects()! {
+                directoryObserver.observeProject(proj)
             }
             
-            if (self.recentListMaintainer.selectedProject == nil) {
-                self.insertPlaceholderProject()
+            if (recentListMaintainer.selectedProject == nil) {
+                insertPlaceholderProject()
             }
             
         }
-        self.delegate?.projectToolbarDidChangeProject(self.recentListMaintainer.selectedProject)
+        delegate?.projectToolbarDidChangeProject(recentListMaintainer.selectedProject)
 
     }
     
     private func addNewProject(#url: NSURL) {
-        self.recentListMaintainer.addProject(url: url)
-        self.updateDropdownListTitles()
+        recentListMaintainer.addProject(url: url)
+        updateDropdownListTitles()
         
-        if !self.recentProjectsDropdownListView.enabled {
-            self.enableDropdownList() // We dont need to really call it after each addition. just the first one.
+        if !recentProjectsDropdownListView.enabled {
+            enableDropdownList() // We dont need to really call it after each addition. just the first one.
         }
-        self.directoryObserver.observeProject(self.recentListMaintainer.selectedProject!)
-        self.delegate?.projectToolbarDidChangeProject(self.recentListMaintainer.selectedProject)
+        directoryObserver.observeProject(recentListMaintainer.selectedProject!)
+        delegate?.projectToolbarDidChangeProject(recentListMaintainer.selectedProject)
     }
     
     
     // TODO: Why do we remove all items? its the recentUsedProjectsManager concern to maintain order for its cache. So either trust its decisions or dont use it.
     private func updateDropdownListTitles() -> Void {
-        self.recentProjectsDropdownListView.removeAllItems()
-        if self.recentListMaintainer.recentProjectsCount() > 0 {
-            let titles = self.recentListMaintainer.recentProjectsTitlesList()!
-            self.recentProjectsDropdownListView.addItemsWithTitles(titles)
-            self.recentProjectsDropdownListView.selectItemAtIndex(SelectedItemIndex)
+        recentProjectsDropdownListView.removeAllItems()
+        if recentListMaintainer.recentProjectsCount() > 0 {
+            let titles = recentListMaintainer.recentProjectsTitlesList()!
+            recentProjectsDropdownListView.addItemsWithTitles(titles)
+            recentProjectsDropdownListView.selectItemAtIndex(SelectedItemIndex)
         } else {
-            self.disableDropdownList()
+            disableDropdownList()
         }
     }
     
     private func insertPlaceholderProject() {
-        self.recentProjectsDropdownListView.insertItemWithTitle("               -- Select A Project -- " /* lol */, atIndex: SelectedItemIndex)
-        self.recentProjectsDropdownListView.selectItemAtIndex(SelectedItemIndex)
+        recentProjectsDropdownListView.insertItemWithTitle(NSLocalizedString("Selected Project Was Deleted", comment: ""), atIndex: SelectedItemIndex)
+        recentProjectsDropdownListView.selectItemAtIndex(SelectedItemIndex)
     }
     
 }
@@ -225,47 +225,47 @@ extension ProjectToolbarController: FileSystemObserverDelegate {
     
     func FileSystemDirectory(oldPath: String!, renamedTo newPath: String!) {
         
-        let project = self.recentListMaintainer.recentProjects { (project) -> Bool in
+        let project = recentListMaintainer.recentProjects { (project) -> Bool in
             return oldPath.isXCProject() ? project.path == oldPath : oldPath.isXCAsset() ? project.assetPath == oldPath : false
         }?.first
         
         if let proj = project {
-            let index = self.recentListMaintainer.indexOfProject(proj)
+            let index = recentListMaintainer.indexOfProject(proj)
                 
             if let idx = index {
-                self.recentListMaintainer.removeProject(project: proj)
-                self.recentListMaintainer.addProject(project: XCProject(bookmark: proj.bookmark), index: idx)
+                recentListMaintainer.removeProject(project: proj)
+                recentListMaintainer.addProject(project: XCProject(bookmark: proj.bookmark), index: idx)
                 
             }
         }
         
-        self.directoryObserver.updatePathForObserver(oldPath: oldPath, newPath: newPath)
-        self.updateDropdownListTitles()
+        directoryObserver.updatePathForObserver(oldPath: oldPath, newPath: newPath)
+        updateDropdownListTitles()
     }
 
     
     func FileSystemDirectoryDeleted(path: String!) {
         
-        let project = self.recentListMaintainer.recentProjects { (project) -> Bool in
+        let project = recentListMaintainer.recentProjects { (project) -> Bool in
             return (path.isXCProject()) ? project.path == path : (path.isXCAsset()) ? project.assetPath == path : false
         }?.first
         
-        let wasSelected = project == self.recentListMaintainer.selectedProject
+        let wasSelected = project == recentListMaintainer.selectedProject
         
         if let proj = project {
-            self.recentListMaintainer.removeProject(project: proj)
+            recentListMaintainer.removeProject(project: proj)
         }
         
-        self.updateDropdownListTitles()
+        updateDropdownListTitles()
        
         
         if wasSelected {
-            self.insertPlaceholderProject()
-            self.recentListMaintainer.resetSelectedProject()
+            insertPlaceholderProject()
+            recentListMaintainer.resetSelectedProject()
         }
         
         
-         self.delegate?.projectToolbarDidChangeProject(nil)
+         delegate?.projectToolbarDidChangeProject(nil)
     }
     
     func FileSystemDirectoryError(error: NSError!) {
@@ -280,13 +280,13 @@ extension ProjectToolbarController {
     
     func setToolbarProgress(#progress: CGFloat) {
         if progress > 0 {
-            self.recentProjectsDropdownListView.setProgress(progress: progress)
+            recentProjectsDropdownListView.setProgress(progress: progress)
         } else {
-            self.recentProjectsDropdownListView.resetProgress()
+            recentProjectsDropdownListView.resetProgress()
         }
     }
     
     func setToolbarProgressColor(#color: NSColor) {
-        self.recentProjectsDropdownListView.setProgressColor(color: color)
+        recentProjectsDropdownListView.setProgressColor(color: color)
     }
 }

@@ -7,38 +7,33 @@
 //
 
 import Cocoa
-
+//let source = "/Users/Bader/Asset Generator Misc./Melissa Test Slices/"
+//let target = "/Users/Bader/Developer/Randomer/Randomer/Images.xcassets/"
+//let temp = source + ".XCAssetTemp/"
 class AppDelegate: NSObject, NSApplicationDelegate {
     
     func applicationDidFinishLaunching(aNotification: NSNotification?) {
         // Insert code here to initialize your application
         let az = PathValidator.directoryContainsImages(path: "/Users/Bader/Downloads/Testz")
         println("contains: \(az)")
-        var string1 = "a"
-        var string2 = "b"
-        var data1 = NSKeyedArchiver.archivedDataWithRootObject(string1)
-        var data2 = NSKeyedArchiver.archivedDataWithRootObject(string2)
-        var a1 = [data1, data2]
-        
-        var dataa1 = NSKeyedArchiver.archivedDataWithRootObject(a1)
-        
-        var a11: AnyObject = NSKeyedUnarchiver.unarchiveObjectWithData(dataa1)!
-        
-        var string11: String = NSKeyedUnarchiver.unarchiveObjectWithData(a11[1]! as NSData) as String
-        let a: [Int] = [Int]()
-        let b = a.map({(Void) -> String in
-            return "a"
-        })
-        
-        println(b)
-        println("the string = \(string11)")
         
         println(PathValidator.directoryContainsInvalidCharacters(path: "/Users/Bader/Downloads/Testz", options: nil))
    
         let d = PathValidator.directoryContainsInvalidCharacters(path: "/Users/Bader/Downloads/Testz", options: nil)
         println("d: \(d)")
-    }
+        
+        let image = Asset.create("/Users/Bader/Asset Generator Misc./test a/untitled folder/Icons/AppIcon@2x.png")
+        println(image.attributes)
 
+        var i = Asset.create("/Users/Bader/Asset Generator Misc./test a/untitled folder/Icons/AppIcon@2x.png")
+        var p = i.attributes
+        println(p.serialized)
+        var i1 = Asset.create("/Users/Bader/Asset Generator Misc./Melissa Test Slices/Dialing_GroupAvatar_SM@2x.png")
+        println(p.serialized)
+    }
+    
+    
+    
     func applicationWillTerminate(aNotification: NSNotification?) {
         // Insert code here to tear down your application
     }
@@ -50,5 +45,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationShouldTerminate(sender: NSApplication!) -> NSApplicationTerminateReply {
         return NSApplicationTerminateReply.TerminateNow
     }
+    
 }
 

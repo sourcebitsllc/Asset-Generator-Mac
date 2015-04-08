@@ -17,12 +17,13 @@ enum ProjectSelectionError: ErrorType {
     case NoProjectFound
 //    case AutoSelectedProject(String, String)
     
-    // TODO:
     var message: String {
         get {
             switch self {
-                case .AssetNoFound(let project): return "The selected project (\(project)) does not contain a valid xcassets folder."
-                case .NoProjectFound: return "The selected folder does not contain an Xcode Project."
+            case .AssetNoFound(let project):
+                return "The selected project (\(project)) does not contain a valid xcassets folder."
+            case .NoProjectFound:
+                return NSLocalizedString("The selected folder does not contain an Xcode Project.",comment: "")
             }
         }
     }

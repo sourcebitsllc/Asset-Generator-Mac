@@ -31,16 +31,16 @@ class DropView: NSView {
     
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
-        self.setup()
+        setup()
     }
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        self.setup()
+        setup()
     }
     
     func setup() {
-        self.registerForDraggedTypes([NSFilenamesPboardType])
+        registerForDraggedTypes([NSFilenamesPboardType])
         self.wantsLayer = true
     }
     
@@ -49,21 +49,21 @@ class DropView: NSView {
     
     override func draggingEntered(sender: NSDraggingInfo) -> NSDragOperation {
         let filenames = sender.draggingPasteboard().propertyListForType(NSFilenamesPboardType) as [String]
-        let acceptDrag: Bool = self.delegate?.dropViewShouldAcceptDraggedPath(self, paths: filenames) ?? false
+        let acceptDrag: Bool = delegate?.dropViewShouldAcceptDraggedPath(self, paths: filenames) ?? false
         
         if acceptDrag {
-            self.delegate?.dropViewDidDragValidFileIntoView(self)
+            delegate?.dropViewDidDragValidFileIntoView(self)
             return NSDragOperation.Copy
         
         } else {
-            self.delegate?.dropViewDidDragInvalidFileIntoView(self)
+            delegate?.dropViewDidDragInvalidFileIntoView(self)
             return NSDragOperation.None
         }
         
     }
     
     override func draggingExited(sender: NSDraggingInfo?) {
-        self.delegate?.dropViewDidDragFileOutOfView(self)
+        delegate?.dropViewDidDragFileOutOfView(self)
     }
 //    override func draggingExited(sender: NSDraggingInfo?)  {
 //        self.delegate?.dropViewDidDragFileOutOfView(self)
@@ -81,7 +81,7 @@ class DropView: NSView {
         let filenames = sender!.draggingPasteboard().propertyListForType(NSFilenamesPboardType) as Array<String>
         let filename = filenames[0]
         
-        self.delegate?.dropViewDidDropFileToView(self, filePath: filename)
+        delegate?.dropViewDidDropFileToView(self, filePath: filename)
     }
    
     
