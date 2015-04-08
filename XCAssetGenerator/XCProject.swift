@@ -119,7 +119,11 @@ struct XCProject: Equatable {
     internal init(bookmark: Bookmark) {
         self.bookmark = bookmark
         self.path = BookmarkResolver.resolvePathFromBookmark(bookmark)!
-        self.xcassets = fetchAssets(directory: XCProjectDirectoryPath())
+     //   self.xcassets = fetchAssets(directory: XCProjectDirectoryPath())
+        self.xcassets = PathQuery.availableAssetFolders(from: XCProjectDirectoryPath()).map {
+            let bookmark = BookmarkResolver.resolveBookmarkFromPath($0)
+            return AssetsFolder(bookmark: bookmark)
+        }
     }
 
     internal init(bookmark: Bookmark, xcassetBookmarks: [Bookmark]?) {
@@ -150,39 +154,11 @@ struct XCProject: Equatable {
         return path.stringByDeletingLastPathComponent + ("/") // .extend
     }
     
-    
+
     // MARK - Mutating Functions
     mutating func invalidateAssets() {
         xcassets = nil
     }
-    
-    
-    mutating private func fetchAssets(#directory: Path) -> [AssetsFolder]? {
-        
-        var assets: [AssetsFolder]?
-        let url = NSURL(fileURLWithPath: directory, isDirectory: true)
-        
-        let generator = NSFileManager.defaultManager().enumeratorAtURL(url!, includingPropertiesForKeys: [NSURLIsDirectoryKey], options: NSDirectoryEnumerationOptions.SkipsHiddenFiles, errorHandler: nil)
-        
-        while let element = generator?.nextObject() as? NSURL {
-            var isDirectory: AnyObject? = nil
-            element.getResourceValue(&isDirectory, forKey: NSURLIsDirectoryKey, error: nil)
-            let isD: Bool = (isDirectory as Bool?) ?? false
-
-            if isD {
-                if let asset = element.path? {
-                    if asset.isXCAsset() {
-                        assets = assets ?? []
-                        var data: Bookmark = BookmarkResolver.resolveBookmarkFromPath(asset)
-                        assets?.append(AssetsFolder(bookmark: data))
-                    }
-                }
-            }
-        }
-        
-        return assets
-    }
-    
 }
 
 

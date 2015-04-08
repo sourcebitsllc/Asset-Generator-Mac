@@ -19,9 +19,16 @@ struct PathQuery {
         }
     }
     
-    static func availableAssetFolders(from path: Path) -> [Path] {
+    static func availableAssetSets(from path: Path) -> [Path] {
         return queryWith(path, searchOption: NSDirectoryEnumerationOptions.SkipsPackageDescendants) { element -> Path? in
             let isAssetFolder = element.path!.hasSuffix(".imageset") || element.path!.hasSuffix(".appiconset") || element.path!.hasSuffix(".launchimage")
+            return (isAssetFolder) ? element.path! : nil
+        }
+    }
+    
+    static func availableAssetFolders(from path: Path) -> [Path] {
+        return queryWith(path, searchOption: NSDirectoryEnumerationOptions.SkipsPackageDescendants) { element -> Path? in
+            let isAssetFolder = element.path!.isXCAsset()
             return (isAssetFolder) ? element.path! : nil
         }
     }

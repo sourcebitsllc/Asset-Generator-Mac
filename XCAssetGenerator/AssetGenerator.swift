@@ -92,7 +92,7 @@ class AssetGenerator {
     
     
     private func integrateAssets(temp: Path, target: Path) {
-        let folders = PathQuery.availableAssetFolders(from: temp)
+        let folders = PathQuery.availableAssetSets(from: temp)
         notifyDelegate(.Ongoing(60))
         for folder in folders {
             let images = PathQuery.availableImages(from: folder)
