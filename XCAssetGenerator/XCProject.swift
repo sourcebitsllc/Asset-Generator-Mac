@@ -8,10 +8,9 @@
 
 import Foundation
 
-let pathKey = "XCAssetGeneratorXcodeProjectPath"
-let assetPathKey = "XCAssetGeneratorXcodeAssetsPath"
+let PathKey = "XCAssetGeneratorXcodeProjectPath"
+let AssetPathsKey = "XCAssetGeneratorXcodeAssetsPath"
 let invalidAssetTitleDisplay = ""
-// TODO: If we wanted to add support for multiple xcassets, it simple goes here.
 
 
 // MARK:- Equatable Conformance
@@ -56,53 +55,29 @@ extension XCProject: Printable {
     }
 }
 
-// MARK:- NSUserDefaults compliance extension.
-// Converts the current project into a propertylist Dictionary and initiates project from dictionary content
-extension XCProject {
+// MARK: -  Serializable.
+extension XCProject: Serializable {
     
-    func dictionaryRepresentation() -> [String: Bookmark] {
-        if let assets = xcassets {
-            let assetsAsBookmarksArray: [Bookmark] = assets.map { asset -> Bookmark in
-                return asset.bookmark
-            }
-            let assetsData = NSKeyedArchiver.archivedDataWithRootObject(assetsAsBookmarksArray)
-            return [pathKey: bookmark, assetPathKey: assetsData]
-        } else {
-            return [pathKey: bookmark, assetPathKey: Bookmark() ]
-        }
-        
-    }
+    /// For the key "PathKey", the NSData is the project bookmark.
+    /// For the key "AssetPathsKey", the NSData is an array of asset bookmarks.
+    typealias Serialized = [String: NSData]
     
-    func userDefaultsDictionaryRepresentation() -> [NSString: Bookmark] {
-        return dictionaryRepresentation()
-    }
-    
-    // TODO:
-    static func projectFromDictionary(dictionary: [String: Bookmark]) -> XCProject {
-        let bookmarks = dictionary[pathKey]!
-        
-        if let assetsBookmarks: Bookmark = dictionary[assetPathKey] {
-            // TODO: Hack.
-            // the data can be initialized but empty -> should be equivelant to nil data.
-            // If asset data is not empty, process it. else, ignore it.
-            let emptyDataTester = Bookmark()
-            
-            if assetsBookmarks.isEqualToData(emptyDataTester) == false {
-                let assetsAsData = NSKeyedUnarchiver.unarchiveObjectWithData(assetsBookmarks) as! [Bookmark]
-                let XCAssets = assetsAsData.map { (bookmark: Bookmark) -> AssetsFolder in
-                    return AssetsFolder(bookmark: bookmark)
-                }
-                return XCProject(bookmark: bookmarks, xcassets: XCAssets)
-            
-            } else {
-                return XCProject(bookmark: bookmarks)
-            }
-        
-        } else {
-            return XCProject(bookmark: bookmarks)
+    var serialized: Serialized {
+        get {
+            let assets = xcassets?.map { $0.bookmark } ?? [Bookmark]()
+            let assetsData = NSKeyedArchiver.archivedDataWithRootObject(assets)
+            return [PathKey: bookmark, AssetPathsKey: assetsData]
         }
     }
     
+    static func projectFromDictionary(dictionary: Serialized) -> XCProject {
+        let projectPath = dictionary[PathKey]!
+        var assets: [Bookmark]? = nil
+        if let data = dictionary[AssetPathsKey] {
+            assets = NSKeyedUnarchiver.unarchiveObjectWithData(data) as? [Bookmark]
+        }
+        return XCProject(bookmark: projectPath, xcassetBookmarks: assets)
+    }
 }
 
 
@@ -114,13 +89,11 @@ struct XCProject: Equatable {
     let path: Path
     private var xcassets: [AssetsFolder]?
     
-    
     // MARK:- Initializers
     
     internal init(bookmark: Bookmark) {
         self.bookmark = bookmark
         self.path = BookmarkResolver.resolvePathFromBookmark(bookmark)!
-     //   self.xcassets = fetchAssets(directory: XCProjectDirectoryPath())
         self.xcassets = PathQuery.availableAssetFolders(from: currentWorkingDirectory).map {
             let bookmark = BookmarkResolver.resolveBookmarkFromPath($0)
             return AssetsFolder(bookmark: bookmark)
@@ -148,18 +121,13 @@ struct XCProject: Equatable {
     internal init(bookmark: Bookmark, xcassets: [AssetsFolder]?) {
         self.bookmark = bookmark
         self.path = BookmarkResolver.resolvePathFromBookmark(bookmark)!
-        self.xcassets = xcassets ?? nil
+        self.xcassets = xcassets?.count > 0 ? xcassets : nil
     }
 
     private var currentWorkingDirectory: Path {
         get {
             return path.stringByDeletingLastPathComponent + ("/")
         }
-    }
-    
-    // MARK - Mutating Functions
-    mutating func invalidateAssets() {
-        xcassets = nil
     }
 }
 

@@ -138,7 +138,7 @@ extension RecentlySelectedProjectMaintainer {
     // TODO: Find better hooks for these calls.
     private func storeRecentProjects() {
         let projects = recentProjects?.map { (proj: XCProject) -> [NSString: NSData] in
-            return proj.userDefaultsDictionaryRepresentation()
+            return proj.serialized
         }
         
         NSUserDefaults.standardUserDefaults().setObject(projects, forKey: kRecentProjectsKey)
@@ -157,7 +157,7 @@ extension RecentlySelectedProjectMaintainer {
         let projectDicts = NSUserDefaults.standardUserDefaults().objectForKey(kRecentProjectsKey) as? [[String: NSData]]
 
         let validProjectDicts = projectDicts?.filter { (dictionary: [String: NSData]) -> Bool in
-            return BookmarkResolver.isBookmarkValid(dictionary[pathKey]! as Bookmark)
+            return BookmarkResolver.isBookmarkValid(dictionary[PathKey]! as Bookmark)
         }
         
         recentProjects = validProjectDicts?.map { (a: [String: NSData]) -> XCProject in
