@@ -229,14 +229,9 @@ extension ProjectToolbarController: FileSystemObserverDelegate {
             return oldPath.isXCProject() ? project.path == oldPath : oldPath.isXCAsset() ? project.assetPath == oldPath : false
         }?.first
         
-        if let proj = project {
-            let index = recentListMaintainer.indexOfProject(proj)
-                
-            if let idx = index {
-                recentListMaintainer.removeProject(project: proj)
-                recentListMaintainer.addProject(project: XCProject(bookmark: proj.bookmark), index: idx)
-                
-            }
+        if let proj = project, let index = recentListMaintainer.indexOfProject(proj) {
+            recentListMaintainer.removeProject(project: proj)
+            recentListMaintainer.addProject(project: XCProject(bookmark: proj.bookmark), index: index)
         }
         
         directoryObserver.updatePathForObserver(oldPath: oldPath, newPath: newPath)
@@ -255,16 +250,12 @@ extension ProjectToolbarController: FileSystemObserverDelegate {
         if let proj = project {
             recentListMaintainer.removeProject(project: proj)
         }
-        
         updateDropdownListTitles()
-       
         
         if wasSelected {
             insertPlaceholderProject()
             recentListMaintainer.resetSelectedProject()
         }
-        
-        
          delegate?.projectToolbarDidChangeProject(nil)
     }
     

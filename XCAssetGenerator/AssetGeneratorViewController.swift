@@ -20,8 +20,6 @@ class AssetGeneratorViewController: NSViewController {
     var fileDropController: FileDropViewController!
     var projectToolbarController: ProjectToolbarController!
     
-    private var timer: NSTimer = NSTimer()
-    
     required init?(coder: NSCoder) {
         scriptController = AssetGenerationController()
         super.init(coder: coder)
@@ -86,11 +84,9 @@ class AssetGeneratorViewController: NSViewController {
 extension AssetGeneratorViewController: ProjectToolbarDelegate {
     
     func projectToolbarDidChangeProject(project: XCProject?) {
-        if let p = project {
-            if !p.hasValidAssetsPath() {
-                println("ERROR: THE DESTINATION PATH CONTAINS A DODO")
-                println("REASON: SELECTED PROJECT DOES NOT CONTAIN A VALID XCASSETS PATH")
-            }
+        if let p = project where !p.hasValidAssetsPath()  {
+            println("ERROR: THE DESTINATION PATH CONTAINS A DODO")
+            println("REASON: SELECTED PROJECT DOES NOT CONTAIN A VALID XCASSETS PATH")
         }
         
         parametersDelegate?.scriptParametersChanged(self)

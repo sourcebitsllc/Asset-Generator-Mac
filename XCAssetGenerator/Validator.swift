@@ -13,9 +13,8 @@ protocol Validator {}
 extension BookmarkResolver: Validator {
     
     class func isBookmarkValid(bookmark: Bookmark?) -> Bool {
-        if let b = bookmark {
-            let path: Path? = resolvePathFromBookmark(b)
-            return (path != nil) ? PathValidator.directoryExists(path: path!) : false
+        if let b = bookmark, let path = resolvePathFromBookmark(b) {
+            return PathValidator.directoryExists(path: path)
         } else {
             return false
         }

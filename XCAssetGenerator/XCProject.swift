@@ -62,10 +62,10 @@ extension XCProject {
     
     func dictionaryRepresentation() -> [String: Bookmark] {
         if let assets = xcassets {
-            var assetsAsBookmarksArray: [Bookmark] = assets.map { asset -> Bookmark in
+            let assetsAsBookmarksArray: [Bookmark] = assets.map { asset -> Bookmark in
                 return asset.bookmark
             }
-            var assetsData = NSKeyedArchiver.archivedDataWithRootObject(assetsAsBookmarksArray)
+            let assetsData = NSKeyedArchiver.archivedDataWithRootObject(assetsAsBookmarksArray)
             return [pathKey: bookmark, assetPathKey: assetsData]
         } else {
             return [pathKey: bookmark, assetPathKey: Bookmark() ]
@@ -121,7 +121,7 @@ struct XCProject: Equatable {
         self.bookmark = bookmark
         self.path = BookmarkResolver.resolvePathFromBookmark(bookmark)!
      //   self.xcassets = fetchAssets(directory: XCProjectDirectoryPath())
-        self.xcassets = PathQuery.availableAssetFolders(from: projectCurrentWorkingDirectory).map {
+        self.xcassets = PathQuery.availableAssetFolders(from: currentWorkingDirectory).map {
             let bookmark = BookmarkResolver.resolveBookmarkFromPath($0)
             return AssetsFolder(bookmark: bookmark)
         }
@@ -130,8 +130,8 @@ struct XCProject: Equatable {
     internal init(bookmark: Bookmark, xcassetBookmarks: [Bookmark]?) {
         var assets: [AssetsFolder]? = nil
         
-        if let assetsData = xcassetBookmarks {
-            var validBookmarks: [BookmarkResolver.ResolvedBookmark] = BookmarkResolver.resolveValidPathsFromBookmarks(assetsData)
+        if let assetsData = xcassetBookmarks  {
+            let validBookmarks: [BookmarkResolver.ResolvedBookmark] = BookmarkResolver.resolveValidPathsFromBookmarks(assetsData)
 
             if validBookmarks.count > 0 {
                 assets = validBookmarks.map { rb -> AssetsFolder in
@@ -151,7 +151,7 @@ struct XCProject: Equatable {
         self.xcassets = xcassets ?? nil
     }
 
-    private var projectCurrentWorkingDirectory: Path {
+    private var currentWorkingDirectory: Path {
         get {
             return path.stringByDeletingLastPathComponent + ("/")
         }

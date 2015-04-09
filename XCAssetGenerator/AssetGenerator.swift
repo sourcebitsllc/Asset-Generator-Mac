@@ -66,7 +66,7 @@ class AssetGenerator {
             let asset = Asset.create(image)
             
             // Compute the temporary XCAssets folder format for given image.
-            var tempDest: Path!
+            let tempDest: Path
             switch asset.type {
             case .Image:
                 let path = image.stringByDeletingLastPathComponent + "/"
@@ -102,7 +102,7 @@ class AssetGenerator {
                 
                 let dir = image.stringByDeletingLastPathComponent + "/"
                 let path = dir.stringByReplacingOccurrencesOfString(temp, withString: target, options: NSStringCompareOptions.LiteralSearch, range: nil)
-                var xcfolder = path + "/"
+                let xcfolder = path + "/"
                 
                 // If .* doesnt exist, create it.
                 FileSystem.createDirectoryIfMissing(xcfolder)

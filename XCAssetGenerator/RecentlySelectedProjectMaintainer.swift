@@ -60,26 +60,21 @@ class RecentlySelectedProjectMaintainer : NSObject {
 
     
     func addProject(#url: NSURL) {
-        var bookmark: Bookmark = BookmarkResolver.resolveBookmarkFromURL(url)
+        let bookmark: Bookmark = BookmarkResolver.resolveBookmarkFromURL(url)
         addProject(project: XCProject(bookmark: bookmark))
     }
     
     func removeProject(#project: XCProject) {
-        if let projectsList = recentProjects {
-            
-            if let index: Int = find(projectsList, project) {
-                recentProjects!.removeAtIndex(index)
-            }
+        if let projectsList = recentProjects, let index: Int = find(projectsList, project)  {
+            recentProjects!.removeAtIndex(index)
+            storeRecentProjects()
         }
-        storeRecentProjects()
     }
     
-    
-    private func cullStaleAssets() -> Void {
+    private func cullStaleAssets() {
         recentProjects = recentProjects?.map { (project: XCProject) -> XCProject in
             return !project.hasValidAssetsPath() ? XCProject(bookmark: project.bookmark) : project
         }
-        
     }
 }
 
