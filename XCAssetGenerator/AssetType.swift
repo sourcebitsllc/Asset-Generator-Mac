@@ -10,7 +10,7 @@ import Foundation
 
 typealias SerializedAssetAttribute =  [String: String]
 
-struct AssetAttribute {
+struct AssetAttribute: Serializable {
     var filename: String
     let scale: String
     let idiom: String
@@ -35,7 +35,8 @@ struct AssetAttribute {
     
     // MARK: -
     
-    var serialized: SerializedAssetAttribute {
+    typealias Serialized = SerializedAssetAttribute
+    var serialized: Serialized {
         get {
             var s = [SerializedAssetAttributeKeys.Filename: filename, SerializedAssetAttributeKeys.Scale: scale, SerializedAssetAttributeKeys.Idiom: idiom]
             if let size = size {
