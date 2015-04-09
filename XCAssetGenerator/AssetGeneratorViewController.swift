@@ -73,7 +73,7 @@ class AssetGeneratorViewController: NSViewController {
     // Is this better?
     override func prepareForSegue(segue: NSStoryboardSegue, sender: AnyObject!) {
         if segue.identifier == "embeddedContainer" {
-            fileDropController = segue.destinationController as FileDropViewController
+            fileDropController = segue.destinationController as! FileDropViewController
             fileDropController.delegate = self
             // self.scriptController.sourceDelegate = self.fileDropController
         }

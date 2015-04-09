@@ -48,7 +48,7 @@ class DropView: NSView {
     // MARK:- Drag Handlers.
     
     override func draggingEntered(sender: NSDraggingInfo) -> NSDragOperation {
-        let filenames = sender.draggingPasteboard().propertyListForType(NSFilenamesPboardType) as [String]
+        let filenames = sender.draggingPasteboard().propertyListForType(NSFilenamesPboardType) as! [String]
         let acceptDrag: Bool = delegate?.dropViewShouldAcceptDraggedPath(self, paths: filenames) ?? false
         
         if acceptDrag {
@@ -78,7 +78,7 @@ class DropView: NSView {
     }
     
     override func concludeDragOperation(sender: NSDraggingInfo?) {
-        let filenames = sender!.draggingPasteboard().propertyListForType(NSFilenamesPboardType) as Array<String>
+        let filenames = sender!.draggingPasteboard().propertyListForType(NSFilenamesPboardType) as! [String]
         let filename = filenames[0]
         
         delegate?.dropViewDidDropFileToView(self, filePath: filename)

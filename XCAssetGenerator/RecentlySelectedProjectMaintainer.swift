@@ -28,7 +28,7 @@ class RecentlySelectedProjectMaintainer : NSObject {
     
     // Return whether the selected project is suitable for script execution
     func isSelectedProjectValid() -> Bool {
-        return (selectedProject? != nil) ? ProjectValidator.isProjectValid(selectedProject!) && selectedProject!.hasValidAssetsPath()
+        return (selectedProject != nil) ? ProjectValidator.isProjectValid(selectedProject!) && selectedProject!.hasValidAssetsPath()
                                                 : false
     }
 

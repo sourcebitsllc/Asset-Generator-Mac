@@ -81,9 +81,9 @@ class PathValidator: Validator {
             
             var d: AnyObject? = nil
             element.getResourceValue(&d, forKey: NSURLIsDirectoryKey, error: nil)
-            let isDirectory: Bool = (d as Bool?) ?? false
+            let isDirectory: Bool = (d as? Bool) ?? false
             
-            if let asset = element.path? {
+            if let asset = element.path {
                 let t = f(element, isDirectory)
                 if (t != nil) { return t }
             }

@@ -31,7 +31,7 @@ struct JSON {
     
     static func readJSON(path: Path) -> JSONDictionary {
         let data = NSData(contentsOfFile: path)!
-        let json: JSONDictionary = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: nil)! as JSONDictionary
+        let json: JSONDictionary = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: nil)! as! JSONDictionary
         return json
     }
 }

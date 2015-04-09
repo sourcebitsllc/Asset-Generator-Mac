@@ -184,7 +184,7 @@ struct AssetAttributeProcessor {
         let result = CGImageSourceCopyPropertiesAtIndex(src, 0, nil) as NSDictionary
         
         let name = path.lastPathComponent
-        let width = result[kCGImagePropertyPixelWidth as String]! as Int
+        let width = result[kCGImagePropertyPixelWidth as String]! as! Int
         
         var idiom = "iphone"
         var scale = "1x"
@@ -217,7 +217,7 @@ struct AssetAttributeProcessor {
         let result = CGImageSourceCopyPropertiesAtIndex(src, 0, nil) as NSDictionary
         
         let name = path.lastPathComponent
-        let width = result[kCGImagePropertyPixelWidth as String]! as Float
+        let width = result[kCGImagePropertyPixelWidth as String]! as! Float
         
         var idiom = "iphone"
         var scale = "1x"
@@ -231,7 +231,7 @@ struct AssetAttributeProcessor {
             break
         case 640:
             scale = "2x"
-            let height = result[kCGImagePropertyPixelHeight as String]! as Float
+            let height = result[kCGImagePropertyPixelHeight as String]! as! Float
             if (height == 1136) { subtype = "retina4" }
         case 1242:
             scale = "3x"

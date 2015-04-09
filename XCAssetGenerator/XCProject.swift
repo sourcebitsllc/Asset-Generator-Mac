@@ -21,7 +21,7 @@ func == (lhs: XCProject, rhs: XCProject) -> Bool {
     
     switch (ProjectValidator.isProjectValid(lhs), ProjectValidator.isProjectValid(rhs)) {
     case (true, true):
-        return lhs.path == rhs.path && lhs.xcassets?.first? == rhs.xcassets?.first?
+        return lhs.path == rhs.path && lhs.xcassets?.first == rhs.xcassets?.first
     case (false, false):
         return true
     case (_,_):
@@ -45,7 +45,7 @@ extension XCProject: Printable {
     
     var description: String {
         get {
-            return "path: \(path) -> assets: \(xcassets?.first?)"
+            return "path: \(path) -> assets: \(xcassets?.first)"
         }
     }
     
@@ -77,6 +77,7 @@ extension XCProject {
         return dictionaryRepresentation()
     }
     
+    // TODO:
     static func projectFromDictionary(dictionary: [String: Bookmark]) -> XCProject {
         let bookmarks = dictionary[pathKey]!
         
@@ -87,7 +88,7 @@ extension XCProject {
             let emptyDataTester = Bookmark()
             
             if assetsBookmarks.isEqualToData(emptyDataTester) == false {
-                let assetsAsData = NSKeyedUnarchiver.unarchiveObjectWithData(assetsBookmarks) as [Bookmark]
+                let assetsAsData = NSKeyedUnarchiver.unarchiveObjectWithData(assetsBookmarks) as! [Bookmark]
                 let XCAssets = assetsAsData.map { (bookmark: Bookmark) -> AssetsFolder in
                     return AssetsFolder(bookmark: bookmark)
                 }

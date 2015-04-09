@@ -31,7 +31,7 @@ class AssetGeneratorWindowController: NSWindowController  {
  
     override func windowDidLoad() {
         super.windowDidLoad()
-        assetGeneratorController = contentViewController as AssetGeneratorViewController
+        assetGeneratorController = contentViewController as! AssetGeneratorViewController
         assetGeneratorController.setRecentListDropdown(recentlyUsedProjectsDropdownList)
         assetGeneratorController.parametersDelegate = self
         

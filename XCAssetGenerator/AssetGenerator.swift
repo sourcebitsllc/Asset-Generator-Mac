@@ -119,7 +119,7 @@ class AssetGenerator {
             if NSFileManager.defaultManager().fileExistsAtPath(destinationJSON) {
                 
                 let json = JSON.readJSON(destinationJSON)
-                let existingJSONImages = json["images"] as [SerializedAssetAttribute]
+                let existingJSONImages = json["images"] as! [SerializedAssetAttribute]
                 var newJSON = existingJSONImages
                 
                 for i in images {
@@ -143,7 +143,7 @@ class AssetGenerator {
                     
                 }
                 // Commit updates and write JSON.
-                (json as NSMutableDictionary)["images"] = newJSON
+                (json as! NSMutableDictionary)["images"] = newJSON
                 JSON.writeJSON(json, toFile: destinationJSON)
                 
             } else {
