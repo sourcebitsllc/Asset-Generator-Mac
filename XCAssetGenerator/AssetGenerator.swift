@@ -9,9 +9,9 @@
 import Foundation
 
 protocol AssetGeneratorProgessDelegate {
-    func scriptDidStartExecutingScipt()
-    func scriptFinishedExecutingScript()
-    func scriptExecutingScript(progress: Int?)
+    func assetGenerationStarted()
+    func assetGenerationFinished()
+    func assetGenerationOngoing(progress: Int)
 }
 
 enum AssetGenerationStatus {
@@ -162,12 +162,12 @@ class AssetGenerator {
             switch progress {
             case .Started:
                 self.running = true
-                self.progressDelegate?.scriptDidStartExecutingScipt()
+                self.progressDelegate?.assetGenerationStarted()
             case .Finished:
                 self.running = false
-                self.progressDelegate?.scriptFinishedExecutingScript()
-            case .Ongoing(let p):
-                self.progressDelegate?.scriptExecutingScript(p)
+                self.progressDelegate?.assetGenerationFinished()
+            case .Ongoing(let progress):
+                self.progressDelegate?.assetGenerationOngoing(progress)
             }
         }
     }
