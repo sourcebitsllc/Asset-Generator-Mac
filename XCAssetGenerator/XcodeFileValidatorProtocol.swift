@@ -6,11 +6,12 @@
 //  Copyright (c) 2014 Pranav Shah. All rights reserved.
 //
 
-// I always seem to sturggle on where to include the new types and protocols. Where should they be placed for best possible visibility.
-
 import Foundation
 
-protocol XcodeFileValidator {}
+protocol XcodeFileValidator {
+    func isXCProject() -> Bool
+    func isAssetsFolder() -> Bool
+}
 
 // TODO: We should probably check if its a directory too.
 extension String: XcodeFileValidator {
@@ -23,7 +24,7 @@ extension String: XcodeFileValidator {
         return self.hasSuffix(".xcodeproj")
     }
     
-    func isXCAsset() -> Bool {
+    func isAssetsFolder() -> Bool {
         return self.hasSuffix(".xcassets")
     }
 }
@@ -35,9 +36,9 @@ extension Bookmark: XcodeFileValidator {
         return (path != nil) ? path!.isXCProject() : false
     }
     
-    func isXCAsset() -> Bool {
+    func isAssetsFolder() -> Bool {
         let path: String? = BookmarkResolver.resolvePathFromBookmark(self)
-        return (path != nil) ? path!.isXCAsset() : false
+        return (path != nil) ? path!.isAssetsFolder() : false
     }
     
 }
