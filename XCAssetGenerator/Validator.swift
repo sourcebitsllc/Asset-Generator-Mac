@@ -48,7 +48,7 @@ class PathValidator: Validator {
     
     class func directoryContainsXCAsset(#directory: Path) -> Bool {
         return directoryWith(directory, searchOption: NSDirectoryEnumerationOptions.SkipsHiddenFiles) { (url, isDirectory) -> Bool? in
-            if isDirectory && url.path!.isXCAsset() { return true }
+            if isDirectory && url.path!.isAssetsFolder() { return true }
             return nil
         } ?? false
     }

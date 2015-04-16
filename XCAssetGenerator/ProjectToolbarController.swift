@@ -226,7 +226,7 @@ extension ProjectToolbarController: FileSystemObserverDelegate {
     func FileSystemDirectory(oldPath: String!, renamedTo newPath: String!) {
         
         let project = recentListMaintainer.recentProjects { (project) -> Bool in
-            return oldPath.isXCProject() ? project.path == oldPath : oldPath.isXCAsset() ? project.assetPath == oldPath : false
+            return oldPath.isXCProject() ? project.path == oldPath : oldPath.isAssetsFolder() ? project.assetPath == oldPath : false
         }?.first
         
         if let proj = project, let index = recentListMaintainer.indexOfProject(proj) {
@@ -242,7 +242,7 @@ extension ProjectToolbarController: FileSystemObserverDelegate {
     func FileSystemDirectoryDeleted(path: String!) {
         
         let project = recentListMaintainer.recentProjects { (project) -> Bool in
-            return (path.isXCProject()) ? project.path == path : (path.isXCAsset()) ? project.assetPath == path : false
+            return (path.isXCProject()) ? project.path == path : (path.isAssetsFolder()) ? project.assetPath == path : false
         }?.first
         
         let wasSelected = project == recentListMaintainer.selectedProject
