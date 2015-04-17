@@ -27,27 +27,10 @@ func == (lhs: AssetsFolder?, rhs: AssetsFolder?) -> Bool {
     }
 }
 
-// MARK:- Printable Protocol
-extension AssetsFolder: Printable {
-    
-    var description: String {
-        get {
-            return path
-        }
-    }
-    
-    var title: String {
-        get {
-            return path.lastPathComponent
-        }
-    }
-}
-
-
 
 // The bookmark data canot be invalid in here. It doesnt make sense for an AssetsFolder to not exist.
 // So, invalid data = crash. Protect.Yo.Self.
-struct AssetsFolder: Equatable {
+struct AssetsFolder: Equatable, Printable, Serializable {
     
     var bookmark: Bookmark
     let path: Path
@@ -62,4 +45,21 @@ struct AssetsFolder: Equatable {
         self.path = path
     }
     
+    var title: String {
+        return path.lastPathComponent
+    }
+    
+    // MARK: - Printable
+    
+    var description: String {
+        return path
+    }
+    
+    // MARK: - Serializable
+    
+    typealias Serialized = NSData
+    
+    var serialized: Serialized {
+        return bookmark
+    }
 }

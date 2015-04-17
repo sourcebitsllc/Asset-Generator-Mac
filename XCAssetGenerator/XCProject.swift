@@ -10,10 +10,8 @@ import Foundation
 
 let PathKey = "XCAssetGeneratorXcodeProjectPath"
 let AssetPathsKey = "XCAssetGeneratorXcodeAssetsPath"
-let invalidAssetTitleDisplay = ""
 
 
-// MARK:- Equatable Conformance
 func == (lhs: XCProject, rhs: XCProject) -> Bool {
     // TODO: This needs a rethink.
     if lhs.bookmark == rhs.bookmark { return true }
@@ -39,51 +37,9 @@ func == (lhs: XCProject?, rhs: XCProject?) -> Bool {
     }
 }
 
-// MARK:- Printable Protocol
-extension XCProject: Printable {
-    
-    var description: String {
-        get {
-            return "path: \(path) -> assets: \(xcassets?.first)"
-        }
-    }
-    
-    var title: String {
-        get {
-            return path.lastPathComponent
-        }
-    }
-}
-
-// MARK: -  Serializable.
-extension XCProject: Serializable {
-    
-    /// For the key "PathKey", the NSData is the project bookmark.
-    /// For the key "AssetPathsKey", the NSData is an array of asset bookmarks.
-    typealias Serialized = [String: NSData]
-    
-    var serialized: Serialized {
-        get {
-            let assets = xcassets?.map { $0.bookmark } ?? [Bookmark]()
-            let assetsData = NSKeyedArchiver.archivedDataWithRootObject(assets)
-            return [PathKey: bookmark, AssetPathsKey: assetsData]
-        }
-    }
-    
-    static func projectFromDictionary(dictionary: Serialized) -> XCProject {
-        let projectPath = dictionary[PathKey]!
-        var assets: [Bookmark]? = nil
-        if let data = dictionary[AssetPathsKey] {
-            assets = NSKeyedUnarchiver.unarchiveObjectWithData(data) as? [Bookmark]
-        }
-        return XCProject(bookmark: projectPath, xcassetBookmarks: assets)
-    }
-}
-
-
 
 // MARK:-
-struct XCProject: Equatable {
+struct XCProject: Equatable, Printable {
     
     var bookmark : Bookmark
     let path: Path
@@ -125,31 +81,58 @@ struct XCProject: Equatable {
     }
 
     private var currentWorkingDirectory: Path {
+        return path.stringByDeletingLastPathComponent + ("/")
+    }
+    
+    var title: String {
+        return path.lastPathComponent
+    }
+    
+    // MARK: - Printable
+    
+    var description: String {
+        return "path: \(path) -> assets: \(xcassets?.first)"
+    }
+}
+
+// MARK: -  Serializable.
+extension XCProject: Serializable {
+    
+    /// For the key "PathKey", the NSData is the project bookmark.
+    /// For the key "AssetPathsKey", the NSData is an array of asset bookmarks.
+    typealias Serialized = [String: NSData]
+    
+    var serialized: Serialized {
         get {
-            return path.stringByDeletingLastPathComponent + ("/")
+            let assets = xcassets?.map { $0.serialized } ?? [Bookmark]()
+            let assetsData = NSKeyedArchiver.archivedDataWithRootObject(assets)
+            return [PathKey: bookmark, AssetPathsKey: assetsData]
         }
+    }
+    
+    static func projectFromDictionary(dictionary: Serialized) -> XCProject {
+        let projectPath = dictionary[PathKey]!
+        var assets: [Bookmark]? = nil
+        if let data = dictionary[AssetPathsKey] {
+            assets = NSKeyedUnarchiver.unarchiveObjectWithData(data) as? [Bookmark]
+        }
+        return XCProject(bookmark: projectPath, xcassetBookmarks: assets)
     }
 }
 
 
 // MARK:- XCProject Assets Public Query Interface
 extension XCProject {
-    var assetTitle: Path {
-        get {
-            return xcassets?.first?.title ?? invalidAssetTitleDisplay
-        }
+    var assetTitle: String {
+        return xcassets?.first?.title ?? NSLocalizedString("Invalid Asset Title", comment: "")
     }
     
     var assetPath: Path? {
-        get {
-            return xcassets?.first?.path
-        }
+        return xcassets?.first?.path
     }
     
     var assetBookmark: Bookmark? {
-        get {
-            return xcassets?.first?.bookmark
-        }
+        return xcassets?.first?.bookmark
     }
     
     // A project will have a valid assets path if it contains an asset and if the asset path is not empty.
@@ -157,7 +140,6 @@ extension XCProject {
         if (xcassets?.first != nil) {
             return BookmarkResolver.isBookmarkValid(xcassets!.first!.bookmark) && !xcassets!.first!.path.isEmpty
         }
-        
         return false
     }
 }
