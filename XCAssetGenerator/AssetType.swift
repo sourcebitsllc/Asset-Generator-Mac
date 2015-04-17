@@ -8,7 +8,7 @@
 
 import Foundation
 
-typealias SerializedAssetAttribute =  [String: String]
+typealias SerializedAssetAttribute = [String: String]
 
 struct AssetAttribute: Serializable {
     var filename: String
@@ -33,29 +33,27 @@ struct AssetAttribute: Serializable {
         self.minimumSystemVersion = minimumSystemVersion
     }
     
-    // MARK: -
+    // MARK: - Serializable
     
     typealias Serialized = SerializedAssetAttribute
     var serialized: Serialized {
-        get {
-            var s = [SerializedAssetAttributeKeys.Filename: filename, SerializedAssetAttributeKeys.Scale: scale, SerializedAssetAttributeKeys.Idiom: idiom]
-            if let size = size {
-                s.updateValue(size, forKey: SerializedAssetAttributeKeys.Size)
-            }
-            if let extent = extent {
-                s.updateValue(extent, forKey: SerializedAssetAttributeKeys.Extent)
-            }
-            if let subtype = subtype {
-                s.updateValue(subtype, forKey: SerializedAssetAttributeKeys.Subtype)
-            }
-            if let orientation = orientation {
-                s.updateValue(orientation, forKey: SerializedAssetAttributeKeys.Orientation)
-            }
-            if let minimumSystemVersion = minimumSystemVersion {
-                s.updateValue(minimumSystemVersion, forKey: SerializedAssetAttributeKeys.MinimumSystemVersion)
-            }
-            return s
+        var s = [SerializedAssetAttributeKeys.Filename: filename, SerializedAssetAttributeKeys.Scale: scale, SerializedAssetAttributeKeys.Idiom: idiom]
+        if let size = size {
+            s.updateValue(size, forKey: SerializedAssetAttributeKeys.Size)
         }
+        if let extent = extent {
+            s.updateValue(extent, forKey: SerializedAssetAttributeKeys.Extent)
+        }
+        if let subtype = subtype {
+            s.updateValue(subtype, forKey: SerializedAssetAttributeKeys.Subtype)
+        }
+        if let orientation = orientation {
+            s.updateValue(orientation, forKey: SerializedAssetAttributeKeys.Orientation)
+        }
+        if let minimumSystemVersion = minimumSystemVersion {
+            s.updateValue(minimumSystemVersion, forKey: SerializedAssetAttributeKeys.MinimumSystemVersion)
+        }
+        return s
     }
 }
 
@@ -66,7 +64,6 @@ enum AssetType {
     case LaunchImage
     
 }
-
 
 struct Asset {
     let attributes: AssetAttribute
@@ -102,42 +99,41 @@ struct Asset {
     // MARK: - Properties
     
     var enclosingSet: Path {
-        get {
-            switch type {
-            case .Image: return stripKeywords(path) + ".imageset"
-            case .Icon: return "AppIcon.appiconset"
-            case .LaunchImage: return "LaunchImage.launchimage"
-            }
+        switch type {
+        case .Image:
+            return stripKeywords(path) + ".imageset"
+        case .Icon:
+            return "AppIcon.appiconset"
+        case .LaunchImage:
+            return "LaunchImage.launchimage"
         }
     }
     
     typealias AssetComparator = (SerializedAssetAttribute -> Bool)
     var comparator: AssetComparator {
-        get {
-            
-            let attribute = attributes
-            switch type {
-            case .Image:
-                return { dict in
-                    let sameIdiom = dict[SerializedAssetAttributeKeys.Idiom] as String? == attribute.idiom
-                    let sameScale = dict[SerializedAssetAttributeKeys.Scale] as String? == attribute.scale
-                    return sameIdiom && sameScale
-                }
-            case .Icon:
-                return { dict in
-                    let sameIdiom = dict[SerializedAssetAttributeKeys.Idiom] as String? == attribute.idiom
-                    let sameScale = dict[SerializedAssetAttributeKeys.Scale] as String? == attribute.scale
-                    let sameSize  = dict[SerializedAssetAttributeKeys.Size]  as String? == attribute.size
-                    return sameIdiom && sameScale && sameSize
-                }
-            case .LaunchImage:
-                return { dict in
-                    let sameIdiom = dict[SerializedAssetAttributeKeys.Idiom] as String? == attribute.idiom
-                    let sameScale = dict[SerializedAssetAttributeKeys.Scale] as String? == attribute.scale
-                    let sameSubtype = dict[SerializedAssetAttributeKeys.Subtype] as String? == attribute.subtype
-                    let sameOrientation = dict[SerializedAssetAttributeKeys.Orientation] as String? == attribute.orientation
-                    return sameIdiom && sameScale && sameOrientation && sameSubtype
-                }
+        let attribute = attributes
+        
+        switch type {
+        case .Image:
+            return { dict in
+                let sameIdiom = dict[SerializedAssetAttributeKeys.Idiom] as String? == attribute.idiom
+                let sameScale = dict[SerializedAssetAttributeKeys.Scale] as String? == attribute.scale
+                return sameIdiom && sameScale
+            }
+        case .Icon:
+            return { dict in
+                let sameIdiom = dict[SerializedAssetAttributeKeys.Idiom] as String? == attribute.idiom
+                let sameScale = dict[SerializedAssetAttributeKeys.Scale] as String? == attribute.scale
+                let sameSize  = dict[SerializedAssetAttributeKeys.Size]  as String? == attribute.size
+                return sameIdiom && sameScale && sameSize
+            }
+        case .LaunchImage:
+            return { dict in
+                let sameIdiom = dict[SerializedAssetAttributeKeys.Idiom] as String? == attribute.idiom
+                let sameScale = dict[SerializedAssetAttributeKeys.Scale] as String? == attribute.scale
+                let sameSubtype = dict[SerializedAssetAttributeKeys.Subtype] as String? == attribute.subtype
+                let sameOrientation = dict[SerializedAssetAttributeKeys.Orientation] as String? == attribute.orientation
+                return sameIdiom && sameScale && sameOrientation && sameSubtype
             }
         }
     }
@@ -147,16 +143,15 @@ struct Asset {
     ///
     /// Removes the various keywords used in Asset Generator.
     ///
-    /// * scale: @1x, @2x, @3x
-    /// * idiom: ~iphone, ~ipad
-    /// * extention: .png, .jpg, etc.
+    ///  scale: @1x, @2x, @3x
+    ///  idiom: ~iphone, ~ipad
+    ///  extention: .png, .jpg, etc.
     private func stripKeywords(path: Path) -> Path {
-        var name = path.lastPathComponent.stringByDeletingPathExtension
-        name = name.remove([GenerationKeywords.PPI2x,
-                            GenerationKeywords.PPI3x,
-                            GenerationKeywords.PPI1x,
-                            GenerationKeywords.iPhone,
-                            GenerationKeywords.iPad ])
+        var name = path.lastPathComponent.stringByDeletingPathExtension.remove([GenerationKeywords.PPI2x,
+                                                                                GenerationKeywords.PPI3x,
+                                                                                GenerationKeywords.PPI1x,
+                                                                                GenerationKeywords.iPhone,
+                                                                                GenerationKeywords.iPad ])
         return name
     }
     
