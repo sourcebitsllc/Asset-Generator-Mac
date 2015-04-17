@@ -101,7 +101,7 @@ struct Asset {
     
     // MARK: - Properties
     
-    var enclosingFolder: Path {
+    var enclosingSet: Path {
         get {
             switch type {
             case .Image: return stripKeywords(path) + ".imageset"

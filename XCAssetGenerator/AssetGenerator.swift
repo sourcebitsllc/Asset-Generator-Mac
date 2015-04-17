@@ -72,12 +72,12 @@ class AssetGenerator {
                 let path = image.stringByDeletingLastPathComponent + "/"
                 let subddirectory = path.stringByReplacingOccurrencesOfString(source, withString: "", options: NSStringCompareOptions.LiteralSearch, range: nil)
                 let cleanSubDirectory = subddirectory.replace([".", ":"], withCharacter: "_")
-                tempDest = temp + cleanSubDirectory + asset.enclosingFolder + "/"
+                tempDest = temp + cleanSubDirectory + asset.enclosingSet + "/"
                 
             case .Icon:
                 fallthrough
             case .LaunchImage:
-                tempDest = temp + asset.enclosingFolder + "/"
+                tempDest = temp + asset.enclosingSet + "/"
             }
             
             // Create the folder if it does not exist.
