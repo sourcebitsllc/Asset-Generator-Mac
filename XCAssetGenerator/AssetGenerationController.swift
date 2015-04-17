@@ -19,7 +19,7 @@ protocol AssetGeneratorDestination {
     func hasValidDestinationProject() -> Bool
 }
 
-enum ScriptOptions {
+enum AssetGenerationOptions {
     case GenerateMissingAssets
     case CreateDesitnationIfMissing
 }
@@ -53,10 +53,10 @@ class AssetGenerationController: NSObject {
         }
     }
     
-    func executeScript(options: [ScriptOptions]?) {
+    func executeScript(options: [AssetGenerationOptions]?) {
         if let ops = options {
-            let generate1x = contains(ops, ScriptOptions.GenerateMissingAssets)
-            let createDest = contains(ops, ScriptOptions.CreateDesitnationIfMissing)
+            let generate1x = contains(ops, .GenerateMissingAssets)
+            let createDest = contains(ops, .CreateDesitnationIfMissing)
             executeScript(generate1x: generate1x, extraArgs: nil)
         } else {
             executeScript()
@@ -68,11 +68,5 @@ class AssetGenerationController: NSObject {
     
     private func executeScript(#generate1x: Bool, extraArgs args: [String]?) {
         assetGenerator.generateAssets(sourceDelegate!.sourcePath!, target: destinationDelegate!.destinationPath!)
-    }
-    
-    
-    // MARK:- For future usages, maybe.
-    private func createNewAsset(#project: String) -> String {
-        return project.stringByDeletingPathExtension + "/Images.xcassets"
     }
 }
