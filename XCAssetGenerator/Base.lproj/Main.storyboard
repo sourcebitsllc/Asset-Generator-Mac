@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="14B17" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="7531" systemVersion="14D131" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="6250"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7531"/>
     </dependencies>
     <scenes>
         <!--Application-->
@@ -140,32 +140,11 @@
                     <connections>
                         <outlet property="browseButton" destination="3Qf-aw-mCy" id="5aM-W3-ffT"/>
                         <outlet property="recentlyUsedProjectsDropdownList" destination="Qw3-m5-n1B" id="ZW3-K8-NR6"/>
-                        <segue destination="jIf-Ib-41m" kind="relationship" relationship="window.shadowedContentViewController" id="qhY-Hb-Tlu"/>
+                        <segue destination="PAg-JE-4JN" kind="relationship" relationship="window.shadowedContentViewController" id="pP7-V0-t25"/>
                     </connections>
                 </windowController>
             </objects>
             <point key="canvasLocation" x="52" y="426"/>
-        </scene>
-        <!--Asset Generator View Controller-->
-        <scene sceneID="aCi-cJ-A5z">
-            <objects>
-                <viewController id="jIf-Ib-41m" customClass="AssetGeneratorViewController" customModule="XCAssetGenerator" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" autoresizesSubviews="NO" wantsLayer="YES" id="BYb-n2-Lia">
-                        <rect key="frame" x="0.0" y="0.0" width="449" height="284"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                        <subviews>
-                            <containerView autoresizesSubviews="NO" wantsLayer="YES" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9F3-Cu-4mC">
-                                <rect key="frame" x="0.0" y="31" width="449" height="252"/>
-                                <connections>
-                                    <segue destination="PAg-JE-4JN" kind="embed" identifier="embeddedContainer" id="cZX-D2-olz"/>
-                                </connections>
-                            </containerView>
-                        </subviews>
-                    </view>
-                </viewController>
-                <customObject id="XeI-LI-jIZ" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="661.5" y="488"/>
         </scene>
         <!--File Drop View Controller-->
         <scene sceneID="drA-8E-bVf">
@@ -206,7 +185,7 @@
                 </viewController>
                 <customObject id="dXT-s7-aE9" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="75" y="866"/>
+            <point key="canvasLocation" x="57" y="872"/>
         </scene>
     </scenes>
 </document>
