@@ -3,11 +3,12 @@
     {
       "idiom" : "universal",
       "scale" : "1x",
-      "filename" : "Drop.fileHoverState.png"
+      "filename" : "DropfileHoverState.png"
     },
     {
       "idiom" : "universal",
-      "scale" : "2x"
+      "scale" : "2x",
+      "filename" : "DropfileHoverState@2x.png"
     },
     {
       "idiom" : "universal",
