@@ -174,7 +174,7 @@ struct AssetAttributeProcessor {
         
         let isiPhone = name.rangeOfString(GenerationKeywords.iPhone) != nil
         let isiPad = name.rangeOfString(GenerationKeywords.iPad) != nil
-        let idiom = isiPhone ? "iphone" : isiPad ? "ipad": is3x ? "iphone" : "universal"
+        let idiom = isiPhone ? "iphone" : isiPad ? "ipad" : "universal"
         
         return AssetAttribute(filename: name, scale: scale, idiom: idiom)
     }
