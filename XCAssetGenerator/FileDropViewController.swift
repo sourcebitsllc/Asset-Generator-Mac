@@ -3,7 +3,7 @@
 //  XCAssetGenerator
 //
 //  Created by Bader on 9/11/14.
-//  Copyright (c) 2014 Pranav Shah. All rights reserved.
+//  Copyright (c) 2014 Bader Alabdulrazzaq. All rights reserved.
 //
 
 import Cocoa
@@ -74,27 +74,23 @@ class FileDropViewController: NSViewController {
         switch state {
         case .Initial:
             dropImageView.image     = NSImage(named: "DropfileInitialState")
-            pathLabel.stringValue   = NSLocalizedString("Initial State", comment: "")
-            detailLabel.stringValue = NSLocalizedString("Initial Detail Label", comment: "")
+            detailLabel.stringValue = NSLocalizedString("Drop a folder with slices here.", comment: "")
         case .Hovering:
             dropImageView.image     = NSImage(named: "DropfileHoverState")
-            pathLabel.stringValue   = NSLocalizedString("Hovering State", comment: "")
-            detailLabel.stringValue = NSLocalizedString("Hovering Detail Label", comment: "")
         case .SuccessfulDrop:
             dropImageView.image     = NSImage(named: "DropfileSuccessState")
             pathLabel.stringValue   = folderPath?.lastPathComponent ?? ""
-            detailLabel.stringValue = NSLocalizedString("Successful Drop Detail Label", comment: "")
+            detailLabel.stringValue = NSLocalizedString("Hit Create button to add your slices to the project.", comment: "")
         case .SuccessfulButEmptyDrop:
             dropImageView.image     = NSImage(named: "DropfileInitialState")
             pathLabel.stringValue   = folderPath?.lastPathComponent ?? ""
-            detailLabel.stringValue = NSLocalizedString("Drop Has No Images Detail Label", comment: "")
+            detailLabel.stringValue = NSLocalizedString("Drop a folder that contains slice-able images.", comment: "")
         case .InvalidDrop:
-            pathLabel.stringValue   = NSLocalizedString("Invalid Drop", comment: "")
-            detailLabel.stringValue = NSLocalizedString("Invalid Drop Detail Label", comment: "")
+            detailLabel.stringValue = NSLocalizedString("Drop a folder that contains slice-able images.", comment: "")
         case .PathNoLongerExists:
             dropImageView.image     = nil
-            pathLabel.stringValue   = folderPath ?? "Directory no longer exists"
-            detailLabel.stringValue = NSLocalizedString("Directory No Longer Exists Detail Label", comment: "")
+            pathLabel.stringValue   = folderPath ?? ""
+            detailLabel.stringValue = NSLocalizedString("Seems like your folder has disappeared! Select it again.", comment: "")
         }
     }
     
@@ -115,7 +111,7 @@ extension FileDropViewController: AssetGeneratorSource {
     }
     
     func hasValidSourceProject() -> Bool {
-        return (folderPath? != nil) ? PathValidator.directoryContainsImages(path: folderPath!) : false
+        return (folderPath != nil) ? PathValidator.directoryContainsImages(path: folderPath!) : false
     }
 }
 

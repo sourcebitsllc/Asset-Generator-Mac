@@ -3,7 +3,7 @@
 //  XCAssetGenerator
 //
 //  Created by Bader on 9/25/14.
-//  Copyright (c) 2014 Pranav Shah. All rights reserved.
+//  Copyright (c) 2014 Bader Alabdulrazzaq. All rights reserved.
 //
 
 import Cocoa
@@ -37,7 +37,7 @@ class ProjectToolbarController: NSObject  {
     
     let SelectedItemIndex: Int = 0
     
-    // MARK:- Setup Helpers
+    // MARK:- Initializers
     
     init(recentList: ProgressPopUpButton) {
         recentListMaintainer = RecentlySelectedProjectMaintainer()
@@ -50,6 +50,8 @@ class ProjectToolbarController: NSObject  {
         openPanelSetup()
         
     }
+    
+    // MARK:- Setup Helpers
     
     private func setupProjectObserver() {
         directoryObserver = ProjectObserver(delegate: self)
@@ -156,7 +158,7 @@ extension ProjectToolbarController {
     
     private func disableDropdownList() {
         recentProjectsDropdownListView.removeAllItems()
-        recentProjectsDropdownListView.addItemWithTitle(NSLocalizedString("Recent List Empty", comment: ""))
+        recentProjectsDropdownListView.addItemWithTitle(NSLocalizedString("Recent Projects", comment: ""))
         
         recentProjectsDropdownListView.enabled     = false
         recentProjectsDropdownListView.alignment   = NSTextAlignment.CenterTextAlignment
@@ -213,7 +215,7 @@ extension ProjectToolbarController {
     }
     
     private func insertPlaceholderProject() {
-        recentProjectsDropdownListView.insertItemWithTitle(NSLocalizedString("Selected Project Was Deleted", comment: ""), atIndex: SelectedItemIndex)
+        recentProjectsDropdownListView.insertItemWithTitle(NSLocalizedString("Select a project…", comment: ""), atIndex: SelectedItemIndex)
         recentProjectsDropdownListView.selectItemAtIndex(SelectedItemIndex)
     }
     
