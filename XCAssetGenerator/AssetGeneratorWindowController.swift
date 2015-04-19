@@ -29,7 +29,7 @@ class AssetGeneratorWindowController: NSWindowController  {
     override func windowDidLoad() {
         super.windowDidLoad()
 
-        fileDropController = contentViewController as? FileDropViewController
+        fileDropController = contentViewController as! FileDropViewController
         fileDropController.delegate = self
         
         projectToolbarController = ProjectToolbarController(recentList: recentlyUsedProjectsDropdownList)
