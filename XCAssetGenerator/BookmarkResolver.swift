@@ -29,24 +29,3 @@ class BookmarkResolver {
         return data
     }
 }
-
-
-extension BookmarkResolver {
-    
-    // Find better name for struct
-    struct ResolvedBookmark {
-        let bookmark: Bookmark
-        let path: Path
-    }
-    
-    class func resolveValidPathsFromBookmarks(bookmarks: [Bookmark]) -> [ResolvedBookmark] {
-        var valid: [ResolvedBookmark] = [ResolvedBookmark]()
-        for bookmark in bookmarks {
-            let path: Path? = resolvePathFromBookmark(bookmark)
-            if let p = path {
-                valid.append(ResolvedBookmark(bookmark: bookmark, path: p))
-            }
-        }
-        return valid
-    }
-}

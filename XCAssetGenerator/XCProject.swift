@@ -56,22 +56,11 @@ struct XCProject: Equatable, Printable {
         }
     }
 
-    internal init(bookmark: Bookmark, xcassetBookmarks: [Bookmark]?) {
-        var assets: [AssetsFolder]? = nil
-        
-        if let assetsData = xcassetBookmarks  {
-            let validBookmarks: [BookmarkResolver.ResolvedBookmark] = BookmarkResolver.resolveValidPathsFromBookmarks(assetsData)
-
-            if validBookmarks.count > 0 {
-                assets = validBookmarks.map { rb -> AssetsFolder in
-                    return AssetsFolder(bookmark: rb.bookmark, path: rb.path)
-                }
-            }
-        }
-        
-        self.xcassets = assets
+    internal init(bookmark: Bookmark, assetsBookmarks: [Bookmark]?) {
         self.bookmark = bookmark
         self.path = BookmarkResolver.resolvePathFromBookmark(bookmark)!
+        self.xcassets = assetsBookmarks?.filter(BookmarkResolver.isBookmarkValid)
+                                        .map { AssetsFolder(bookmark: $0) }
     }
     
     internal init(bookmark: Bookmark, xcassets: [AssetsFolder]?) {
@@ -116,7 +105,7 @@ extension XCProject: Serializable {
         if let data = dictionary[AssetPathsKey] {
             assets = NSKeyedUnarchiver.unarchiveObjectWithData(data) as? [Bookmark]
         }
-        return XCProject(bookmark: projectPath, xcassetBookmarks: assets)
+        return XCProject(bookmark: projectPath, assetsBookmarks: assets)
     }
 }
 
@@ -137,8 +126,8 @@ extension XCProject {
     
     // A project will have a valid assets path if it contains an asset and if the asset path is not empty.
     func hasValidAssetsPath() -> Bool {
-        if (xcassets?.first != nil) {
-            return BookmarkResolver.isBookmarkValid(xcassets!.first!.bookmark) && !xcassets!.first!.path.isEmpty
+        if let folder = xcassets?.first {
+            return BookmarkResolver.isBookmarkValid(folder.bookmark) && !folder.path.isEmpty
         }
         return false
     }
