@@ -89,13 +89,14 @@ extension XCProject: Serializable {
     
     /// For the key "PathKey", the NSData is the project bookmark.
     /// For the key "AssetPathsKey", the NSData is an array of asset bookmarks.
+    /// TODO: 2.0: Store all found AssetFolders of the project. (We only store the "selected" one right now. Keep code messy and revisit later).
     typealias Serialized = [String: NSData]
     
     var serialized: Serialized {
         get {
-            let assets = xcassets?.map { $0.serialized } ?? [Bookmark]()
-            let assetsData = NSKeyedArchiver.archivedDataWithRootObject(assets)
-            return [PathKey: bookmark, AssetPathsKey: assetsData]
+            let assets = xcassets?.first?.serialized ?? Bookmark()
+//            let assetsData = NSKeyedArchiver.archivedDataWithRootObject([assets])
+            return [PathKey: bookmark, AssetPathsKey: assets]
         }
     }
     
@@ -103,7 +104,8 @@ extension XCProject: Serializable {
         let projectPath = dictionary[PathKey]!
         var assets: [Bookmark]? = nil
         if let data = dictionary[AssetPathsKey] {
-            assets = NSKeyedUnarchiver.unarchiveObjectWithData(data) as? [Bookmark]
+//            assets = NSKeyedUnarchiver.unarchiveObjectWithData(data) as? [Bookmark]
+            assets = [data]
         }
         return XCProject(bookmark: projectPath, assetsBookmarks: assets)
     }
