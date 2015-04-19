@@ -274,9 +274,11 @@ extension ProjectToolbarController {
     func setToolbarProgress(#progress: CGFloat) {
         if progress > 0 {
             recentProjectsDropdownListView.setProgress(progress: progress)
-        } else {
-            recentProjectsDropdownListView.resetProgress()
         }
+    }
+    
+    func resetToolbarProgress(completion: () -> Void) {
+        recentProjectsDropdownListView.resetProgress(completion)
     }
     
     func setToolbarProgressColor(#color: NSColor) {

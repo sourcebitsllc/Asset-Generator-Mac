@@ -44,7 +44,7 @@ class ProgressPopUpButton: NSPopUpButton {
         line.animator().frame.size.width = width
     }
     
-    func resetProgress() {
+    func resetProgress(completion: () -> Void) {
         let width = line.superview!.bounds.size.width
         NSAnimationContext.runAnimationGroup({ (context: NSAnimationContext!) -> Void in
             self.line.animator().frame.size.width = width
@@ -55,6 +55,7 @@ class ProgressPopUpButton: NSPopUpButton {
                     }, completionHandler: { () -> Void in
                         self.line.frame.size.width = 0
                         self.line.alphaValue = 1
+                        completion()
                 })
         })
         
