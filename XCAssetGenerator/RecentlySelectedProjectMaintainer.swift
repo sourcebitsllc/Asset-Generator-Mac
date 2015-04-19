@@ -28,16 +28,15 @@ class RecentlySelectedProjectMaintainer : NSObject {
     
     // Return whether the selected project is suitable for script execution
     func isSelectedProjectValid() -> Bool {
-        return (selectedProject != nil) ? ProjectValidator.isProjectValid(selectedProject!) && selectedProject!.hasValidAssetsPath()
-                                                : false
+        return (selectedProject != nil) ? ProjectValidator.isProjectValid(selectedProject!) && selectedProject!.hasValidAssetsPath() : false
     }
 
     // TODO: Too much state manipulation. fix it buddy yea? HEY? fix it.
     // TODO: ......
     // TODO: ...... Terrible .......
     // FIXME:
-    func addProject(project newProject: XCProject) {
-        addProject(project: newProject, index: 0)
+    func addProject(#project: XCProject) {
+        addProject(project: project, index: 0)
     }
     
     func addProject(project newProject: XCProject, index: Int) {
@@ -137,10 +136,7 @@ extension RecentlySelectedProjectMaintainer {
    
     // TODO: Find better hooks for these calls.
     private func storeRecentProjects() {
-        let projects = recentProjects?.map { (proj: XCProject) -> [NSString: NSData] in
-            return proj.serialized
-        }
-        
+        let projects = recentProjects?.map { $0.serialized }
         NSUserDefaults.standardUserDefaults().setObject(projects, forKey: kRecentProjectsKey)
         storeSelectionState()
     }
@@ -149,24 +145,25 @@ extension RecentlySelectedProjectMaintainer {
         NSUserDefaults.standardUserDefaults().setBool(didSetProject, forKey: kSelectionStateKey)
     }
     
-    /*
-        Load Recent Projects.
-        Summary: Loads projects and checks if any project bookmark or asset bookmark corruption
-    */
+    ///
+    ///
     private func loadRecentProjects() {
         let projectDicts = NSUserDefaults.standardUserDefaults().objectForKey(kRecentProjectsKey) as? [[String: NSData]]
-
-        let validProjectDicts = projectDicts?.filter { (dictionary: [String: NSData]) -> Bool in
-            return BookmarkResolver.isBookmarkValid(dictionary[PathKey]! as Bookmark)
-        }
-        
-        recentProjects = validProjectDicts?.map { (a: [String: NSData]) -> XCProject in
-            let project = XCProject.projectFromDictionary(a as [String: NSData])
-            return project.hasValidAssetsPath() ? project : XCProject(bookmark: project.bookmark)
-        }
-        
         didSetProject = NSUserDefaults.standardUserDefaults().boolForKey(kSelectionStateKey)
         
+        func validProject(dict: [String: NSData]) -> Bool {
+            let validPath =  BookmarkResolver.isBookmarkValid(dict[PathKey])
+            let validAsset = BookmarkResolver.isBookmarkValid(dict[AssetPathsKey])
+            return validPath && validAsset
+        }
+        
+        // Make sure the current selected project is valid and adjust the selection state accordingly.
+        if let dict = projectDicts?.first where didSetProject {
+            didSetProject = validProject(dict)
+        }
+        // Filter out invalid/corrupted projects
+        recentProjects = projectDicts?.filter(validProject)
+                                      .map(XCProject.projectFromDictionary)
         storeRecentProjects()
     }
     
