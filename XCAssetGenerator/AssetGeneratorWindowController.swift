@@ -117,10 +117,10 @@ extension AssetGeneratorWindowController: AssetGeneratorProgessDelegate {
         updateGenerateButton()
     }
     
-    func assetGenerationFinished() {
+    func assetGenerationFinished(generated: Int) {
         projectToolbarController.resetToolbarProgress {
             self.updateGenerateButton()
-            self.fileDropController.displayDoneState()
+            self.fileDropController.displayDoneState(generated)
         }
     }
     

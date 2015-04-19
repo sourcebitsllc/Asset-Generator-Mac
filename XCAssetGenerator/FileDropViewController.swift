@@ -8,9 +8,6 @@
 
 import Cocoa
 
-let kBottomBarHeight: CGFloat = 30
-
-
 protocol FileDropControllerDelegate {
     func fileDropControllerDidSetSourcePath(controller: FileDropViewController, path: Path, previousPath: String?)
     func fileDropControllerDidRemoveSourcePath(controller: FileDropViewController, removedPath: String)
@@ -23,6 +20,7 @@ enum DropViewState {
     case SuccessfulButEmptyDrop
     case InvalidDrop
     case PathNoLongerExists
+    case Done(Int)
 }
 
 class FileDropViewController: NSViewController {
@@ -62,8 +60,8 @@ class FileDropViewController: NSViewController {
         
         dropView.addConstraint(centerX)
         dropView.addConstraint(centerY)
-        dropView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[imageView(imageWidth)]", options: nil, metrics: ["imageWidth": 150], views: ["imageView": dropImageView]))
-         dropView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[imageView(imageHeight)]", options: nil, metrics: ["imageHeight": 150], views: ["imageView": dropImageView]))
+//        dropView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[imageView(imageWidth)]", options: nil, metrics: ["imageWidth": 150], views: ["imageView": dropImageView]))
+//         dropView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[imageView(imageHeight)]", options: nil, metrics: ["imageHeight": 150], views: ["imageView": dropImageView]))
         
         
         directoryObserver = SourceObserver(delegate: self)
@@ -91,9 +89,26 @@ class FileDropViewController: NSViewController {
             dropImageView.image     = nil
             pathLabel.stringValue   = folderPath ?? ""
             detailLabel.stringValue = NSLocalizedString("Seems like your folder has disappeared! Select it again.", comment: "")
+        case .Done(let amount):
+            dropImageView.image     = NSImage(named: "DropfileDoneState")
+            detailLabel.stringValue = pluralize(amount, singular: "slice", plural: "slices") + " added to the project"
         }
     }
     
+    func displayDoneState(total: Int) {
+        updateDropView(state: .Done(total))
+    }
+    
+    private func pluralize(amount: Int, singular: String, plural: String) -> String {
+        switch amount {
+        case 0:
+            return "No \(plural)"
+        case 1:
+            return "1 \(singular)"
+        case let a:
+            return "\(a) \(plural)"
+        }
+    }
 }
 
 

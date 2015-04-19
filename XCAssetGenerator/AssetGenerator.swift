@@ -10,13 +10,13 @@ import Foundation
 
 protocol AssetGeneratorProgessDelegate {
     func assetGenerationStarted()
-    func assetGenerationFinished()
+    func assetGenerationFinished(generated: Int)
     func assetGenerationOngoing(progress: Int)
 }
 
 enum AssetGenerationStatus {
     case Started
-    case Finished
+    case Finished(Int)
     case Ongoing(Int)
 }
 
@@ -47,11 +47,11 @@ class AssetGenerator {
             self.populateTemporaryDirectory(source, temp: temp)
             self.notifyDelegate(.Ongoing(50))
             // Step 3
-            self.integrateAssets(temp, target: target + "/")
+            let total = self.integrateAssets(temp, target: target + "/")
             self.notifyDelegate(.Ongoing(95))
             // Step 4
             FileSystem.deleteDirectory(temp)
-            self.notifyDelegate(.Finished)
+            self.notifyDelegate(.Finished(total))
         }
         
     }
@@ -91,11 +91,14 @@ class AssetGenerator {
     }
     
     
-    private func integrateAssets(temp: Path, target: Path) {
+    private func integrateAssets(temp: Path, target: Path) -> Int {
+        var numberOfAssets = 0
         let folders = PathQuery.availableAssetSets(from: temp)
         notifyDelegate(.Ongoing(60))
+        
         for folder in folders {
             let images = PathQuery.availableImages(from: folder)
+            numberOfAssets += images.count
             
             // Move Images First.
             for image in images {
@@ -155,6 +158,8 @@ class AssetGenerator {
                 JSON.writeJSON(json, toFile: destinationJSON)
             }
         }
+        
+        return numberOfAssets
     }
     
     private func notifyDelegate(progress: AssetGenerationStatus) {
@@ -163,9 +168,9 @@ class AssetGenerator {
             case .Started:
                 self.running = true
                 self.progressDelegate?.assetGenerationStarted()
-            case .Finished:
+            case .Finished(let total):
                 self.running = false
-                self.progressDelegate?.assetGenerationFinished()
+                self.progressDelegate?.assetGenerationFinished(total)
             case .Ongoing(let progress):
                 self.progressDelegate?.assetGenerationOngoing(progress)
             }
