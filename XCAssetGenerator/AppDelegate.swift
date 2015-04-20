@@ -12,37 +12,39 @@ import Cocoa
 //let temp = source + ".XCAssetTemp/"
 class AppDelegate: NSObject, NSApplicationDelegate {
     
-    func applicationDidFinishLaunching(aNotification: NSNotification?) {
+    func applicationDidFinishLaunching(aNotification: NSNotification) {
         // Insert code here to initialize your application
-        let az = PathValidator.directoryContainsImages(path: "/Users/Bader/Downloads/Testz")
-        println("contains: \(az)")
-        
-        println(PathValidator.directoryContainsInvalidCharacters(path: "/Users/Bader/Downloads/Testz", options: nil))
-   
-        let d = PathValidator.directoryContainsInvalidCharacters(path: "/Users/Bader/Downloads/Testz", options: nil)
-        println("d: \(d)")
-        
-        let image = Asset.create("/Users/Bader/Asset Generator Misc./test a/untitled folder/Icons/AppIcon@2x.png")
-        println(image.attributes)
-
-        var i = Asset.create("/Users/Bader/Asset Generator Misc./test a/untitled folder/Icons/AppIcon@2x.png")
-        var p = i.attributes
-        println(p.serialized)
-        var i1 = Asset.create("/Users/Bader/Asset Generator Misc./Melissa Test Slices/Dialing_GroupAvatar_SM@2x.png")
-        println(p.serialized)
+//        let az = PathValidator.directoryContainsImages(path: "/Users/Bader/Downloads/Testz")
+//        println("contains: \(az)")
+//        
+//        println(PathValidator.directoryContainsInvalidCharacters(path: "/Users/Bader/Downloads/Testz", options: nil))
+//   
+//        let d = PathValidator.directoryContainsInvalidCharacters(path: "/Users/Bader/Downloads/Testz", options: nil)
+//        println("d: \(d)")
+//        
+//        let image = Asset.create("/Users/Bader/Generator Misc./test a/untitled folder/Icons/AppIcon@2x.png")
+//        println(image.attributes)
+//
+//        var i = Asset.create("/Useer/Asset Generator Misc./test a/untitled folder/Icons/AppIcon@2x.png")
+//        var p = i.attributes
+//        println(p.serialized)
+//        var i1 = Asset.create("/Users/r/Asset Generator Misc./Melissa Test Slices/Dialing_GroupAvatar_SM@2x.png")
+//        println(p.serialized)
+//        let p: AnyObject? = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.ApplicationSupportDirectory, NSSearchPathDomainMask.UserDomainMask, true).first
+//        println(p)
     }
     
     
     
-    func applicationWillTerminate(aNotification: NSNotification?) {
+    func applicationWillTerminate(aNotification: NSNotification) {
         // Insert code here to tear down your application
     }
     
-    func applicationShouldTerminateAfterLastWindowClosed(sender: NSApplication!) -> Bool {
+    func applicationShouldTerminateAfterLastWindowClosed(sender: NSApplication) -> Bool {
         return true;
     }
     
-    func applicationShouldTerminate(sender: NSApplication!) -> NSApplicationTerminateReply {
+    func applicationShouldTerminate(sender: NSApplication) -> NSApplicationTerminateReply {
         return NSApplicationTerminateReply.TerminateNow
     }
     
