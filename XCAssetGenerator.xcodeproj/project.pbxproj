@@ -21,8 +21,8 @@
 		1E64F2531ACE57420081D3A3 /* AssetType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E64F2521ACE57420081D3A3 /* AssetType.swift */; };
 		1E64F2551ACE5BF60081D3A3 /* FileSystemHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E64F2541ACE5BF60081D3A3 /* FileSystemHelper.swift */; };
 		1E64F2571ACE71090081D3A3 /* AssetGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E64F2561ACE71090081D3A3 /* AssetGenerator.swift */; };
-		1E959F3019C251EC00B2759D /* AssetGeneratorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E959F2F19C251EC00B2759D /* AssetGeneratorViewController.swift */; };
-		1E970A6E1AC1B93D00EA97BC /* ProjectSelectionError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E970A6D1AC1B93D00EA97BC /* ProjectSelectionError.swift */; };
+		1E970A6E1AC1B93D00EA97BC /* ErrorType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E970A6D1AC1B93D00EA97BC /* ErrorType.swift */; };
+		1EAC6E691AD68E08003C0B78 /* Serializable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EAC6E681AD68E08003C0B78 /* Serializable.swift */; };
 		1EBD1ECD19D37FD600A5F0B6 /* ProjectToolbarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBD1ECC19D37FD600A5F0B6 /* ProjectToolbarController.swift */; };
 		1EBD1ECF19D38ED200A5F0B6 /* AssetGenerationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EBD1ECE19D38ED200A5F0B6 /* AssetGenerationController.swift */; };
 		1ED5A7E319E7494B00B96118 /* FileSystemObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ED5A7E219E7494B00B96118 /* FileSystemObserver.m */; };
@@ -63,8 +63,8 @@
 		1E64F2521ACE57420081D3A3 /* AssetType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetType.swift; sourceTree = "<group>"; };
 		1E64F2541ACE5BF60081D3A3 /* FileSystemHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileSystemHelper.swift; sourceTree = "<group>"; };
 		1E64F2561ACE71090081D3A3 /* AssetGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetGenerator.swift; sourceTree = "<group>"; };
-		1E959F2F19C251EC00B2759D /* AssetGeneratorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = AssetGeneratorViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		1E970A6D1AC1B93D00EA97BC /* ProjectSelectionError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectSelectionError.swift; sourceTree = "<group>"; };
+		1E970A6D1AC1B93D00EA97BC /* ErrorType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorType.swift; sourceTree = "<group>"; };
+		1EAC6E681AD68E08003C0B78 /* Serializable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Serializable.swift; sourceTree = "<group>"; };
 		1EBD1ECC19D37FD600A5F0B6 /* ProjectToolbarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectToolbarController.swift; sourceTree = "<group>"; };
 		1EBD1ECE19D38ED200A5F0B6 /* AssetGenerationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetGenerationController.swift; sourceTree = "<group>"; };
 		1ED5A7E019E7494A00B96118 /* XCAssetGenerator-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "XCAssetGenerator-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -127,28 +127,28 @@
 			children = (
 				DD09CBEB1989A46C002DD2FB /* AppDelegate.swift */,
 				1E4250A519C77C8C00BF686B /* AssetGeneratorWindowController.swift */,
-				1E959F2F19C251EC00B2759D /* AssetGeneratorViewController.swift */,
 				1EBD1ECC19D37FD600A5F0B6 /* ProjectToolbarController.swift */,
-				1E970A6D1AC1B93D00EA97BC /* ProjectSelectionError.swift */,
 				1EE9353D19C3A0AB000DA40A /* RecentlySelectedProjectMaintainer.swift */,
 				1EE99B2C19CFCC6A00169245 /* ProgressPopUpButton.swift */,
 				1E4A926219CB846300BFB0D0 /* XCProject.swift */,
 				1EE6009D19E32ED300B67D05 /* AssetsFolder.swift */,
 				1E10E2901AB198EE00D5862C /* Validator.swift */,
+				1E970A6D1AC1B93D00EA97BC /* ErrorType.swift */,
 				1E17A3A21AD1405700785DB2 /* PathQuery.swift */,
 				1E10E2921AB19A1100D5862C /* BookmarkResolver.swift */,
 				1ED7BDCA1A11720100CA2A7E /* XcodeFileValidatorProtocol.swift */,
 				1EBD1ECE19D38ED200A5F0B6 /* AssetGenerationController.swift */,
 				1E64F2561ACE71090081D3A3 /* AssetGenerator.swift */,
+				1EAC6E681AD68E08003C0B78 /* Serializable.swift */,
 				1E64F2521ACE57420081D3A3 /* AssetType.swift */,
 				1E44A19B1AD51F8100198215 /* Keyword Constants.swift */,
 				1E64F2541ACE5BF60081D3A3 /* FileSystemHelper.swift */,
 				1E64F2501ACE56850081D3A3 /* JSON.swift */,
 				1E4EA5AB19C2343300B23001 /* FileDropViewController.swift */,
 				1E4EA5A919C22DBD00B23001 /* DropView.swift */,
-				1E44A19D1AD5282300198215 /* StringExtension.swift */,
 				DD09CBEF1989A46C002DD2FB /* Main.storyboard */,
 				1EE5ACAE1A09B79500A759A2 /* DirectoryObserver.swift */,
+				1E44A19D1AD5282300198215 /* StringExtension.swift */,
 				1ED5A7E119E7494B00B96118 /* FileSystemObserver.h */,
 				1ED5A7E219E7494B00B96118 /* FileSystemObserver.m */,
 				1ED5A7E019E7494A00B96118 /* XCAssetGenerator-Bridging-Header.h */,
@@ -234,6 +234,11 @@
 				TargetAttributes = {
 					DD09CBE11989A46C002DD2FB = {
 						CreatedOnToolsVersion = 6.0;
+						SystemCapabilities = {
+							com.apple.Sandbox = {
+								enabled = 0;
+							};
+						};
 					};
 					DD09CBF51989A46C002DD2FB = {
 						CreatedOnToolsVersion = 6.0;
@@ -287,8 +292,7 @@
 			files = (
 				1E64F2531ACE57420081D3A3 /* AssetType.swift in Sources */,
 				DD09CBEC1989A46C002DD2FB /* AppDelegate.swift in Sources */,
-				1E959F3019C251EC00B2759D /* AssetGeneratorViewController.swift in Sources */,
-				1E970A6E1AC1B93D00EA97BC /* ProjectSelectionError.swift in Sources */,
+				1E970A6E1AC1B93D00EA97BC /* ErrorType.swift in Sources */,
 				1E4A926319CB846300BFB0D0 /* XCProject.swift in Sources */,
 				1E10E2911AB198EE00D5862C /* Validator.swift in Sources */,
 				1E4250A619C77C8C00BF686B /* AssetGeneratorWindowController.swift in Sources */,
@@ -305,6 +309,7 @@
 				1ED7BDCB1A11720100CA2A7E /* XcodeFileValidatorProtocol.swift in Sources */,
 				1EE9353E19C3A0AB000DA40A /* RecentlySelectedProjectMaintainer.swift in Sources */,
 				1E64F2551ACE5BF60081D3A3 /* FileSystemHelper.swift in Sources */,
+				1EAC6E691AD68E08003C0B78 /* Serializable.swift in Sources */,
 				1EE99B2D19CFCC6A00169245 /* ProgressPopUpButton.swift in Sources */,
 				1E4EA5AA19C22DBD00B23001 /* DropView.swift in Sources */,
 				1ED5A7E319E7494B00B96118 /* FileSystemObserver.m in Sources */,
@@ -425,6 +430,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = XCAssetGenerator/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
@@ -441,6 +447,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = XCAssetGenerator/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
