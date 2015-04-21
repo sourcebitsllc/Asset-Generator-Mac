@@ -26,13 +26,13 @@ enum DropViewState {
 class FileDropViewController: NSViewController {
 
     @IBOutlet var dropView: DropView!
-    @IBOutlet var pathLabel: NSTextField!
-    @IBOutlet var detailLabel: NSTextField!
     
     var delegate: FileDropControllerDelegate?
     var directoryObserver: SourceObserver!
     
     var dropImageView: NSImageView!
+    var pathLabel: NSTextField!
+    var detailLabel: NSTextField!
     
     private var folderPath : String?
     
@@ -48,23 +48,57 @@ class FileDropViewController: NSViewController {
     
         dropImageView = NSImageView()
         dropImageView.translatesAutoresizingMaskIntoConstraints = false
-        
         dropImageView.unregisterDraggedTypes() // otherwise, the subview will intercept the dropView calls.
-        updateDropView(state: DropViewState.Initial)
-        
         dropView.addSubview(dropImageView)
         
         let centerX: NSLayoutConstraint = NSLayoutConstraint(item: dropImageView, attribute: NSLayoutAttribute.CenterX, relatedBy: NSLayoutRelation.Equal, toItem: dropView, attribute: NSLayoutAttribute.CenterX, multiplier: 1, constant: 0)
        
         let centerY: NSLayoutConstraint = NSLayoutConstraint(item: dropImageView, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: dropView, attribute: NSLayoutAttribute.CenterY, multiplier: 0.8, constant: 0)
         
-        dropView.addConstraint(centerX)
-        dropView.addConstraint(centerY)
+        NSLayoutConstraint.activateConstraints([centerX, centerY])
+//        dropView.addConstraint(centerX)
+//        dropView.addConstraint(centerY)
 //        dropView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[imageView(imageWidth)]", options: nil, metrics: ["imageWidth": 150], views: ["imageView": dropImageView]))
 //         dropView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[imageView(imageHeight)]", options: nil, metrics: ["imageHeight": 150], views: ["imageView": dropImageView]))
         
-        
         directoryObserver = SourceObserver(delegate: self)
+        
+        pathLabel = NSTextField()
+        pathLabel.translatesAutoresizingMaskIntoConstraints = false
+        pathLabel.editable = false
+        pathLabel.backgroundColor = NSColor.controlColor()
+        pathLabel.bordered = false
+        pathLabel.font = NSFont.systemFontOfSize(13)
+        
+        dropView.addSubview(pathLabel)
+        
+        let center1X: NSLayoutConstraint = NSLayoutConstraint(item: pathLabel, attribute: NSLayoutAttribute.CenterX, relatedBy: NSLayoutRelation.Equal, toItem: dropView, attribute: NSLayoutAttribute.CenterX, multiplier: 1, constant: 0)
+        
+        let center1Y: NSLayoutConstraint = NSLayoutConstraint(item: pathLabel, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: dropView, attribute: NSLayoutAttribute.CenterY, multiplier: 1.45, constant: 0)
+        
+        
+        NSLayoutConstraint.activateConstraints([center1X, center1Y])
+        
+        detailLabel = NSTextField()
+        detailLabel.translatesAutoresizingMaskIntoConstraints = false
+        detailLabel.stringValue = "Drop a folder with slices here."
+        detailLabel.editable = false
+        detailLabel.textColor = NSColor.secondaryLabelColor()
+        detailLabel.backgroundColor = NSColor.controlColor()
+        detailLabel.bordered = false
+        detailLabel.font = NSFont.systemFontOfSize(13)
+        
+        dropView.addSubview(detailLabel)
+        
+        let center2X: NSLayoutConstraint = NSLayoutConstraint(item: detailLabel, attribute: NSLayoutAttribute.CenterX, relatedBy: NSLayoutRelation.Equal, toItem: dropView, attribute: NSLayoutAttribute.CenterX, multiplier: 1, constant: 0)
+        
+        let center2Y: NSLayoutConstraint = NSLayoutConstraint(item: detailLabel, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: dropView, attribute: NSLayoutAttribute.CenterY, multiplier: 1.59, constant: 0)
+        
+        NSLayoutConstraint.activateConstraints([center2X, center2Y])
+        
+        // Initialize state
+        updateDropView(state: DropViewState.Initial)
+
     }
     
     
@@ -78,7 +112,7 @@ class FileDropViewController: NSViewController {
         case .SuccessfulDrop:
             dropImageView.image     = NSImage(named: "DropfileSuccessState")
             pathLabel.stringValue   = folderPath?.lastPathComponent ?? ""
-            detailLabel.stringValue = NSLocalizedString("Hit Create button to add your slices to the project.", comment: "")
+            detailLabel.animator().stringValue = NSLocalizedString("Hit Create button to add your slices to the project.", comment: "")
         case .SuccessfulButEmptyDrop:
             dropImageView.image     = NSImage(named: "DropfileInitialState")
             pathLabel.stringValue   = folderPath?.lastPathComponent ?? ""
@@ -165,7 +199,7 @@ extension FileDropViewController: DropViewDelegate {
     
     func dropViewDidDragFileOutOfView(dropView: DropView) {
         if !hasValidSourceProject() {
-            updateDropView(state: DropViewState.Initial)
+            updateDropView(state: DropViewState.Initial) // Bug
         } else {
             updateDropView(state: DropViewState.SuccessfulDrop)
         }
