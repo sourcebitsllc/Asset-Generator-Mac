@@ -28,7 +28,7 @@ struct PathQuery {
     
     static func availableAssetFolders(from path: Path) -> [Path] {
         return queryWith(path, searchOption: NSDirectoryEnumerationOptions.SkipsPackageDescendants) { element -> Path? in
-            let isAssetFolder = element.path!.isAssetsFolder()
+            let isAssetFolder = element.path!.isAssetCatalog()
             return (isAssetFolder) ? element.path! : nil
         }
     }

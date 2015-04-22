@@ -28,7 +28,7 @@
 		1ED5A7E319E7494B00B96118 /* FileSystemObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = 1ED5A7E219E7494B00B96118 /* FileSystemObserver.m */; };
 		1ED7BDCB1A11720100CA2A7E /* XcodeFileValidatorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED7BDCA1A11720100CA2A7E /* XcodeFileValidatorProtocol.swift */; };
 		1EE5ACAF1A09B79500A759A2 /* DirectoryObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE5ACAE1A09B79500A759A2 /* DirectoryObserver.swift */; };
-		1EE6009E19E32ED300B67D05 /* AssetsFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE6009D19E32ED300B67D05 /* AssetsFolder.swift */; };
+		1EE6009E19E32ED300B67D05 /* AssetCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE6009D19E32ED300B67D05 /* AssetCatalog.swift */; };
 		1EE9353E19C3A0AB000DA40A /* RecentlySelectedProjectMaintainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE9353D19C3A0AB000DA40A /* RecentlySelectedProjectMaintainer.swift */; };
 		1EE99B2D19CFCC6A00169245 /* ProgressPopUpButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EE99B2C19CFCC6A00169245 /* ProgressPopUpButton.swift */; };
 		DD09CBE81989A46C002DD2FB /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD09CBE71989A46C002DD2FB /* main.swift */; };
@@ -72,7 +72,7 @@
 		1ED5A7E219E7494B00B96118 /* FileSystemObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileSystemObserver.m; sourceTree = "<group>"; };
 		1ED7BDCA1A11720100CA2A7E /* XcodeFileValidatorProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XcodeFileValidatorProtocol.swift; sourceTree = "<group>"; };
 		1EE5ACAE1A09B79500A759A2 /* DirectoryObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DirectoryObserver.swift; sourceTree = "<group>"; };
-		1EE6009D19E32ED300B67D05 /* AssetsFolder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetsFolder.swift; sourceTree = "<group>"; };
+		1EE6009D19E32ED300B67D05 /* AssetCatalog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetCatalog.swift; sourceTree = "<group>"; };
 		1EE9353D19C3A0AB000DA40A /* RecentlySelectedProjectMaintainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = RecentlySelectedProjectMaintainer.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		1EE99B2C19CFCC6A00169245 /* ProgressPopUpButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressPopUpButton.swift; sourceTree = "<group>"; };
 		DD09CBE21989A46C002DD2FB /* XCAssetGenerator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XCAssetGenerator.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -131,7 +131,7 @@
 				1EE9353D19C3A0AB000DA40A /* RecentlySelectedProjectMaintainer.swift */,
 				1EE99B2C19CFCC6A00169245 /* ProgressPopUpButton.swift */,
 				1E4A926219CB846300BFB0D0 /* XCProject.swift */,
-				1EE6009D19E32ED300B67D05 /* AssetsFolder.swift */,
+				1EE6009D19E32ED300B67D05 /* AssetCatalog.swift */,
 				1E10E2901AB198EE00D5862C /* Validator.swift */,
 				1E970A6D1AC1B93D00EA97BC /* ErrorType.swift */,
 				1E17A3A21AD1405700785DB2 /* PathQuery.swift */,
@@ -313,7 +313,7 @@
 				1EE99B2D19CFCC6A00169245 /* ProgressPopUpButton.swift in Sources */,
 				1E4EA5AA19C22DBD00B23001 /* DropView.swift in Sources */,
 				1ED5A7E319E7494B00B96118 /* FileSystemObserver.m in Sources */,
-				1EE6009E19E32ED300B67D05 /* AssetsFolder.swift in Sources */,
+				1EE6009E19E32ED300B67D05 /* AssetCatalog.swift in Sources */,
 				1E4EA5AC19C2343300B23001 /* FileDropViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -10,7 +10,7 @@ import Foundation
 
 protocol XcodeFileValidator {
     func isXCProject() -> Bool
-    func isAssetsFolder() -> Bool
+    func isAssetCatalog() -> Bool
 }
 
 // TODO: We should probably check if its a directory too.
@@ -24,7 +24,7 @@ extension String: XcodeFileValidator {
         return self.hasSuffix(".xcodeproj")
     }
     
-    func isAssetsFolder() -> Bool {
+    func isAssetCatalog() -> Bool {
         return self.hasSuffix(".xcassets")
     }
 }
@@ -36,9 +36,9 @@ extension Bookmark: XcodeFileValidator {
         return (path != nil) ? path!.isXCProject() : false
     }
     
-    func isAssetsFolder() -> Bool {
+    func isAssetCatalog() -> Bool {
         let path: String? = BookmarkResolver.resolvePathFromBookmark(self)
-        return (path != nil) ? path!.isAssetsFolder() : false
+        return (path != nil) ? path!.isAssetCatalog() : false
     }
     
 }

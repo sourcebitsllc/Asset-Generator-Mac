@@ -43,7 +43,7 @@ struct XCProject: Equatable, Printable {
     
     var bookmark : Bookmark
     let path: Path
-    private var xcassets: [AssetsFolder]?
+    private var xcassets: [AssetCatalog]?
     
     // MARK:- Initializers
     
@@ -52,7 +52,7 @@ struct XCProject: Equatable, Printable {
         self.path = BookmarkResolver.resolvePathFromBookmark(bookmark)!
         self.xcassets = PathQuery.availableAssetFolders(from: currentWorkingDirectory).map {
             let bookmark = BookmarkResolver.resolveBookmarkFromPath($0)
-            return AssetsFolder(bookmark: bookmark)
+            return AssetCatalog(bookmark: bookmark)
         }
     }
 
@@ -60,10 +60,10 @@ struct XCProject: Equatable, Printable {
         self.bookmark = bookmark
         self.path = BookmarkResolver.resolvePathFromBookmark(bookmark)!
         self.xcassets = assetsBookmarks?.filter(BookmarkResolver.isBookmarkValid)
-                                        .map { AssetsFolder(bookmark: $0) }
+                                        .map { AssetCatalog(bookmark: $0) }
     }
     
-    internal init(bookmark: Bookmark, xcassets: [AssetsFolder]?) {
+    internal init(bookmark: Bookmark, xcassets: [AssetCatalog]?) {
         self.bookmark = bookmark
         self.path = BookmarkResolver.resolvePathFromBookmark(bookmark)!
         self.xcassets = xcassets?.count > 0 ? xcassets : nil

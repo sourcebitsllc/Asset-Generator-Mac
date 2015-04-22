@@ -31,7 +31,7 @@ class ProjectValidator: Validator {
         return BookmarkResolver.isBookmarkValid(project.assetBookmark)
     }
     
-    class func isAssetValid(asset: AssetsFolder) -> Bool {
+    class func isAssetValid(asset: AssetCatalog) -> Bool {
         return BookmarkResolver.isBookmarkValid(asset.bookmark)
     }
 }
@@ -48,7 +48,7 @@ class PathValidator: Validator {
     
     class func directoryContainsXCAsset(#directory: Path) -> Bool {
         return directoryWith(directory, searchOption: NSDirectoryEnumerationOptions.SkipsHiddenFiles) { (url, isDirectory) -> Bool? in
-            if isDirectory && url.path!.isAssetsFolder() { return true }
+            if isDirectory && url.path!.isAssetCatalog() { return true }
             return nil
         } ?? false
     }
