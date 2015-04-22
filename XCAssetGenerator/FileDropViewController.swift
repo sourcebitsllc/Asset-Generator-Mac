@@ -8,6 +8,10 @@
 
 import Cocoa
 
+/// Derp
+/// The animation code here makes absolutely no sense whatsoever. Which evidently is the only viable state
+/// in leui of using AutoLayout + CoreAnimation
+
 protocol FileDropControllerDelegate {
     func fileDropControllerDidSetSourcePath(controller: FileDropViewController, path: Path, previousPath: String?)
     func fileDropControllerDidRemoveSourcePath(controller: FileDropViewController, removedPath: String)
@@ -34,11 +38,18 @@ class FileDropViewController: NSViewController {
     var pathLabel: NSTextField!
     var detailLabel: NSTextField!
     
+    var pathLabelYPosition: NSLayoutConstraint!
+    var detailLabelInitialYPosition: NSLayoutConstraint!
+    var detailLabelSecondaryYPosition: NSLayoutConstraint!
+
     private var folderPath : String?
+    private var viewState: DropViewState // FUCK FUCK FUCK FUCK FUC KFUC FUC FUCK FU CU FUCK FUCK FUCKF FUCKF FUC FUKC 
+    // FUCK FUC KF CUKC FUCK FUCK FUKC UFL FUCK FUCK FU C UF CUFK CU F KCYF CK FYF  UC DF CK
     
+    typealias Trigger = () -> ()
     
     required init?(coder: NSCoder) {
-        
+        viewState = .Initial
         super.init(coder: coder)
     }
     
@@ -74,10 +85,6 @@ class FileDropViewController: NSViewController {
         
         let center1X: NSLayoutConstraint = NSLayoutConstraint(item: pathLabel, attribute: NSLayoutAttribute.CenterX, relatedBy: NSLayoutRelation.Equal, toItem: dropView, attribute: NSLayoutAttribute.CenterX, multiplier: 1, constant: 0)
         
-        let center1Y: NSLayoutConstraint = NSLayoutConstraint(item: pathLabel, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: dropView, attribute: NSLayoutAttribute.CenterY, multiplier: 1.45, constant: 0)
-        
-        
-        NSLayoutConstraint.activateConstraints([center1X, center1Y])
         
         detailLabel = NSTextField()
         detailLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -92,42 +99,178 @@ class FileDropViewController: NSViewController {
         
         let center2X: NSLayoutConstraint = NSLayoutConstraint(item: detailLabel, attribute: NSLayoutAttribute.CenterX, relatedBy: NSLayoutRelation.Equal, toItem: dropView, attribute: NSLayoutAttribute.CenterX, multiplier: 1, constant: 0)
         
-        let center2Y: NSLayoutConstraint = NSLayoutConstraint(item: detailLabel, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: dropView, attribute: NSLayoutAttribute.CenterY, multiplier: 1.59, constant: 0)
         
-        NSLayoutConstraint.activateConstraints([center2X, center2Y])
         
         // Initialize state
         updateDropView(state: DropViewState.Initial)
+        
+        pathLabelYPosition = NSLayoutConstraint(item: pathLabel, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: dropView, attribute: NSLayoutAttribute.CenterY, multiplier: 1.45, constant: 0)
+        detailLabelInitialYPosition = NSLayoutConstraint(item: detailLabel, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: dropView, attribute: NSLayoutAttribute.CenterY, multiplier: 1.44, constant: 0)
+        detailLabelSecondaryYPosition = NSLayoutConstraint(item: detailLabel, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: dropView, attribute: NSLayoutAttribute.CenterY, multiplier: 1.59, constant: 0)
 
+        NSLayoutConstraint.activateConstraints([center1X])
+        NSLayoutConstraint.activateConstraints([center2X, detailLabelInitialYPosition])
+        
     }
     
     
     func updateDropView(#state: DropViewState) {
+        
         switch state {
         case .Initial:
             dropImageView.image     = NSImage(named: "DropfileInitialState")
             detailLabel.stringValue = NSLocalizedString("Drop a folder with slices here.", comment: "")
+            viewState = state
         case .Hovering:
             dropImageView.image     = NSImage(named: "DropfileHoverState")
         case .SuccessfulDrop:
             dropImageView.image     = NSImage(named: "DropfileSuccessState")
-            pathLabel.stringValue   = folderPath?.lastPathComponent ?? ""
-            detailLabel.animator().stringValue = NSLocalizedString("Hit Create button to add your slices to the project.", comment: "")
+            retaculateAnimation(viewState, to: state)
+            viewState = state
+            // Make sure all changes are commited.
+//            self.dropView.layoutSubtreeIfNeeded()
+//            
+//            NSAnimationContext.runAnimationGroup({ (context: NSAnimationContext!) -> () in
+//                
+//                self.pathLabel.stringValue   = self.folderPath?.lastPathComponent ?? ""
+//                self.detailLabel.stringValue = NSLocalizedString("Hit Create button to add your slices to the project.", comment: "")
+//                self.pathLabelYPosition.active = true
+//                self.pathLabel.alphaValue = 0
+//                
+//                
+//                }, completionHandler: {
+//                    self.detailLabelInitialYPosition.active = false
+//                    self.detailLabelSecondaryYPosition.active = true
+//
+//                    NSAnimationContext.runAnimationGroup({ (context: NSAnimationContext!) -> Void in
+//                        context.duration = 0.25
+//                        context.allowsImplicitAnimation = true
+//                        
+//                        self.pathLabel.animator().alphaValue = 1 // This cna be moved up since all the animations will have the same duration basically.
+//                        self.dropView.layoutSubtreeIfNeeded()
+//                        }, completionHandler: nil)
+//            })
+           
+
         case .SuccessfulButEmptyDrop:
             dropImageView.image     = NSImage(named: "DropfileInitialState")
-            pathLabel.stringValue   = folderPath?.lastPathComponent ?? ""
-            detailLabel.stringValue = NSLocalizedString("Drop a folder that contains slice-able images.", comment: "")
+//            pathLabel.stringValue   = folderPath?.lastPathComponent ?? ""
+//            detailLabel.stringValue = NSLocalizedString("Drop a folder that contains slice-able images.", comment: "")
+            retaculateAnimation(viewState, to: state)
+            viewState = state
         case .InvalidDrop:
+            dropImageView.image     = NSImage(named: "DropfileInitialState")
             detailLabel.stringValue = NSLocalizedString("Drop a folder that contains slice-able images.", comment: "")
+            retaculateAnimation(viewState, to: state)
+            viewState = state
         case .PathNoLongerExists:
             dropImageView.image     = nil
             pathLabel.stringValue   = folderPath ?? ""
             detailLabel.stringValue = NSLocalizedString("Seems like your folder has disappeared! Select it again.", comment: "")
+            viewState = state
         case .Done(let amount):
             dropImageView.image     = NSImage(named: "DropfileDoneState")
             detailLabel.stringValue = pluralize(amount, singular: "slice", plural: "slices") + " added to the project"
+            viewState = state
+        }
+        
+        
+        
+    }
+    
+    func retaculateAnimation(from: DropViewState, to: DropViewState) {
+        switch (from, to) {
+        case (.Initial, .SuccessfulDrop) :
+            fallthrough
+        case (.InvalidDrop, .SuccessfulDrop):
+            let detail = NSLocalizedString("Hit Create button to add your slices to the project.", comment: "")
+            transitionToSuccess(detail, animated: true)
+        case (_, .SuccessfulDrop):
+            let detail = NSLocalizedString("Hit Create button to add your slices to the project.", comment: "")
+            transitionToSuccess(detail, animated: false)
+        case (.Initial, .SuccessfulButEmptyDrop):
+            let detail = NSLocalizedString("Drop a folder that contains slice-able images.", comment: "")
+            transitionToSuccess(detail, animated: true)
+        case (_, .InvalidDrop):
+            let detail = NSLocalizedString("Drop a folder that contains slice-able images.", comment: "")
+            transitionToInvalid(detail, animated: true)
+        case (_,_):
+            break
         }
     }
+    
+    
+    func transitionToInvalid(detail: String, animated: Bool) {
+        let u: () -> () = {
+            self.detailLabel.stringValue = detail
+
+//            self.pathLabel.stringValue   = self.folderPath?.lastPathComponent ?? ""
+        }
+        
+        var s: Trigger?
+        var c: Trigger?
+        if animated {
+            s = {
+                self.pathLabel.alphaValue = 0
+                self.pathLabelYPosition.active = false
+                self.detailLabelSecondaryYPosition.active = false
+            }
+            
+            c = {
+                
+                self.detailLabelInitialYPosition.active = true
+//                self.pathLabel.animator().alphaValue = 0
+            }
+        }
+        
+        animate(update: u, stage: s, commit: c)
+    }
+    func transitionToSuccess(detail: String, animated: Bool) {
+        let u: () -> () = {
+            self.detailLabel.stringValue = detail
+            self.pathLabel.stringValue   = self.folderPath?.lastPathComponent ?? ""
+        }
+        
+        var s: Trigger?
+        var c: Trigger?
+        if animated {
+            s = {
+                self.pathLabel.alphaValue = 0
+                self.pathLabelYPosition.active = true
+            }
+            
+            c = {
+                self.detailLabelInitialYPosition.active = false
+                self.detailLabelSecondaryYPosition.active = true
+                self.pathLabel.animator().alphaValue = 1
+            }
+        }
+        
+        animate(update: u, stage: s, commit: c)
+    }
+    
+    ///
+    /// This makes no sense whatsoever. I wrote it in hope of writing it once and never having to return to it again.
+    ///
+    func animate(#update: Trigger,stage: Trigger?, commit: Trigger?, completion: (() -> ())? = nil) {
+        // Make sure all previous changes are commited.
+        self.dropView.layoutSubtreeIfNeeded()
+        update()
+        NSAnimationContext.runAnimationGroup({ (context: NSAnimationContext!) -> () in
+            
+            if let stage = stage { stage() }
+            }, completionHandler: {
+                if let commit = commit { commit() }
+                NSAnimationContext.runAnimationGroup({ (context: NSAnimationContext!) -> Void in
+//                    context.duration = 10
+                    context.duration = 0.5
+                    context.allowsImplicitAnimation = true
+                    self.dropView.layoutSubtreeIfNeeded()
+                    }, completionHandler: completion)
+        })
+    }
+    
+    
     
     func displayDoneState(total: Int) {
         updateDropView(state: .Done(total))
@@ -199,7 +342,7 @@ extension FileDropViewController: DropViewDelegate {
     
     func dropViewDidDragFileOutOfView(dropView: DropView) {
         if !hasValidSourceProject() {
-            updateDropView(state: DropViewState.Initial) // Bug
+            updateDropView(state: viewState) // Bug
         } else {
             updateDropView(state: DropViewState.SuccessfulDrop)
         }
