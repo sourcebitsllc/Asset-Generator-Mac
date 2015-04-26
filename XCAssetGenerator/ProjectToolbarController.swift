@@ -156,24 +156,24 @@ extension ProjectToolbarController {
         recentProjectsDropdownListView.preferredEdge = NSMaxYEdge
         recentProjectsDropdownListView.setProgressColor(color: NSColor(calibratedRed: 0.047, green: 0.261, blue: 0.993, alpha: 1))
         
-        if (recentListMaintainer.recentProjectsCount() <= 0) {
-            disableDropdownList()
-        
-        } else {
-            // If we have recent projects, set it up and observe them.
+        if let titles = recentListMaintainer.recentProjectsTitlesList() where titles.count > 0 {
+            // If we have recent projects, set them up and observe them.
             enableDropdownList()
             recentProjectsDropdownListView.addItemsWithTitles(recentListMaintainer.recentProjectsTitlesList()!)
+            
+            if (recentListMaintainer.selectedProject == nil) {
+                insertPlaceholderProject()
+            }
             
             let projects = recentListMaintainer.recentProjects { _ in true }
             for proj in projects! {
                 directoryObserver.observeProject(proj)
             }
             
-            if (recentListMaintainer.selectedProject == nil) {
-                insertPlaceholderProject()
-            }
-            
+        } else {
+            disableDropdownList()
         }
+        
         delegate?.projectToolbarDidChangeProject(recentListMaintainer.selectedProject)
 
     }
@@ -193,8 +193,7 @@ extension ProjectToolbarController {
     // TODO: Why do we remove all items? its the recentUsedProjectsManager concern to maintain order for its cache. So either trust its decisions or dont use it.
     private func updateDropdownListTitles() -> Void {
         recentProjectsDropdownListView.removeAllItems()
-        if recentListMaintainer.recentProjectsCount() > 0 {
-            let titles = recentListMaintainer.recentProjectsTitlesList()!
+        if let titles = recentListMaintainer.recentProjectsTitlesList() where titles.count > 0 {
             recentProjectsDropdownListView.addItemsWithTitles(titles)
             recentProjectsDropdownListView.selectItemAtIndex(SelectedItemIndex)
         } else {

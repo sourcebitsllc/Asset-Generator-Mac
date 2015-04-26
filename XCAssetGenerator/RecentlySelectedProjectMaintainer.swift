@@ -86,15 +86,6 @@ extension RecentlySelectedProjectMaintainer {
         storeSelectionState()
     }
     
-    func recentProjectsCount() -> Int {
-        return recentProjects?.count ?? 0
-    }
-    
-    // TODO: If i can remove this function, it would make alot more sense.
-//    func projects() -> [XCProject]? {
-//        return recentProjects
-//    }
-    
     var selectedProject: XCProject? {
         get {
             return (didSetProject) ? recentProjects?.first : nil
