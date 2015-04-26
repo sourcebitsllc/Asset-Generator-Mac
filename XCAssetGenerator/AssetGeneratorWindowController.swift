@@ -35,8 +35,7 @@ class AssetGeneratorWindowController: NSWindowController  {
         projectToolbarController = ProjectToolbarController(recentList: recentlyUsedProjectsDropdownList)
         projectToolbarController.delegate = self
         
-        scriptController.sourceDelegate = fileDropController
-        scriptController.destinationDelegate = projectToolbarController
+        scriptController.delegate = self
         scriptController.progressDelegate = self
         
         buttonSetup()
@@ -68,7 +67,7 @@ class AssetGeneratorWindowController: NSWindowController  {
     }
     
     func updateGenerateButton() {
-        generateButton.enabled = scriptController.canExecuteScript()
+        generateButton.enabled = scriptController.canPreformAssetGeneration()
     }
     
     
@@ -100,12 +99,8 @@ extension AssetGeneratorWindowController: ProjectToolbarDelegate {
 }
 
 extension AssetGeneratorWindowController: FileDropControllerDelegate {
-    func fileDropControllerDidRemoveSourcePath(controller: FileDropViewController, removedPath: String) {
-        updateGenerateButton()
-    }
-    
-    func fileDropControllerDidSetSourcePath(controller: FileDropViewController, path: Path, previousPath: String?) {
-        if PathValidator.directoryContainsInvalidCharacters(path: path, options: nil) {
+    func fileDropControllerDidSetFolder(controller: FileDropViewController, path: Path?) {
+        if let path = path where PathValidator.directoryContainsInvalidCharacters(path: path, options: nil) {
             // TODO:
         }
         updateGenerateButton()
@@ -128,3 +123,21 @@ extension AssetGeneratorWindowController: AssetGeneratorProgessDelegate {
         projectToolbarController.setToolbarProgress(progress: CGFloat(progress))
     }
 }
+
+extension AssetGeneratorWindowController: AssetGeneratorInput {
+
+    func hasValidGeneratorInputs() -> Bool {
+        let validSource = AssetGeneratorInputValidator.validateSource(fileDropController.folder)
+        let validTarget = AssetGeneratorInputValidator.validateTarget(projectToolbarController.selectedProject)
+        return validSource && validTarget
+    }
+    
+    var source: Path? {
+        return fileDropController.folder
+    }
+    
+    var target: Path? {
+        return projectToolbarController.selectedProject?.assetPath
+    }
+}
+

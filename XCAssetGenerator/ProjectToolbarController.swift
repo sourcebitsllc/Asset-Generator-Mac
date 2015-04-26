@@ -12,19 +12,6 @@ protocol ProjectToolbarDelegate {
     func projectToolbarDidChangeProject(project: XCProject?)
 }
 
-// MARK:- ScriptDestinationPath Delegate
-extension ProjectToolbarController: AssetGeneratorDestination {
-    
-    var destinationPath: String? {
-        get {
-            return recentListMaintainer.selectedProject?.assetPath
-        }
-    }
-    
-    func hasValidDestinationProject() -> Bool {
-        return recentListMaintainer.isSelectedProjectValid() //&& recentListMaintainer.selectedProject()!.hasValidAssetsPath()
-    }
-}
 
 class ProjectToolbarController: NSObject  {
 
@@ -35,7 +22,11 @@ class ProjectToolbarController: NSObject  {
     private let recentListMaintainer: RecentlySelectedProjectMaintainer
     private var panel: NSOpenPanel = NSOpenPanel()
     
-    let SelectedItemIndex: Int = 0
+    private let SelectedItemIndex: Int = 0
+    
+    var selectedProject: XCProject? {
+        return recentListMaintainer.selectedProject
+    }
     
     // MARK:- Initializers
     

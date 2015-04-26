@@ -8,27 +8,22 @@
 
 import Cocoa
 
-// TODO: hmm to functionally-identical protocols.... You know what to do.
-protocol AssetGeneratorSource {
-    var sourcePath: String? { get }
-    func hasValidSourceProject() -> Bool
-}
-
-protocol AssetGeneratorDestination {
-    var destinationPath: String? { get }
-    func hasValidDestinationProject() -> Bool
-}
-
 enum AssetGenerationOptions {
     case GenerateMissingAssets
     case CreateDesitnationIfMissing
 }
 
+protocol AssetGeneratorInput {
+    var source: Path? { get }
+    var target: Path? { get }
+    
+    func hasValidGeneratorInputs() -> Bool
+}
+
 class AssetGenerationController: NSObject {
 
-    let assetGenerator: AssetGenerator
-    var sourceDelegate: AssetGeneratorSource?
-    var destinationDelegate: AssetGeneratorDestination?
+    private let assetGenerator: AssetGenerator
+    var delegate: AssetGeneratorInput?
     var progressDelegate: AssetGeneratorProgessDelegate? {
         set {
             assetGenerator.progressDelegate = newValue
@@ -44,29 +39,25 @@ class AssetGenerationController: NSObject {
         super.init()
     }
     
-    func canExecuteScript() -> Bool {
-        switch (sourceDelegate, destinationDelegate) {
-        case (.Some(let source), .Some(let destination)):
-            return source.hasValidSourceProject() && destination.hasValidDestinationProject() && !assetGenerator.executing()
-        case (_,_):
-            return false
-        }
+    func canPreformAssetGeneration() -> Bool {
+        return delegate?.hasValidGeneratorInputs() ?? false
     }
     
     func executeScript(options: [AssetGenerationOptions]?) {
         if let ops = options {
             let generate1x = contains(ops, .GenerateMissingAssets)
             let createDest = contains(ops, .CreateDesitnationIfMissing)
-            executeScript(generate1x: generate1x, extraArgs: nil)
+            preformAssetGeneration(generate1x: generate1x, extraArgs: nil)
         } else {
-            executeScript()
+            preformAssetGeneration()
         }
     }
-    private func executeScript() {
-        assetGenerator.generateAssets(sourceDelegate!.sourcePath!, target: destinationDelegate!.destinationPath!)
+    
+    private func preformAssetGeneration() {
+        assetGenerator.generateAssets(delegate!.source!, target: delegate!.target!)
     }
     
-    private func executeScript(#generate1x: Bool, extraArgs args: [String]?) {
-        assetGenerator.generateAssets(sourceDelegate!.sourcePath!, target: destinationDelegate!.destinationPath!)
+    private func preformAssetGeneration(#generate1x: Bool, extraArgs args: [String]?) {
+        assetGenerator.generateAssets(delegate!.source!, target: delegate!.target!)
     }
 }

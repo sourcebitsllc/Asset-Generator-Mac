@@ -11,6 +11,7 @@
 		1E10E2931AB19A1100D5862C /* BookmarkResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E10E2921AB19A1100D5862C /* BookmarkResolver.swift */; };
 		1E17A3A11ACF637700785DB2 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1E17A3A01ACF637700785DB2 /* Localizable.strings */; };
 		1E17A3A31AD1405700785DB2 /* PathQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E17A3A21AD1405700785DB2 /* PathQuery.swift */; };
+		1E1D14D51AECEC1400295BBB /* AssetGeneratorInputValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E1D14D41AECEC1400295BBB /* AssetGeneratorInputValidator.swift */; };
 		1E4250A619C77C8C00BF686B /* AssetGeneratorWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4250A519C77C8C00BF686B /* AssetGeneratorWindowController.swift */; };
 		1E44A19C1AD51F8100198215 /* Keyword Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E44A19B1AD51F8100198215 /* Keyword Constants.swift */; };
 		1E44A19E1AD5282300198215 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E44A19D1AD5282300198215 /* StringExtension.swift */; };
@@ -53,6 +54,7 @@
 		1E10E2921AB19A1100D5862C /* BookmarkResolver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookmarkResolver.swift; sourceTree = "<group>"; };
 		1E17A3A01ACF637700785DB2 /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		1E17A3A21AD1405700785DB2 /* PathQuery.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PathQuery.swift; sourceTree = "<group>"; };
+		1E1D14D41AECEC1400295BBB /* AssetGeneratorInputValidator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetGeneratorInputValidator.swift; sourceTree = "<group>"; };
 		1E4250A519C77C8C00BF686B /* AssetGeneratorWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = AssetGeneratorWindowController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		1E44A19B1AD51F8100198215 /* Keyword Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Keyword Constants.swift"; sourceTree = "<group>"; };
 		1E44A19D1AD5282300198215 /* StringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
@@ -127,6 +129,7 @@
 			children = (
 				DD09CBEB1989A46C002DD2FB /* AppDelegate.swift */,
 				1E4250A519C77C8C00BF686B /* AssetGeneratorWindowController.swift */,
+				1E1D14D41AECEC1400295BBB /* AssetGeneratorInputValidator.swift */,
 				1EBD1ECC19D37FD600A5F0B6 /* ProjectToolbarController.swift */,
 				1EE9353D19C3A0AB000DA40A /* RecentlySelectedProjectMaintainer.swift */,
 				1EE99B2C19CFCC6A00169245 /* ProgressPopUpButton.swift */,
@@ -308,6 +311,7 @@
 				1EBD1ECF19D38ED200A5F0B6 /* AssetGenerationController.swift in Sources */,
 				1ED7BDCB1A11720100CA2A7E /* XcodeFileValidatorProtocol.swift in Sources */,
 				1EE9353E19C3A0AB000DA40A /* RecentlySelectedProjectMaintainer.swift in Sources */,
+				1E1D14D51AECEC1400295BBB /* AssetGeneratorInputValidator.swift in Sources */,
 				1E64F2551ACE5BF60081D3A3 /* FileSystemHelper.swift in Sources */,
 				1EAC6E691AD68E08003C0B78 /* Serializable.swift in Sources */,
 				1EE99B2D19CFCC6A00169245 /* ProgressPopUpButton.swift in Sources */,

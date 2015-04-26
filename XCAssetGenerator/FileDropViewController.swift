@@ -12,8 +12,7 @@ import Cocoa
 /// The animation code is rough to say the least.
 
 protocol FileDropControllerDelegate {
-    func fileDropControllerDidSetSourcePath(controller: FileDropViewController, path: Path, previousPath: String?)
-    func fileDropControllerDidRemoveSourcePath(controller: FileDropViewController, removedPath: String)
+    func fileDropControllerDidSetFolder(controller: FileDropViewController, path: Path?)
 }
 
 
@@ -49,24 +48,26 @@ class FileDropViewController: NSViewController {
     var pathLabel: NSTextField!
     var detailLabel: NSTextField!
     
-    // Since the Path label does not move + im not removing it form subview. Why not just animate its alpha state only?
-    /// Save yourself the shame of manipulating NSLayoutcontraints.
     var detailLabelInitialYPosition: NSLayoutConstraint!
     var detailLabelSecondaryYPosition: NSLayoutConstraint!
     
     private var folderPath : String?
-    private var viewState: DropViewState // FUCK FUCK FUCK FUCK FUC KFUC FUC FUCK FU CU FUCK FUCK FUCKF FUCKF FUC FUKC 
-    // FUCK FUC KF CUKC FUCK FUCK FUKC UFL FUCK FUCK FU C UF CUFK CU F KCYF CK FYF  UC DF CK
-    private var currentViewState: DropViewState
+
+    /// REFACTOR THIS SHIT. THIS IS WHEN YOU KNOW YOU FUCKED UP.
+    private var previousViewState: DropViewState // OH COME ON.
+    private var lastStableState: DropViewState // HOLY FUCKING SHIT WOW NO WOW NO.
     
     typealias Stage = () -> ()
     typealias AnimationStage = (NSAnimationContext) -> ()
     
+    var folder: Path? {
+        return folderPath != nil ? folderPath! + "/" : nil
+    }
     
     
     required init?(coder: NSCoder) {
-        viewState = .Initial
-        currentViewState = .Initial
+        lastStableState = .Initial
+        previousViewState = .Initial
         super.init(coder: coder)
     }
     
@@ -175,13 +176,22 @@ class FileDropViewController: NSViewController {
             }
         }
         
-        let animation = retaculateAnimation(from: currentViewState, to: state)
+        let animation = retaculateAnimation(from: previousViewState, to: state)
         performTransition(animation, with: trigger)
         
-        currentViewState = state
+        previousViewState = state
+        lastStableState = stabilize(state) ? state : lastStableState
         
     }
     
+    private func stabilize(state: DropViewState) -> Bool {
+        switch (state) {
+        case .Hovering, .InvalidDrop:
+            return false
+        case _:
+            return true
+        }
+    }
     
     private func labelPosition(#state: DropViewState) -> DropViewLabelPosition {
         switch state {
@@ -222,11 +232,6 @@ class FileDropViewController: NSViewController {
         }
     }
 
-
-    ///
-    /// Do a step-by-step documentation of each step and why its there.
-    /// Seems to be a trial and error approach.
-    ///
     
     func transitionToTwoLabels(trigger: Stage) {
         let u  = trigger
@@ -308,25 +313,6 @@ class FileDropViewController: NSViewController {
 }
 
 
-// MARK:- ScriptSourcePath Delegate
-extension FileDropViewController: AssetGeneratorSource {
-    
-    var sourcePath: String? {
-        get {
-            if let sourcePath = folderPath {
-                return sourcePath + "/"
-            } else {
-                return folderPath
-            }
-        }
-    }
-    
-    func hasValidSourceProject() -> Bool {
-        return (folderPath != nil) ? PathValidator.directoryContainsImages(path: folderPath!) : false
-    }
-}
-
-
 // MARK: - DropViewDelegate required functions.
 extension FileDropViewController: DropViewDelegate {
     
@@ -345,14 +331,14 @@ extension FileDropViewController: DropViewDelegate {
         }
         
         directoryObserver.observeSource(filePath)
-        delegate?.fileDropControllerDidSetSourcePath(self,path: folderPath!, previousPath: old)
+        delegate?.fileDropControllerDidSetFolder(self, path: folder)
     }
     
     
     func dropViewDidDragValidFileIntoView(dropView: DropView) {
-        if !hasValidSourceProject() {
+//        if !hasValidSourceProject() {
             updateDropView(state: DropViewState.Hovering)
-        }
+//        }
     }
     
     func dropViewDidDragInvalidFileIntoView(dropView: DropView) {
@@ -360,11 +346,7 @@ extension FileDropViewController: DropViewDelegate {
     }
     
     func dropViewDidDragFileOutOfView(dropView: DropView) {
-        if !hasValidSourceProject() {
-            updateDropView(state: DropViewState.Initial) // Bug. We should return the previous state. The previous state, however, needs to ignore .Hovering
-        } else {
-            updateDropView(state: DropViewState.SuccessfulDrop)
-        }
+        updateDropView(state: lastStableState)
     }
 }
 
@@ -375,7 +357,7 @@ extension FileDropViewController: FileSystemObserverDelegate {
         updateDropView(state: DropViewState.PathNoLongerExists)
         directoryObserver.stopObservingPath(path)
         folderPath = nil
-        delegate?.fileDropControllerDidRemoveSourcePath(self, removedPath: path)
+        delegate?.fileDropControllerDidSetFolder(self, path: folder)
     }
     
     
