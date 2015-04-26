@@ -122,8 +122,12 @@ class ProjectToolbarController: NSObject  {
    
     func recentProjectsListChanged(sender: NSPopUpButton) {
         // If we select a new project, proceed.
-        if sender.indexOfSelectedItem != SelectedItemIndex {
-            updateRecentProjectsList(index: sender.indexOfSelectedItem)
+        let index = sender.indexOfSelectedItem
+        if index != SelectedItemIndex {
+            let idx = (recentListMaintainer.selectedProject != nil) ? index : index - 1 // This will never be called on index = 0
+            recentListMaintainer.addProject(project: recentListMaintainer.projectAtIndex(idx)!)
+            updateDropdownListTitles()
+            delegate?.projectToolbarDidChangeProject(recentListMaintainer.selectedProject)
         }
     }
     
@@ -131,15 +135,7 @@ class ProjectToolbarController: NSObject  {
 
 // MARK:- Dropdown list Management.
 extension ProjectToolbarController {
-    
-    
-    private func updateRecentProjectsList(#index: Int){
-        let idx = (recentListMaintainer.selectedProject != nil) ? index : index - 1 // This will never be called on index = 0
-        recentListMaintainer.addProject(project: recentListMaintainer.projectAtIndex(idx)!)
-        updateDropdownListTitles()
-        delegate?.projectToolbarDidChangeProject(recentListMaintainer.selectedProject)
-    }
-    
+
     
     private func enableDropdownList() {
         recentProjectsDropdownListView.enabled     = true
@@ -168,7 +164,8 @@ extension ProjectToolbarController {
             enableDropdownList()
             recentProjectsDropdownListView.addItemsWithTitles(recentListMaintainer.recentProjectsTitlesList()!)
             
-            for proj in recentListMaintainer.projects()! {
+            let projects = recentListMaintainer.recentProjects { _ in true }
+            for proj in projects! {
                 directoryObserver.observeProject(proj)
             }
             

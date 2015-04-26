@@ -91,9 +91,9 @@ extension RecentlySelectedProjectMaintainer {
     }
     
     // TODO: If i can remove this function, it would make alot more sense.
-    func projects() -> [XCProject]? {
-        return recentProjects
-    }
+//    func projects() -> [XCProject]? {
+//        return recentProjects
+//    }
     
     var selectedProject: XCProject? {
         get {
@@ -114,16 +114,6 @@ extension RecentlySelectedProjectMaintainer {
         return recentProjects?.map { proj in
                 return proj.title + "  > " + proj.assetTitle
         }
-    }
-    
-    // Returns the most recent project matching the predicate indicated in the closure.
-    private func recentProject(closure: (project: XCProject) -> Bool) -> XCProject? {
-        let matches = recentProjects?.filter(closure)
-        if matches?.count > 1 {
-            println("[XCAssetGenerator] Houston, we have a problem. Found multiple projects for a check that should return one.")
-        }
-        
-        return matches?.first
     }
     
     func recentProjects(filter: (project: XCProject) -> Bool) -> [XCProject]? {
