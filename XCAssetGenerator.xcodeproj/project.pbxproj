@@ -129,7 +129,6 @@
 			children = (
 				DD09CBEB1989A46C002DD2FB /* AppDelegate.swift */,
 				1E4250A519C77C8C00BF686B /* AssetGeneratorWindowController.swift */,
-				1E1D14D41AECEC1400295BBB /* AssetGeneratorInputValidator.swift */,
 				1EBD1ECC19D37FD600A5F0B6 /* ProjectToolbarController.swift */,
 				1EE9353D19C3A0AB000DA40A /* RecentlySelectedProjectMaintainer.swift */,
 				1EE99B2C19CFCC6A00169245 /* ProgressPopUpButton.swift */,
@@ -140,6 +139,7 @@
 				1E17A3A21AD1405700785DB2 /* PathQuery.swift */,
 				1E10E2921AB19A1100D5862C /* BookmarkResolver.swift */,
 				1ED7BDCA1A11720100CA2A7E /* XcodeFileValidatorProtocol.swift */,
+				1E1D14D41AECEC1400295BBB /* AssetGeneratorInputValidator.swift */,
 				1EBD1ECE19D38ED200A5F0B6 /* AssetGenerationController.swift */,
 				1E64F2561ACE71090081D3A3 /* AssetGenerator.swift */,
 				1EAC6E681AD68E08003C0B78 /* Serializable.swift */,
