@@ -28,4 +28,10 @@ struct SerializedAssetAttributeKeys {
     static let Extent = "extent"
     static let Subtype = "sub-type"
     static let MinimumSystemVersion = "minimum-system-version"
+    
+    static let WidthClass = "widthClass"
+    static let HeightClass = "heightClass"
+    
+    static let Alignment = "alignment-insets"
+
 }
