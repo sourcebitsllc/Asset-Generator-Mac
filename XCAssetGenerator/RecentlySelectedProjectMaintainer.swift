@@ -24,12 +24,6 @@ class RecentlySelectedProjectMaintainer : NSObject {
 //        __flushStoredProjects()
         loadRecentProjects()
     }
-    
-    
-    // Return whether the selected project is suitable for script execution
-    func isSelectedProjectValid() -> Bool {
-        return (selectedProject != nil) ? ProjectValidator.isProjectValid(selectedProject!) && selectedProject!.hasValidAssetsPath() : false
-    }
 
     // TODO: Too much state manipulation. fix it buddy yea? HEY? fix it.
     // TODO: ......
@@ -63,16 +57,10 @@ class RecentlySelectedProjectMaintainer : NSObject {
         addProject(project: XCProject(bookmark: bookmark))
     }
     
-    func removeProject(#project: XCProject) {
+    func removeProject(project: XCProject) {
         if let projectsList = recentProjects, let index: Int = find(projectsList, project)  {
             recentProjects!.removeAtIndex(index)
             storeRecentProjects()
-        }
-    }
-    
-    private func cullStaleAssets() {
-        recentProjects = recentProjects?.map { (project: XCProject) -> XCProject in
-            return !project.hasValidAssetsPath() ? XCProject(bookmark: project.bookmark) : project
         }
     }
 }
@@ -126,7 +114,6 @@ extension RecentlySelectedProjectMaintainer {
         NSUserDefaults.standardUserDefaults().setBool(didSetProject, forKey: kSelectionStateKey)
     }
     
-    ///
     ///
     private func loadRecentProjects() {
         let projectDicts = NSUserDefaults.standardUserDefaults().objectForKey(kRecentProjectsKey) as? [[String: NSData]]

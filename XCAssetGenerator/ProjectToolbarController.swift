@@ -219,7 +219,7 @@ extension ProjectToolbarController: FileSystemObserverDelegate {
         }?.first
         
         if let proj = project, let index = recentListMaintainer.indexOfProject(proj) {
-            recentListMaintainer.removeProject(project: proj)
+            recentListMaintainer.removeProject(proj)
             recentListMaintainer.addProject(project: XCProject(bookmark: proj.bookmark), index: index)
         }
         
@@ -237,7 +237,7 @@ extension ProjectToolbarController: FileSystemObserverDelegate {
         let wasSelected = project == recentListMaintainer.selectedProject
         
         if let proj = project {
-            recentListMaintainer.removeProject(project: proj)
+            recentListMaintainer.removeProject(proj)
         }
         updateDropdownListTitles()
         
