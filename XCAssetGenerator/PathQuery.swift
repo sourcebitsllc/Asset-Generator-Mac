@@ -9,42 +9,33 @@
 import Foundation
 
 struct PathQuery {
-    ///
-    /// TODO: Documentation
-    ///
+
     static func availableImages(from path: Path) -> [Path] {
-        return queryWith(path, searchOption: NSDirectoryEnumerationOptions.SkipsHiddenFiles) { element -> Path? in
-            let isImage = element.path!.hasSuffix(".png") || element.path!.hasSuffix(".jpg") || element.path!.hasSuffix(".jpeg")
-            return (isImage) ? element.path! : nil
+        return queryWith(path, searchOption: NSDirectoryEnumerationOptions.SkipsHiddenFiles) {
+            return $0.hasSuffix(".png") || $0.hasSuffix(".jpg") || $0.hasSuffix(".jpeg")
         }
     }
     
     static func availableAssetSets(from path: Path) -> [Path] {
-        return queryWith(path, searchOption: NSDirectoryEnumerationOptions.SkipsPackageDescendants) { element -> Path? in
-            let isAssetSet = element.path!.hasSuffix(".imageset") || element.path!.hasSuffix(".appiconset") || element.path!.hasSuffix(".launchimage")
-            return (isAssetSet) ? element.path! : nil
+        return queryWith(path, searchOption: NSDirectoryEnumerationOptions.SkipsPackageDescendants) {
+            return $0.hasSuffix(".imageset") || $0.hasSuffix(".appiconset") || $0.hasSuffix(".launchimage")
         }
     }
-    
+
     static func availableAssetFolders(from path: Path) -> [Path] {
-        return queryWith(path, searchOption: NSDirectoryEnumerationOptions.SkipsPackageDescendants) { element -> Path? in
-            let isAssetFolder = element.path!.isAssetCatalog()
-            return (isAssetFolder) ? element.path! : nil
+        return queryWith(path, searchOption: NSDirectoryEnumerationOptions.SkipsPackageDescendants) {
+            return $0.isAssetCatalog()
         }
     }
-    
-    private static func queryWith<T>(path: Path,  searchOption: NSDirectoryEnumerationOptions, query: (NSURL -> T?)) -> [T] {
+
+    private static func queryWith(path: Path,  searchOption: NSDirectoryEnumerationOptions, query: Path -> Bool) -> [Path] {
         let url = NSURL(fileURLWithPath: path, isDirectory: true)
         let generator = NSFileManager.defaultManager().enumeratorAtURL(url!, includingPropertiesForKeys: [NSURLIsDirectoryKey], options: searchOption , errorHandler: nil)
-        var matches = [T]()
         
-        while let element = generator?.nextObject() as? NSURL {
-            let result = query(element)
-            if let result = result {
-                matches.append(result)
-            }
-        }
-        return matches
+        let list = generator?.allObjects as? [NSURL]
+        let result = list?.map{ $0.path!}.filter(query)
+        return result ?? []
+
     }
     
 }
