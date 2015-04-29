@@ -20,7 +20,7 @@ class ProjectToolbarController: NSObject  {
     
     private var directoryObserver: ProjectObserver!
     private let recentListMaintainer: RecentlySelectedProjectMaintainer
-    private var panel: NSOpenPanel = NSOpenPanel()
+    private var panel: NSOpenPanel
     
     private let SelectedItemIndex: Int = 0
     
@@ -33,28 +33,20 @@ class ProjectToolbarController: NSObject  {
     init(recentList: ProgressPopUpButton) {
         recentListMaintainer = RecentlySelectedProjectMaintainer()
         recentProjectsDropdownListView = recentList
-        
+        panel = NSOpenPanel()
         super.init()
         
-        setupProjectObserver()
-        dropdownListSetup()
-        openPanelSetup()
-        
-    }
-    
-    // MARK:- Setup Helpers
-    
-    private func setupProjectObserver() {
         directoryObserver = ProjectObserver(delegate: self)
-    }
-    
-    private func openPanelSetup() {
+        
         panel.canChooseFiles            = true
         panel.allowedFileTypes          = ["xcodeproj"]
         panel.canChooseDirectories      = true
         panel.allowsMultipleSelection   = false
+        dropdownListSetup()
+        
     }
     
+    // MARK: - Helpers
     
     private func setupError(message: String) -> NSAlert {
         let alert = NSAlert()
@@ -230,7 +222,7 @@ extension ProjectToolbarController: FileSystemObserverDelegate {
     
     func FileSystemDirectoryDeleted(path: String!) {
         
-        let project = recentListMaintainer.recentProjects { (project) -> Bool in
+        let project = recentListMaintainer.recentProjects { project in
             return (path.isXCProject()) ? project.path == path : (path.isAssetCatalog()) ? project.assetPath == path : false
         }?.first
         
@@ -245,7 +237,7 @@ extension ProjectToolbarController: FileSystemObserverDelegate {
             insertPlaceholderProject()
             recentListMaintainer.resetSelectedProject()
         }
-         delegate?.projectToolbarDidChangeProject(nil)
+        delegate?.projectToolbarDidChangeProject(nil)
     }
     
     func FileSystemDirectoryError(error: NSError!) {
@@ -264,7 +256,7 @@ extension ProjectToolbarController {
         }
     }
     
-    func resetToolbarProgress(completion: () -> Void) {
+    func resetToolbarProgress(completion: () -> ()) {
         recentProjectsDropdownListView.resetProgress(completion)
     }
     
