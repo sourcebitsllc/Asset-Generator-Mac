@@ -3,7 +3,7 @@
 //  XCAssetGenerator
 //
 //  Created by Bader on 3/24/15.
-//  Copyright (c) 2015 Pranav Shah. All rights reserved.
+//  Copyright (c) 2015 Bader Alabdulrazzaq. All rights reserved.
 //
 
 import Foundation
@@ -15,7 +15,6 @@ extension NSError: ErrorType {}
 enum ProjectSelectionError: ErrorType {
     case AssetNoFound(String)
     case NoProjectFound
-//    case AutoSelectedProject(String, String)
     
     var message: String {
         get {

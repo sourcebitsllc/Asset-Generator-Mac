@@ -7,6 +7,8 @@
 //
 
 import Cocoa
+import Result
+import Box
 
 protocol ProjectToolbarDelegate {
     func projectToolbarDidChangeProject(project: XCProject?)
@@ -62,55 +64,17 @@ class ProjectToolbarController: NSObject  {
     func browseButtonPressed() {
         panel.beginWithCompletionHandler() { (handler: Int) -> Void in
             if handler == NSFileHandlingPanelOKButton {
-                /* 
-                    1 - Check if path is project
-                    2 - If project, proceed normally.
-                    3 - If not, Search for internals to find project. (deep search or just one level? or even the current window only.)
-                    4 - If project found, proceeed normally.
-                    5 - Else, nothing found. Display error.
-                */
-                
-                let url = self.panel.URL!
-                let path = url.path!
-                
-                
-                if path.isXCProject() {
-                    let directory = self.panel.URL!.path!.stringByDeletingLastPathComponent + ("/")
-                    let hasAsset = PathValidator.directoryContainsXCAsset(directory: directory)
-                    
-                    if hasAsset {
-                        self.addNewProject(url: self.panel.URL!)
-                    } else {
-                      // Throw No valid assets error
-                        let name = path.lastPathComponent
-                        self.setupError(ProjectSelectionError.AssetNoFound(name).message).runModal()
-                    }
-                
-                } else {
-                    let projectURL = PathValidator.retreiveProject(url)
-                    
-                    
-                    if let pURL = projectURL {
-                        let directory = pURL.path!.stringByDeletingLastPathComponent + ("/")
-                        let hasAsset = PathValidator.directoryContainsXCAsset(directory: directory)
-                        
-                        if hasAsset {
-                            self.addNewProject(url: pURL)
-                        } else {
-                            // Throw no valid assets error
-                            let name = pURL.lastPathComponent!
-                            self.setupError(ProjectSelectionError.AssetNoFound(name).message).runModal()
-                        }
-                        
-                    } else {
-                        self.setupError(ProjectSelectionError.NoProjectFound.message).runModal()
-                    }
-                
+                let project = ProjectSelector.excavateProject(self.panel.URL!)
+                switch project {
+                case .Success(let box):
+                    self.addNewProject(url: box.value)
+                case .Failure(let box):
+                    self.setupError(box.value.message).runModal() // (self.setupError <| box.value.message ).runModal()
                 }
             }
         }
     }
-    
+
    
     func recentProjectsListChanged(sender: NSPopUpButton) {
         // If we select a new project, proceed.
