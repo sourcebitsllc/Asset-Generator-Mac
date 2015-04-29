@@ -50,7 +50,7 @@ struct XCProject: Equatable, Printable {
     internal init(bookmark: Bookmark) {
         self.bookmark = bookmark
         self.path = BookmarkResolver.resolvePathFromBookmark(bookmark)!
-        self.xcassets = PathQuery.availableAssetFolders(from: currentWorkingDirectory).map {
+        self.xcassets = PathQuery.availableAssetCatalogs(from: currentWorkingDirectory).map {
             let bookmark = BookmarkResolver.resolveBookmarkFromPath($0)
             return AssetCatalog(bookmark: bookmark)
         }

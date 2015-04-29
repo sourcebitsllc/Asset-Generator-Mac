@@ -22,7 +22,7 @@ struct PathQuery {
         }
     }
 
-    static func availableAssetFolders(from path: Path) -> [Path] {
+    static func availableAssetCatalogs(from path: Path) -> [Path] {
         return queryWith(path, searchOption: NSDirectoryEnumerationOptions.SkipsPackageDescendants) {
             return $0.isAssetCatalog()
         }
@@ -33,9 +33,8 @@ struct PathQuery {
         let generator = NSFileManager.defaultManager().enumeratorAtURL(url!, includingPropertiesForKeys: [NSURLIsDirectoryKey], options: searchOption , errorHandler: nil)
         
         let list = generator?.allObjects as? [NSURL]
-        let result = list?.map{ $0.path!}.filter(query)
+        let result = list?.map{$0.path!}.filter(query)
         return result ?? []
-
     }
     
 }
