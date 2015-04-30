@@ -13,13 +13,13 @@ protocol ErrorType {}
 extension NSError: ErrorType {}
 
 enum ProjectSelectionError: ErrorType {
-    case AssetNoFound(String)
+    case AssetNotFound(String)
     case NoProjectFound
     
     var message: String {
         get {
             switch self {
-            case .AssetNoFound(let project):
+            case .AssetNotFound(let project):
                 return "The selected project (\(project)) does not contain a valid xcassets folder."
             case .NoProjectFound:
                 return NSLocalizedString("The selected folder does not contain an Xcode Project.",comment: "")
