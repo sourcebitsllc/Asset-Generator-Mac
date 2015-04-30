@@ -14,14 +14,14 @@ extension NSError: ErrorType {}
 
 enum ProjectSelectionError: ErrorType {
     case AssetNotFound(String)
-    case NoProjectFound
+    case ProjectNotFound
     
     var message: String {
         get {
             switch self {
             case .AssetNotFound(let project):
                 return "The selected project (\(project)) does not contain a valid xcassets folder."
-            case .NoProjectFound:
+            case .ProjectNotFound:
                 return NSLocalizedString("The selected folder does not contain an Xcode Project.",comment: "")
             }
         }

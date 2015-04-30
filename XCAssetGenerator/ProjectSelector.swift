@@ -30,7 +30,7 @@ struct ProjectSelector {
     
     private static func retrieveProject(directory: NSURL) -> Result<NSURL, ProjectSelectionError> {
         let project = PathValidator.retreiveProject(directory)
-        return (Result.success <^> project) ?? Result.failure(ProjectSelectionError.NoProjectFound)
+        return (Result.success <^> project) ?? Result.failure(ProjectSelectionError.ProjectNotFound)
     }
     
     private static func assetFromProject(url: NSURL) -> Result<NSURL, ProjectSelectionError> {
