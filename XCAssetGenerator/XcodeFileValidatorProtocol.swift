@@ -3,7 +3,7 @@
 //  XCAssetGenerator
 //
 //  Created by Bader on 11/11/14.
-//  Copyright (c) 2014 Pranav Shah. All rights reserved.
+//  Copyright (c) 2014 Bader Alabdulrazzaq. All rights reserved.
 //
 
 import Foundation
