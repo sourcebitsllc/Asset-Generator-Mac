@@ -1,0 +1,18 @@
+{
+  "images" : [
+    {
+      "scale" : "1x",
+      "idiom" : "universal",
+      "filename" : "uiWell.png"
+    },
+    {
+      "scale" : "2x",
+      "idiom" : "universal",
+      "filename" : "uiWell@2x.png"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : "1"
+  }
+}
