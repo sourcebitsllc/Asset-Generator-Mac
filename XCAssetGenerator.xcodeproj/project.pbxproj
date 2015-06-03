@@ -29,7 +29,7 @@
 		1ED9A1311B1F9810000A41B9 /* NSLayoutConstraint+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A10A1B1F9810000A41B9 /* NSLayoutConstraint+Extensions.swift */; };
 		1ED9A1321B1F9810000A41B9 /* Optionals+Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A10B1B1F9810000A41B9 /* Optionals+Operators.swift */; };
 		1ED9A1331B1F9810000A41B9 /* PathQuery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A10C1B1F9810000A41B9 /* PathQuery.swift */; };
-		1ED9A1341B1F9810000A41B9 /* ProgressController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A10D1B1F9810000A41B9 /* ProgressController.swift */; };
+		1ED9A1341B1F9810000A41B9 /* ProgressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A10D1B1F9810000A41B9 /* ProgressViewController.swift */; };
 		1ED9A1351B1F9810000A41B9 /* ProgressIndicationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A10E1B1F9810000A41B9 /* ProgressIndicationViewModel.swift */; };
 		1ED9A1371B1F9810000A41B9 /* ProjectDropViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A1101B1F9810000A41B9 /* ProjectDropViewController.swift */; };
 		1ED9A1381B1F9810000A41B9 /* ProjectSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A1111B1F9810000A41B9 /* ProjectSelector.swift */; };
@@ -96,7 +96,7 @@
 		1ED9A10A1B1F9810000A41B9 /* NSLayoutConstraint+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSLayoutConstraint+Extensions.swift"; sourceTree = "<group>"; };
 		1ED9A10B1B1F9810000A41B9 /* Optionals+Operators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Optionals+Operators.swift"; sourceTree = "<group>"; };
 		1ED9A10C1B1F9810000A41B9 /* PathQuery.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PathQuery.swift; sourceTree = "<group>"; };
-		1ED9A10D1B1F9810000A41B9 /* ProgressController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressController.swift; sourceTree = "<group>"; };
+		1ED9A10D1B1F9810000A41B9 /* ProgressViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressViewController.swift; sourceTree = "<group>"; };
 		1ED9A10E1B1F9810000A41B9 /* ProgressIndicationViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressIndicationViewModel.swift; sourceTree = "<group>"; };
 		1ED9A1101B1F9810000A41B9 /* ProjectDropViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectDropViewController.swift; sourceTree = "<group>"; };
 		1ED9A1111B1F9810000A41B9 /* ProjectSelector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectSelector.swift; sourceTree = "<group>"; };
@@ -142,6 +142,53 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1ED9A1511B1F9FA7000A41B9 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				1ED9A0FB1B1F9810000A41B9 /* AssetWindowViewModel.swift */,
+				1ED9A1061B1F9810000A41B9 /* ImagesGroupViewModel.swift */,
+				1ED9A1151B1F9810000A41B9 /* SelectedProjectViewModel.swift */,
+				1ED9A1171B1F9810000A41B9 /* StatusViewModel.swift */,
+				1ED9A10E1B1F9810000A41B9 /* ProgressIndicationViewModel.swift */,
+			);
+			name = ViewModels;
+			sourceTree = "<group>";
+		};
+		1ED9A1521B1F9FBE000A41B9 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				1ED9A0F91B1F9810000A41B9 /* AssetGeneratorWindowController.swift */,
+				1ED9A1051B1F9810000A41B9 /* ImagesDropViewController.swift */,
+				1ED9A1101B1F9810000A41B9 /* ProjectDropViewController.swift */,
+				1ED9A10D1B1F9810000A41B9 /* ProgressViewController.swift */,
+				1ED9A1141B1F9810000A41B9 /* RoundedDropView.swift */,
+				1ED9A0FE1B1F9810000A41B9 /* DropView.swift */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		1ED9A1531B1F9FEC000A41B9 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				1ED9A11C1B1F9810000A41B9 /* XCProject.swift */,
+				1ED9A0F51B1F9810000A41B9 /* AssetCatalog.swift */,
+				1ED9A0FF1B1F9810000A41B9 /* ErrorType.swift */,
+				1ED9A0FA1B1F9810000A41B9 /* AssetType.swift */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
+		1ED9A1541B1FA013000A41B9 /* Extensions and Operators */ = {
+			isa = PBXGroup;
+			children = (
+				1ED9A1091B1F9810000A41B9 /* NSImage+Extensions.swift */,
+				1ED9A10A1B1F9810000A41B9 /* NSLayoutConstraint+Extensions.swift */,
+				1ED9A10B1B1F9810000A41B9 /* Optionals+Operators.swift */,
+				1ED9A1181B1F9810000A41B9 /* StringExtension.swift */,
+			);
+			name = "Extensions and Operators";
+			sourceTree = "<group>";
+		};
 		DD09CBD91989A46C002DD2FB = {
 			isa = PBXGroup;
 			children = (
@@ -167,39 +214,24 @@
 			isa = PBXGroup;
 			children = (
 				1ED9A0F31B1F97CE000A41B9 /* AppDelegate.swift */,
-				1ED9A0F51B1F9810000A41B9 /* AssetCatalog.swift */,
+				1ED9A1531B1F9FEC000A41B9 /* Models */,
+				1ED9A1511B1F9FA7000A41B9 /* ViewModels */,
+				1ED9A1521B1F9FBE000A41B9 /* Views */,
+				1ED9A1541B1FA013000A41B9 /* Extensions and Operators */,
 				1ED9A0F61B1F9810000A41B9 /* AssetGenerationController.swift */,
-				1ED9A1461B1F983B000A41B9 /* Main.storyboard */,
 				1ED9A0F71B1F9810000A41B9 /* AssetGenerator.swift */,
-				1ED9A0F81B1F9810000A41B9 /* AssetGeneratorInputValidator.swift */,
-				1ED9A0F91B1F9810000A41B9 /* AssetGeneratorWindowController.swift */,
-				1ED9A0FA1B1F9810000A41B9 /* AssetType.swift */,
-				1ED9A0FB1B1F9810000A41B9 /* AssetWindowViewModel.swift */,
 				1ED9A0FC1B1F9810000A41B9 /* BookmarkResolver.swift */,
-				1ED9A0FE1B1F9810000A41B9 /* DropView.swift */,
-				1ED9A0FF1B1F9810000A41B9 /* ErrorType.swift */,
+				1ED9A0F81B1F9810000A41B9 /* AssetGeneratorInputValidator.swift */,
 				1ED9A1011B1F9810000A41B9 /* FileSystemHelper.swift */,
 				1ED9A1041B1F9810000A41B9 /* FileSystemObserver.swift */,
-				1ED9A1051B1F9810000A41B9 /* ImagesDropViewController.swift */,
-				1ED9A1061B1F9810000A41B9 /* ImagesGroupViewModel.swift */,
 				1ED9A1071B1F9810000A41B9 /* JSON.swift */,
-				1ED9A1081B1F9810000A41B9 /* Keyword Constants.swift */,
-				1ED9A1091B1F9810000A41B9 /* NSImage+Extensions.swift */,
-				1ED9A10A1B1F9810000A41B9 /* NSLayoutConstraint+Extensions.swift */,
-				1ED9A10B1B1F9810000A41B9 /* Optionals+Operators.swift */,
 				1ED9A10C1B1F9810000A41B9 /* PathQuery.swift */,
-				1ED9A10D1B1F9810000A41B9 /* ProgressController.swift */,
-				1ED9A10E1B1F9810000A41B9 /* ProgressIndicationViewModel.swift */,
-				1ED9A1101B1F9810000A41B9 /* ProjectDropViewController.swift */,
 				1ED9A1111B1F9810000A41B9 /* ProjectSelector.swift */,
-				1ED9A1141B1F9810000A41B9 /* RoundedDropView.swift */,
-				1ED9A1151B1F9810000A41B9 /* SelectedProjectViewModel.swift */,
 				1ED9A1161B1F9810000A41B9 /* Serializable.swift */,
-				1ED9A1171B1F9810000A41B9 /* StatusViewModel.swift */,
-				1ED9A1181B1F9810000A41B9 /* StringExtension.swift */,
 				1ED9A11A1B1F9810000A41B9 /* Validator.swift */,
 				1ED9A11B1B1F9810000A41B9 /* XcodeFileValidatorProtocol.swift */,
-				1ED9A11C1B1F9810000A41B9 /* XCProject.swift */,
+				1ED9A1081B1F9810000A41B9 /* Keyword Constants.swift */,
+				1ED9A1461B1F983B000A41B9 /* Main.storyboard */,
 				DD09CBED1989A46C002DD2FB /* Images.xcassets */,
 				DD09CBE51989A46C002DD2FB /* Supporting Files */,
 			);
@@ -363,7 +395,7 @@
 				1ED9A0F41B1F97CE000A41B9 /* AppDelegate.swift in Sources */,
 				1ED9A13D1B1F9810000A41B9 /* Serializable.swift in Sources */,
 				DD09CBE81989A46C002DD2FB /* main.swift in Sources */,
-				1ED9A1341B1F9810000A41B9 /* ProgressController.swift in Sources */,
+				1ED9A1341B1F9810000A41B9 /* ProgressViewController.swift in Sources */,
 				1ED9A1221B1F9810000A41B9 /* AssetType.swift in Sources */,
 				1ED9A11E1B1F9810000A41B9 /* AssetGenerationController.swift in Sources */,
 				1ED9A12C1B1F9810000A41B9 /* ImagesDropViewController.swift in Sources */,
