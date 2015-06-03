@@ -3,12 +3,13 @@
 //  XCAssetGenerator
 //
 //  Created by Bader on 4/3/15.
-//  Copyright (c) 2015 Pranav Shah. All rights reserved.
+//  Copyright (c) 2015 Bader Alabdulrazzaq. All rights reserved.
 //
 
 import Foundation
 
-
+// NOPE
+// TODO:
 typealias JSONDictionary = NSDictionary
 
 struct JSON {
@@ -30,6 +31,8 @@ struct JSON {
     }
     
     static func readJSON(path: Path) -> JSONDictionary {
+        var error: NSError?
+        let d = NSData(contentsOfFile: path, options: NSDataReadingOptions.DataReadingMappedIfSafe, error: &error)
         let data = NSData(contentsOfFile: path)!
         let json: JSONDictionary = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: nil)! as! JSONDictionary
         return json

@@ -7,137 +7,182 @@
 //
 
 import Cocoa
+import ReactiveCocoa
 
 class AssetGeneratorWindowController: NSWindowController  {
 
-    @IBOutlet var recentlyUsedProjectsDropdownList: ProgressPopUpButton!
-    @IBOutlet var browseButton: NSButton!
+    var statusLabel: NSTextField!
+    @IBOutlet var generateButton: NSButton!
     
-    let generateButton: NSButton
+    var viewModel: AssetWindowViewModel!
     
-    var scriptController: AssetGenerationController
-    var fileDropController: FileDropViewController!
-    var projectToolbarController: ProjectToolbarController!
+    // MARK: ViewControllers
+    var progressController: ProgressViewController!
+    var imagesViewController: ImagesDropViewController!
+    var projectViewController: ProjectDropViewController!
     
-    required init?(coder: NSCoder) {
-        scriptController = AssetGenerationController()
-        generateButton = NSButton()
-        super.init(coder: coder)
+    /// MARK: Initializers
+    
+    static func instantiate(viewModel: AssetWindowViewModel) -> AssetGeneratorWindowController {
+        let controller = NSStoryboard(name: "Main", bundle: nil)!.instantiateControllerWithIdentifier("MainWindowController") as! AssetGeneratorWindowController
+        controller.viewModel = viewModel
+        controller.setup()
+        return controller
     }
     
- 
-    override func windowDidLoad() {
+    /// MARK:- Setup Methods.
+    
+    func setup() {
         super.windowDidLoad()
 
-        fileDropController = contentViewController as! FileDropViewController
-        fileDropController.delegate = self
+        layoutVibrancy()
+        layoutTopbarElements()
+        layoutSeperator()
         
-        projectToolbarController = ProjectToolbarController(recentList: recentlyUsedProjectsDropdownList)
-        projectToolbarController.delegate = self
+        // Bottom bar and status label.
+        layoutBottomElements()
         
-        scriptController.delegate = self
-        scriptController.progressDelegate = self
+        createImagesArea()
+        createProjectArea()
         
-        buttonSetup()
+        // RAC Binding.
+        viewModel.canGenerate.producer
+            |> observeOn(QueueScheduler.mainQueueScheduler)
+            |> start(next: { enabled in
+                self.generateButton.enabled = enabled
+                println("GenerateButton.enabled = \(enabled)")
+        })
+        
+        viewModel.statusLabel.producer
+            |> observeOn(QueueScheduler.mainQueueScheduler)
+            |> start(next: { label in
+                self.statusLabel.stringValue = label
+                println("statusLabel.stringValue = \(label)")
+        })
+                
+        viewModel.generateTitle.producer
+            |> observeOn(QueueScheduler.mainQueueScheduler)
+            |> start(next: { title in
+                self.generateButton.title = title
+        })
+
     }
     
-    func buttonSetup() {
-        // Generate button setup
-        generateButton.font = browseButton.font // Brogramming (tm)
-        generateButton.title = NSLocalizedString("Generate", comment: "")
-        generateButton.state = 1
-        generateButton.target = self
-        generateButton.action = Selector("generateButtonPressed")
-        generateButton.bordered = true
-        generateButton.continuous = false
-        generateButton.bezelStyle = NSBezelStyle.RoundedBezelStyle
-        generateButton.transparent = false
-        generateButton.autoresizesSubviews = true
-        generateButton.translatesAutoresizingMaskIntoConstraints = false
-        
-        generateButton.setButtonType(NSButtonType.MomentaryLightButton)
-        updateGenerateButton()
-        window!.contentView.addSubview(generateButton)
-        
-        let constraintH = NSLayoutConstraint.constraintsWithVisualFormat("H:[generateButton(buttonWidth)]-offsetLeft-|", options: nil, metrics: ["offsetLeft": 10,"buttonWidth": 90], views: ["generateButton": generateButton])
-        let constraintV = NSLayoutConstraint.constraintsWithVisualFormat("V:[generateButton]-offsetBottom-|", options: nil, metrics: ["offsetBottom": 8], views: ["generateButton": generateButton])
-        
-        window?.contentView.addConstraints(constraintH)
-        window?.contentView.addConstraints(constraintV)
-    }
-    
-    func updateGenerateButton() {
-        generateButton.enabled = scriptController.canPreformAssetGeneration()
-    }
-    
-    
-    // MARK:- IBAction outlets
-    
-    @IBAction func recentlyUsedProjectsDropdownListChanged(sender: ProgressPopUpButton!) {
-        projectToolbarController.recentProjectsListChanged(sender)
-    }
-    
-    // MARK - NSButton Callback Functions
-    @IBAction func browseButtonPressed(sender: AnyObject!) {
-        projectToolbarController.browseButtonPressed()
-    }
-    
-    func generateButtonPressed() {
+
+    @IBAction func generateButtonPressed(sneder: AnyObject!) {
         // TODO: Options -> Pushed to 2.0
         var options : [AssetGenerationOptions]? = [AssetGenerationOptions]()
-        scriptController.executeScript(options)
-    }
-}
-
-extension AssetGeneratorWindowController: ProjectToolbarDelegate {
-    func projectToolbarDidChangeProject(project: XCProject?) {
-        if let project = project where !project.hasValidAssetsPath()  {
-            // TODO:
-        }
-        updateGenerateButton()
-    }
-}
-
-extension AssetGeneratorWindowController: FileDropControllerDelegate {
-    func fileDropControllerDidSetFolder(controller: FileDropViewController, path: Path?) {
-        if let path = path where PathValidator.directoryContainsInvalidCharacters(path: path, options: nil) {
-            // TODO:
-        }
-        updateGenerateButton()
-    }
-}
-
-extension AssetGeneratorWindowController: AssetGeneratorProgessDelegate {
-    func assetGenerationStarted() {
-        updateGenerateButton()
+        viewModel.generateAssets()
+//        viewModel.imagesViewModel.test_put()
+//        viewModel.assetGenerator.test_put()
     }
     
-    func assetGenerationFinished(generated: Int) {
-        projectToolbarController.resetToolbarProgress {
-            self.updateGenerateButton()
-            self.fileDropController.displayDoneState(generated)
-        }
+    
+    /// MARK:- Setup Helpers.
+    
+    private func createImagesArea() {
+        let imagesViewModel = viewModel.viewModelForImagesGroup()
+        imagesViewController = ImagesDropViewController.instantiate(imagesViewModel)
+        imagesViewController.view.translatesAutoresizingMaskIntoConstraints = false
+        
+        contentViewController?.view.addSubview(imagesViewController.view)
+        //
+        let centerFileX = NSLayoutConstraint(item: imagesViewController.view, attribute: NSLayoutAttribute.CenterX, relatedBy: NSLayoutRelation.Equal, toItem: contentViewController?.view, attribute: NSLayoutAttribute.CenterX, multiplier: 0.5, constant: 0)
+        let centerFileY = NSLayoutConstraint(item: imagesViewController.view, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: contentViewController?.view, attribute: NSLayoutAttribute.CenterY, multiplier: 0.8, constant: 0)
+        let widthFile = NSLayoutConstraint(item: imagesViewController.view, attribute: NSLayoutAttribute.Width, relatedBy: NSLayoutRelation.Equal, toItem: contentViewController?.view, attribute: NSLayoutAttribute.Width, multiplier: 0.5, constant: 0)
+        let heightFile = NSLayoutConstraint(item: imagesViewController.view, attribute: NSLayoutAttribute.Height, relatedBy: NSLayoutRelation.Equal, toItem: contentViewController?.view, attribute: NSLayoutAttribute.Height, multiplier: 1, constant: 0)
+        
+        NSLayoutConstraint.activateConstraints([centerFileX, centerFileY, widthFile, heightFile])
     }
     
-    func assetGenerationOngoing(progress: Int) {
-        projectToolbarController.setToolbarProgress(progress: CGFloat(progress))
-    }
-}
-
-extension AssetGeneratorWindowController: AssetGeneratorInput {
-
-    func hasValidGeneratorInputs() -> Bool {
-        let validSource = AssetGeneratorInputValidator.validateSource(fileDropController.folder)
-        let validTarget = AssetGeneratorInputValidator.validateTarget(projectToolbarController.selectedProject)
-        return validSource && validTarget
-    }
-    
-    var source: Path? {
-        return fileDropController.folder
+    private func createProjectArea() {
+        let projectViewModel = viewModel.viewModelForSelectedProject()
+        projectViewController = ProjectDropViewController.instantiate(projectViewModel)
+        projectViewController.view.translatesAutoresizingMaskIntoConstraints = false
+        contentViewController?.view.addSubview(projectViewController.view)
+        
+        let centerProjX = NSLayoutConstraint(item: projectViewController.view, attribute: NSLayoutAttribute.CenterX, relatedBy: NSLayoutRelation.Equal, toItem: contentViewController?.view, attribute: NSLayoutAttribute.CenterX, multiplier: 1.5, constant: 0)
+        let centerProjY = NSLayoutConstraint(item: projectViewController.view, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: contentViewController?.view, attribute: NSLayoutAttribute.CenterY, multiplier: 0.8, constant: 0)
+        let widthProj = NSLayoutConstraint(item: projectViewController.view, attribute: NSLayoutAttribute.Width, relatedBy: NSLayoutRelation.Equal, toItem: contentViewController?.view, attribute: NSLayoutAttribute.Width, multiplier: 0.5, constant: 0)
+        let heightProj = NSLayoutConstraint(item: projectViewController.view, attribute: NSLayoutAttribute.Height, relatedBy: NSLayoutRelation.Equal, toItem: contentViewController?.view, attribute: NSLayoutAttribute.Height, multiplier: 1, constant: 0)
+        
+        NSLayoutConstraint.activateConstraints([centerProjX, centerProjY, widthProj, heightProj])
     }
     
-    var target: Path? {
-        return projectToolbarController.selectedProject?.assetPath
+    private func layoutTopbarElements() {
+        window!.titleVisibility = NSWindowTitleVisibility.Hidden
+        
+        // Progress bar.
+        let progressViewModel = viewModel.viewModelForProgressIndication()
+        progressController = ProgressViewController(viewModel: progressViewModel, width: window!.frame.width)
+        self.window?.standardWindowButton(NSWindowButton.CloseButton)?.superview?.addSubview(progressController.view)
+        
+        // Faux Title.
+        let title = setupLabel("Asset Generator")
+        title.translatesAutoresizingMaskIntoConstraints = false
+        self.window?.standardWindowButton(NSWindowButton.CloseButton)?.superview?.addSubview(title) // I... sigh.
+        let titleConstraints = NSLayoutConstraint.centeringConstraints(title, into: title.superview)
+        NSLayoutConstraint.activateConstraints(titleConstraints)
+    }
+    
+    private func layoutBottomElements() {
+        // Bottom translucent bar.
+        let bar = NSImage(named: "uiBottomBar")
+        let bottomBar = NSImageView()
+        bottomBar.translatesAutoresizingMaskIntoConstraints = false
+        bottomBar.image = bar
+        contentViewController?.view.addSubview(bottomBar)
+        
+        // Status label.
+        statusLabel = setupLabel("Drop a folder with slices you'd like to add to your Xcode project")
+        statusLabel.textColor = NSColor(calibratedWhite: 0.577, alpha: 1)
+        bottomBar.addSubview(statusLabel)
+        
+        let posStatusX  = NSLayoutConstraint(item: statusLabel, attribute: NSLayoutAttribute.CenterX, relatedBy: NSLayoutRelation.Equal, toItem: statusLabel.superview, attribute: NSLayoutAttribute.CenterX, multiplier: 1, constant: 0)
+        let posStatusY = NSLayoutConstraint(item: statusLabel, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: statusLabel.superview, attribute: NSLayoutAttribute.CenterY, multiplier: 1.1, constant: 0)
+        
+        NSLayoutConstraint.activateConstraints([posStatusX, posStatusY])
+    }
+    
+    /// MARK: Visual layout.
+    
+    private func layoutVibrancy() {
+        let visualEffectView = NSVisualEffectView()
+        visualEffectView.material = NSVisualEffectMaterial.Titlebar
+        visualEffectView.blendingMode = NSVisualEffectBlendingMode.BehindWindow
+        visualEffectView.state = NSVisualEffectState.Active
+        visualEffectView.wantsLayer = true
+        visualEffectView.translatesAutoresizingMaskIntoConstraints = false
+        contentViewController?.view.addSubview(visualEffectView)
+        let vibrancyConstraints = NSLayoutConstraint.fittingConstraints(visualEffectView, into: contentViewController?.view)
+        NSLayoutConstraint.activateConstraints(vibrancyConstraints)
+    }
+    
+    private func layoutSeperator() {
+        let seperatorView = NSImageView()
+        seperatorView.translatesAutoresizingMaskIntoConstraints = false
+        seperatorView.image = NSImage(named: "iconArrow")
+        contentViewController?.view.addSubview(seperatorView)
+        
+        let centerSeperatorX: NSLayoutConstraint = NSLayoutConstraint(item: seperatorView, attribute: NSLayoutAttribute.CenterX, relatedBy: NSLayoutRelation.Equal, toItem: seperatorView.superview, attribute: NSLayoutAttribute.CenterX, multiplier: 1, constant: 0)
+        
+        let centerSeperatorY: NSLayoutConstraint = NSLayoutConstraint(item: seperatorView, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: seperatorView.superview, attribute: NSLayoutAttribute.CenterY, multiplier: 0.8, constant: 0)
+        
+        NSLayoutConstraint.activateConstraints([centerSeperatorX, centerSeperatorY])
+    
+    }
+    
+    // MARK:- Helpers
+    private func setupLabel(string: String) -> NSTextField {
+        let field = NSTextField()
+        field.translatesAutoresizingMaskIntoConstraints = false
+        field.editable = false
+        field.backgroundColor = NSColor.controlColor()
+        field.bordered = false
+        field.alignment = .CenterTextAlignment
+        field.font = NSFont.systemFontOfSize(13)
+        field.stringValue = string
+        return field
     }
 }
 

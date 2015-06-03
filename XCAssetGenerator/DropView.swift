@@ -17,10 +17,12 @@ protocol DropViewDelegate {
     func dropViewDidDragFileOutOfView(dropView: DropView) // should be called file already in drag area, but we drag it out to delete it. May not be nessecary.
 }
 
+protocol DropViewGroupSelectionDelegate {}
+
 class DropView: NSView {
 
     var delegate: DropViewDelegate?
-   
+    var groupDelegate: DropViewGroupSelectionDelegate?
 //    override func drawRect(dirtyRect: NSRect) {
 //        super.drawRect(dirtyRect)
 //        
@@ -36,6 +38,11 @@ class DropView: NSView {
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
+        setup()
+    }
+    
+    convenience init() {
+        self.init()
         setup()
     }
     

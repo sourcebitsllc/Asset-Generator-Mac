@@ -18,7 +18,7 @@ struct PathQuery {
     
     static func availableAssetSets(from path: Path) -> [Path] {
         return queryWith(path, searchOption: NSDirectoryEnumerationOptions.SkipsPackageDescendants) {
-            return $0.hasSuffix(".imageset") || $0.hasSuffix(".appiconset") || $0.hasSuffix(".launchimage")
+            return $0.isAssetSet()
         }
     }
 

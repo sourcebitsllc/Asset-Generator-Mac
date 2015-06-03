@@ -27,6 +27,20 @@ extension String: XcodeFileValidator {
     func isAssetCatalog() -> Bool {
         return self.hasSuffix(".xcassets")
     }
+    
+    func isAssetSet() -> Bool {
+        return self.hasSuffix(".imageset") || self.hasSuffix(".appiconset") || self.hasSuffix(".launchimage")
+    }
+}
+
+extension PathValidator {
+    static func isAssetSet(path: Path) -> Bool {
+        return path.hasSuffix(".imageset") || path.hasSuffix(".appiconset") || path.hasSuffix(".launchimage")
+    }
+}
+
+func isAssetSet(path: Path) -> Bool {
+    return path.hasSuffix(".imageset") || path.hasSuffix(".appiconset") || path.hasSuffix(".launchimage")
 }
 
 extension Bookmark: XcodeFileValidator {

@@ -12,40 +12,18 @@ let PathKey = "XCAssetGeneratorXcodeProjectPath"
 let AssetPathsKey = "XCAssetGeneratorXcodeAssetsPath"
 
 
-func == (lhs: XCProject, rhs: XCProject) -> Bool {
-    // TODO: This needs a rethink.
-    if lhs.bookmark == rhs.bookmark { return true }
-    
-    switch (ProjectValidator.isProjectValid(lhs), ProjectValidator.isProjectValid(rhs)) {
-    case (true, true):
-        return lhs.path == rhs.path && lhs.xcassets?.first == rhs.xcassets?.first
-    case (false, false):
-        return true
-    case (_,_):
-        return false
-    }
-}
-// MARK: Convenience Funcion
-func == (lhs: XCProject?, rhs: XCProject?) -> Bool {
-    switch (lhs, rhs) {
-    case (.Some(let a), .Some(let b)):
-        return a == b
-    case (.None,.None):
-        return true
-    case (_,_):
-        return false
-    }
-}
-
-
 // MARK:-
-struct XCProject: Equatable, Printable {
+struct XCProject: Printable {
     
     var bookmark : Bookmark
     let path: Path
     private var xcassets: [AssetCatalog]?
     
     // MARK:- Initializers
+    
+    static func create(path: Path) -> XCProject {
+        return XCProject(path: path)
+    }
     
     internal init(bookmark: Bookmark) {
         self.bookmark = bookmark
@@ -56,6 +34,14 @@ struct XCProject: Equatable, Printable {
         }
     }
 
+    internal init(path: Path) {
+        self.path = path
+        self.bookmark = BookmarkResolver.resolveBookmarkFromPath(path)
+        self.xcassets = PathQuery.availableAssetCatalogs(from: currentWorkingDirectory).map {
+            let bookmark = BookmarkResolver.resolveBookmarkFromPath($0)
+            return AssetCatalog(bookmark: bookmark)
+        }
+    }
     internal init(bookmark: Bookmark, assetsBookmarks: [Bookmark]?) {
         self.bookmark = bookmark
         self.path = BookmarkResolver.resolvePathFromBookmark(bookmark)!
@@ -132,6 +118,10 @@ extension XCProject {
             return BookmarkResolver.isBookmarkValid(folder.bookmark) && !folder.path.isEmpty
         }
         return false
+    }
+    
+    func ownsCatalog(catalog: Path) -> Bool {
+        return catalog.hasPrefix(currentWorkingDirectory)
     }
 }
 

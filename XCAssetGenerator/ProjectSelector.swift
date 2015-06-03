@@ -15,29 +15,34 @@ struct ProjectSelector {
     // Can this be done to be more linear? something like >>-,<^> withouth ??
     
     /// Given a URL, find a project with an AssetCatalog. Return ProjectSelectionError if none.
-    static func excavateProject(url: NSURL) -> Result<NSURL, ProjectSelectionError> {
+    static func excavateProject(url: Path) -> Result<XCProject, ProjectSelectionError> {
         let fromProject = assetFromProject <^> asProject(url)
         return fromProject ?? assetFromDirectory(url)
     }
     
-    private static func assetFromDirectory(url: NSURL) -> Result<NSURL, ProjectSelectionError> {
+    static func circumsizeProject(url: Path) -> Result<XCProject, ProjectSelectionError> {
+        let fromProject = assetFromProject <^> asProject(url)
+        return fromProject!
+    }
+    
+    private static func assetFromDirectory(url: Path) -> Result<XCProject, ProjectSelectionError> {
         return retrieveProject(url) >>- assetFromProject
     }
     
-    private static func asProject(url: NSURL) -> NSURL? {
-        return url.path!.isXCProject() ? url : nil
+    private static func asProject(url: Path) -> Path? {
+        return url.isXCProject() ? url : nil
     }
     
-    private static func retrieveProject(directory: NSURL) -> Result<NSURL, ProjectSelectionError> {
+    private static func retrieveProject(directory: Path) -> Result<Path, ProjectSelectionError> {
         let project = PathValidator.retreiveProject(directory)
-        return (Result.success <^> project) ?? Result.failure(ProjectSelectionError.ProjectNotFound)
+        return (Result.success <^>  project) ?? Result.failure(ProjectSelectionError.ProjectNotFound)
     }
     
-    private static func assetFromProject(url: NSURL) -> Result<NSURL, ProjectSelectionError> {
-        let directory = url.path!.stringByDeletingLastPathComponent + ("/")
+    private static func assetFromProject(url: Path) -> Result<XCProject, ProjectSelectionError> {
+        let directory = url.stringByDeletingLastPathComponent + ("/")
         let hasAsset = PathValidator.directoryContainsXCAsset(directory: directory)
-        let name = url.path!.lastPathComponent
-        return (hasAsset) ? Result.success(url) : Result.failure(ProjectSelectionError.AssetNotFound(name))
+        let name = url.lastPathComponent
+        return (hasAsset) ? Result.success(XCProject(path: url)) : Result.failure(ProjectSelectionError.AssetNotFound(name))
     }
     
 }

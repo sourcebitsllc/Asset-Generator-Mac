@@ -54,9 +54,9 @@ class PathValidator: Validator {
     }
 
     
-    class func retreiveProject(url: NSURL) -> NSURL? {
-        return directoryWith(url.path!, searchOption: NSDirectoryEnumerationOptions.SkipsSubdirectoryDescendants) { (url, isDirectory) -> NSURL? in
-            if isDirectory && url.path!.isXCProject() { return url }
+    class func retreiveProject(path: Path) -> Path? {
+        return directoryWith(path, searchOption: NSDirectoryEnumerationOptions.SkipsSubdirectoryDescendants) { (url, isDirectory) -> Path? in
+            if isDirectory && url.path!.isXCProject() { return url.path }
             return nil
         }
     }

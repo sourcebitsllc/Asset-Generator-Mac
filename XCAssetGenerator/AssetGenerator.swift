@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import ReactiveCocoa
 
 protocol AssetGeneratorProgessDelegate {
     func assetGenerationStarted()
@@ -34,24 +35,31 @@ class AssetGenerator {
         return running
     }
     
-    func generateAssets(source: Path, target: Path) {
+    func generateAssets(source: Path, target: Path)(observer: SinkOf<Event<Float, NoError>>, generatedObserver: SinkOf<Event<Int, NoError>>, completion: () -> ()) {
         let temp = source + ".XCAssetTemp/"
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)) {
             self.notifyDelegate(.Started)
             // Step 1
             FileSystem.deleteDirectory(temp)
             self.notifyDelegate(.Ongoing(5))
+            sendNext(observer, 5)
             NSFileManager.defaultManager().createDirectoryAtPath(temp, withIntermediateDirectories: false, attributes: nil, error: nil)
             self.notifyDelegate(.Ongoing(10))
+            sendNext(observer, 10)
             // Step 2
             self.populateTemporaryDirectory(source, temp: temp)
             self.notifyDelegate(.Ongoing(50))
+            sendNext(observer, 50)
             // Step 3
             let total = self.integrateAssets(temp, target: target + "/")
             self.notifyDelegate(.Ongoing(95))
+            sendNext(observer, 95)
             // Step 4
             FileSystem.deleteDirectory(temp)
             self.notifyDelegate(.Finished(total))
+            sendCompleted(observer)
+            sendNext(generatedObserver, total)
+            completion()
         }
         
     }

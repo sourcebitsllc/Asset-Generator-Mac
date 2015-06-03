@@ -26,4 +26,18 @@ extension String {
             }
         })
     }
+    
+    func removeAssetSetsComponent() -> String {
+        let notAssetSet = { (set: Path) in return !set.isAssetSet() }
+//        return self.pathComponents.filter (notAssetSet) |> String.pathWithComponents
+        return (self.pathComponents, notAssetSet) |> filter |> String.pathWithComponents // Again, Which is more readable and more maintianable?
+    }
+    
+    func removeTrailingSlash() -> String {
+        var v = self
+        if v.hasSuffix("/") {
+            v.removeAtIndex(v.endIndex.predecessor())
+        }
+        return v
+    }
 }
