@@ -7,10 +7,7 @@
 //
 
 import Foundation
-
-protocol ErrorType {}
-
-extension NSError: ErrorType {}
+import ReactiveCocoa
 
 enum ProjectSelectionError: ErrorType {
     case AssetNotFound(String)
@@ -25,6 +22,10 @@ enum ProjectSelectionError: ErrorType {
                 return NSLocalizedString("The selected folder does not contain an Xcode Project.",comment: "")
             }
         }
+    }
+    
+    var nsError: NSError {
+        return NSError(domain: message, code: 0, userInfo: nil)
     }
    
 }
