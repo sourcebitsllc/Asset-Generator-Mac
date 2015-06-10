@@ -10,6 +10,8 @@ import Foundation
 import Cocoa
 import ReactiveCocoa
 
+// TODO: Find better way to incorporate VCs and VMs
+
 class ProjectDropViewController: NSViewController, DropViewDelegate {
     
     @IBOutlet var dropView: RoundedDropView!
@@ -17,6 +19,8 @@ class ProjectDropViewController: NSViewController, DropViewDelegate {
     var well: NSImageView!
     var label: NSTextField!
     var viewModel: SelectedProjectViewModel!
+    
+    let borderWidth: CGFloat = 3
     
     static func instantiate(viewModel: SelectedProjectViewModel) -> ProjectDropViewController {
         let controller = NSStoryboard(name: "Main", bundle: nil)!.instantiateControllerWithIdentifier("ProjectDroppa") as! ProjectDropViewController
@@ -27,13 +31,13 @@ class ProjectDropViewController: NSViewController, DropViewDelegate {
     
     func setup() {
         self.view.wantsLayer = true
-//        self.view.translatesAutoresizingMaskIntoConstraints = false
+
         // Intialize RoundedDropView
         dropView.translatesAutoresizingMaskIntoConstraints = false
         dropView.delegate = self
-        dropView.layer?.borderWidth = 3
+        dropView.layer?.borderWidth = borderWidth
         
-        let fillDropView = NSLayoutConstraint.centeringConstraints(dropView, into: view, size: NSSize(width: 150, height: 150))
+        let fillDropView = NSLayoutConstraint.centeringConstraints(dropView, into: view, size: NSSize(width: 125+borderWidth, height: 125 + borderWidth))
         NSLayoutConstraint.activateConstraints(fillDropView)
 
         // Initialize ImageView representing the drop item.
@@ -61,7 +65,6 @@ class ProjectDropViewController: NSViewController, DropViewDelegate {
         label.bordered = false
         label.alignment = .CenterTextAlignment
         label.font = NSFont.systemFontOfSize(13)
-        label.stringValue = "Should not be this value"
         view.addSubview(label)
         let labelX  = NSLayoutConstraint(item: label, attribute: NSLayoutAttribute.CenterX, relatedBy: NSLayoutRelation.Equal, toItem: view, attribute: NSLayoutAttribute.CenterX, multiplier: 1, constant: 0)
         let labelY = NSLayoutConstraint(item: label, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: view, attribute: NSLayoutAttribute.CenterY, multiplier: 1.6, constant: 0)
@@ -71,9 +74,8 @@ class ProjectDropViewController: NSViewController, DropViewDelegate {
         viewModel.label.producer
             |> observeOn(QueueScheduler.mainQueueScheduler)
             |> start(next: { label in
-            self.label.stringValue = label
-            println("ProjectDropViewController.label.stringValue = \(label)")
-        })
+                self.label.stringValue = label
+            })
         
         viewModel.currentSelectionValid.producer
             |> observeOn(QueueScheduler.mainQueueScheduler)
@@ -82,38 +84,29 @@ class ProjectDropViewController: NSViewController, DropViewDelegate {
             |> start()
     }
     
-    func randomColor() -> CGColorRef {
-        let it1 = CGFloat(arc4random_uniform(255))
-        let it2 = CGFloat(arc4random_uniform(255))
-        let it3 = CGFloat(arc4random_uniform(255))
-        return NSColor(calibratedRed: CGFloat(it1/255), green: CGFloat(it2/255), blue: CGFloat(it3/255), alpha: 1).CGColor
-    }
-    
     private func layoutUI(set: Bool) {
-        dropView.layer?.borderColor = (set) ? NSColor.validDropColor().CGColor : NSColor(calibratedRed: 0.576 , green: 0.713, blue: 0.940, alpha: 1).CGColor
+        dropView.layer?.borderColor = (set) ? NSColor.dropViewAcceptedColor().CGColor : NSColor(calibratedRed: 0.576 , green: 0.713, blue: 0.940, alpha: 1).CGColor
         dropView.layer?.backgroundColor = (set) ? NSColor.whiteColor().CGColor : NSColor.clearColor().CGColor
         well.hidden = set
         dropImageView.image = set ? self.viewModel.systemImageForCurrentPath() : nil
+        dropImageView.alphaValue = set ? 1 : 0.5
     
-    }
-    private func setupValidDrop() {
-        layoutUI(true)
     }
     
     func dropViewDidDragFileOutOfView(dropView: DropView) {
         if viewModel.isCurrentSelectionValid() {
-            dropView.layer?.borderColor = NSColor.validDropColor().CGColor
+            dropView.layer?.borderColor = NSColor.dropViewAcceptedColor().CGColor
         } else {
             dropView.layer?.borderColor = dropView.layer?.backgroundColor
         }
     }
     
     func dropViewDidDragInvalidFileIntoView(dropView: DropView) {
-        dropView.layer?.borderColor = NSColor.invalidDropColor().CGColor
+        dropView.layer?.borderColor = NSColor.dropViewRejectedColor().CGColor
     }
     
     func dropViewDidDragValidFileIntoView(dropView: DropView) {
-        dropView.layer?.borderColor = NSColor.hoveringDropColor().CGColor
+        dropView.layer?.borderColor = NSColor.dropViewHoveringColor().CGColor
     }
     
     func dropViewDidDropFileToView(dropView: DropView, filePath: String) {
