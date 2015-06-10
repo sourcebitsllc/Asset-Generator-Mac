@@ -11,25 +11,23 @@ import Cocoa
 
 
 class RoundedDropView : DropView {
-//    @IBInspectable var radius: Float = 25 {
-//        didSet {
-//            self.layer?.cornerRadius = CGFloat(radius)
-//        }
-//    }
-//    
+
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        setItUp()
+        setupRoundedness()
     }
     
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
-        setItUp()
+        setupRoundedness()
     }
     
-    func setItUp() {
-        self.layer?.cornerRadius = self.bounds.size.width / 2
+    func setupRoundedness() {
+        self.layer?.cornerRadius = self.frame.size.width / 2
         self.layer?.masksToBounds = true
     }
     
+    override func layoutSubtreeIfNeeded() {
+        setupRoundedness()
+    }
 }
