@@ -9,7 +9,7 @@
 import Foundation
 import ReactiveCocoa
 
-enum ProjectSelectionError: ErrorType {
+enum ProjectSelectionError: ErrorType, Printable {
     case AssetNotFound(String)
     case ProjectNotFound
     
@@ -26,6 +26,16 @@ enum ProjectSelectionError: ErrorType {
     
     var nsError: NSError {
         return NSError(domain: message, code: 0, userInfo: nil)
+    }
+    
+    var description: String {
+        switch self {
+        case .AssetNotFound(let project):
+            return "AssetNotFound Error: project"
+        case .ProjectNotFound:
+            return "ProjectNotFound Error:"
+        }
+        
     }
    
 }
