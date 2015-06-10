@@ -9,7 +9,8 @@
 import Foundation
 import ReactiveCocoa
 
-struct SelectedProjectViewModel {
+
+class SelectedProjectViewModel {
     private let project: MutableProperty<XCProject?>
     private let contentChanged: MutableProperty<Void>
     
@@ -25,16 +26,13 @@ struct SelectedProjectViewModel {
         return contentChanged.producer
     }
     
-    var currentCatalog: /*AssetCatalog*/ Path? {
-        return project.value?.assetTitle
+    var currentCatalog: Path? {
+        return project.value?.catalog?.title
     }
     
     let projectObserver: FileSystemSignal
     let catalogObserver: FileSystemSignal
     let storage: ProjectStorage
-    
-    // Constants
-    let ImageSize = NSSize(width: 100, height: 100)
     
     init() {
         storage = ProjectStorage()
@@ -73,16 +71,15 @@ struct SelectedProjectViewModel {
     private func observe(project: XCProject?) {
         if let project = project {
             projectObserver.observe(project.path)
-            catalogObserver.observe(project.assetPath!)
+            catalogObserver.observe(project.catalog!.path)
         } else {
-            println("Producer cancel")
             projectObserver.cancel()
             catalogObserver.cancel()
         }
     }
     
     func shouldAcceptPath(path: Path) -> Bool {
-        return path.isXCProject()
+        return path.isXCProject() && PathValidator.directoryContainsXCAsset(directory: path.stringByDeletingLastPathComponent + ("/"))
     }
     
     private func isValidSelection(project: XCProject) -> Bool {
@@ -98,43 +95,47 @@ struct SelectedProjectViewModel {
     }
     
     func systemImageForCurrentPath() -> NSImage {
-        return NSImage.systemImage(project.value!.path, size: ImageSize)
+        return systemImageForPath(project.value!.path)
     }
     
+    func systemImageForPath(path: Path) -> NSImage {
+        return NSImage.systemImage(path)
+    }
+    
+    private func forceSyncSelectionValidity() {
+        currentSelectionValid.put(currentSelectionValid.value)
+    }
     func newPathSelected(path: Path) {
-        let project = ProjectSelector.circumsizeProject(path)
-        switch project {
-            case .Success(let box):
-                self.project.put(box.value)
-            case .Failure(let box):
-                setupError(box.value.message).runModal()
-        }
-//        project.put(XCProject(path: path))
-//        storage.storeRecentProject(project.value)
-        // Store the project
-        // Observe the new project. (stop observing old also)
-        // Store the new project
-        // /////////////////////////////////
-//        if selectedProject != nil {
-//            directoryObserver.stopObservingProject(selectedProject!)
+//        let project = ProjectSelector.excavateProject(path)
+//        switch project {
+//            case .Success(let box):
+//                self.project.put(box.value)
+//            case .Failure(let box):
+//                self.setupError(box.value.message).runModal()
 //        }
-//        setupValidDrop(filePath)
-//        selectedProject = XCProject(path: filePath)
-//        delegate?.projectDropControllerDidSetProject(self, project: selectedProject)
-//        storeRecentProjects()
-//        
-//        directoryObserver.observeProject(selectedProject!)
-    }
-    
-    private func setupError(message: String) -> NSAlert {
-        let alert = NSAlert()
-        alert.messageText = message
-        alert.addButtonWithTitle("OK")
-        alert.alertStyle = NSAlertStyle.CriticalAlertStyle
-        return alert
+        
+        SignalProducer(result: ProjectSelector.excavateProject(path))
+            |> startOn(QueueScheduler(priority: DISPATCH_QUEUE_PRIORITY_DEFAULT, name: "StoreAndObserveQueue"))
+            |> observeOn(QueueScheduler.mainQueueScheduler)
+            |> start(error: { error in
+                setupError(error.message).runModal()
+                self.forceSyncSelectionValidity()
+            }, next: { project in
+                self.project.put(project)
+            })
     }
 }
 
+// TODO: Find new home for this.
+func setupError(message: String) -> NSAlert {
+    let alert = NSAlert()
+    alert.messageText = message
+    alert.addButtonWithTitle("OK")
+    alert.alertStyle = NSAlertStyle.CriticalAlertStyle
+    return alert
+}
+
+//// Refactor. TODO:
 struct ProjectStorage {
     private func storeRecentProject(project: XCProject?) {
         if let project = project {
@@ -147,14 +148,14 @@ struct ProjectStorage {
     
     ///
     private func loadRecentProject() -> XCProject? {
-        let projectDicts = NSUserDefaults.standardUserDefaults().objectForKey("ProjectsWuzzHurr") as? [String: NSData]
+        let projectDict = NSUserDefaults.standardUserDefaults().objectForKey("ProjectsWuzzHurr") as? [String: NSData]
         var project: XCProject? = nil
         func validProject(dict: [String: NSData]) -> Bool {
             let validPath =  BookmarkResolver.isBookmarkValid(dict[PathKey])
             let validAsset = BookmarkResolver.isBookmarkValid(dict[AssetPathsKey])
             return validPath && validAsset
         }
-        if let dict = projectDicts {
+        if let dict = projectDict where validProject(dict) {
             project = dict |> XCProject.projectFromDictionary
         }
         
@@ -162,69 +163,5 @@ struct ProjectStorage {
         // Make sure the current selected project is valid and adjust the selection state accordingly.
         // Filter out invalid/corrupted projects
         return project
-//        storeRecentProjects()
     }
 }
-//
-//extension SelectedProjectViewModel: FileSystemObserverDelegate {
-//    func FileSystemDirectoryDeleted(path: String!) {
-//        //        updateDropView(state: DropViewState.PathNoLongerExists)
-//        directoryObserver.stopObservingPath(path)
-//        selectedProject = nil
-//        dropView.layer?.borderColor = dropView.layer?.backgroundColor
-//        delegate?.projectDropControllerDidSetProject(self, project: nil)
-//        storeRecentProjects()
-//    }
-//    
-//    
-//    func FileSystemDirectory(oldPath: String!, renamedTo newPath: String!) {
-//        directoryObserver.updatePathForObserver(oldPath: oldPath, newPath: newPath)
-//        //        folder = newPath
-//        //        updateDropView(state: DropViewState.SuccessfulDrop)
-//        if oldPath.isXCProject() {
-//            selectedProject = XCProject(path: newPath)
-//        } else if oldPath.isAssetCatalog() {
-//            selectedProject = XCProject(path: selectedProject!.path)
-//        }
-//        delegate?.projectDropControllerDidSetProject(self, project: selectedProject)
-//        storeRecentProjects()
-//    }
-//    
-//    func FileSystemDirectoryError(error: NSError!) {
-//        // TODO:
-//    }
-//    
-//    func FileSystemDirectoryContentChanged(root: String!) {
-//        delegate?.projectDropControllerAssetCatalogContentChanged(self)
-//    }
-//}
-
-/*
-
-class ProjectDropVM {
-    //
-    var project: XCProject MODEL
-    var label
-    var dropImage: MAYBE?
-    var dropColors: MAYBE NOT?
-
-    + Load and Store operations
-
-    + FileSystem observer operations.
-
-    func shouldAcceptDraggedPath(Path) -> Bool
-
-    func newProjectDropped(path) -> Void
-
-    + Maybe expose method to specify the presentation state for given path. Like
-    ENUM DROPSTATE
-    i could have the controller observe this.
-    or i can have a method which returns the DROPSTATE which allows the controller to setup it sshot
-    func StageForPath(path) -> DROPSTATE {
-    if path == nil {	return NOTYET }
-    else return SET
-    }
-    The whole idea being: Help Controller determine dropViewDidDragFileOut without exposing the model.
-}
-
-*/
