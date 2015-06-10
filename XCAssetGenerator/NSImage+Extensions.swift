@@ -10,7 +10,7 @@ import Foundation
 import Cocoa
 
 extension NSImage {
-    static func systemImage(path: Path, size: NSSize) -> NSImage {
+    static func systemImage(path: Path, size: NSSize = NSSize(width: 80, height: 80)) -> NSImage {
         let image = NSWorkspace.sharedWorkspace().iconForFile(path)
         image.size = size
         return image
