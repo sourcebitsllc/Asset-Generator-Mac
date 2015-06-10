@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		1E17A3A11ACF637700785DB2 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1E17A3A01ACF637700785DB2 /* Localizable.strings */; };
+		1E2D9EE31B26620A009A2745 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1ED9A1461B1F983B000A41B9 /* Main.storyboard */; };
+		1ED885CB1B27F11200197226 /* Pluralize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED885CA1B27F11200197226 /* Pluralize.swift */; };
 		1ED9A0F41B1F97CE000A41B9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A0F31B1F97CE000A41B9 /* AppDelegate.swift */; };
 		1ED9A11D1B1F9810000A41B9 /* AssetCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A0F51B1F9810000A41B9 /* AssetCatalog.swift */; };
 		1ED9A11E1B1F9810000A41B9 /* AssetGenerationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A0F61B1F9810000A41B9 /* AssetGenerationController.swift */; };
@@ -36,15 +38,17 @@
 		1ED9A13B1B1F9810000A41B9 /* RoundedDropView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A1141B1F9810000A41B9 /* RoundedDropView.swift */; };
 		1ED9A13C1B1F9810000A41B9 /* SelectedProjectViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A1151B1F9810000A41B9 /* SelectedProjectViewModel.swift */; };
 		1ED9A13D1B1F9810000A41B9 /* Serializable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A1161B1F9810000A41B9 /* Serializable.swift */; };
-		1ED9A13E1B1F9810000A41B9 /* StatusViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A1171B1F9810000A41B9 /* StatusViewModel.swift */; };
+		1ED9A13E1B1F9810000A41B9 /* StatusCrafter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A1171B1F9810000A41B9 /* StatusCrafter.swift */; };
 		1ED9A13F1B1F9810000A41B9 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A1181B1F9810000A41B9 /* StringExtension.swift */; };
 		1ED9A1411B1F9810000A41B9 /* Validator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A11A1B1F9810000A41B9 /* Validator.swift */; };
 		1ED9A1421B1F9810000A41B9 /* XcodeFileValidatorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A11B1B1F9810000A41B9 /* XcodeFileValidatorProtocol.swift */; };
 		1ED9A1431B1F9810000A41B9 /* XCProject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A11C1B1F9810000A41B9 /* XCProject.swift */; };
-		1ED9A1481B1F983B000A41B9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1ED9A1461B1F983B000A41B9 /* Main.storyboard */; };
-		1ED9A14C1B1F9B40000A41B9 /* Box.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ED9A1491B1F9B40000A41B9 /* Box.framework */; };
-		1ED9A14D1B1F9B40000A41B9 /* ReactiveCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ED9A14A1B1F9B40000A41B9 /* ReactiveCocoa.framework */; };
-		1ED9A14E1B1F9B40000A41B9 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ED9A14B1B1F9B40000A41B9 /* Result.framework */; };
+		1EFC5ABA1B2661B300F7400A /* Box.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ED9A1491B1F9B40000A41B9 /* Box.framework */; };
+		1EFC5ABB1B2661B300F7400A /* Box.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1ED9A1491B1F9B40000A41B9 /* Box.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1EFC5ABC1B2661B300F7400A /* ReactiveCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ED9A14A1B1F9B40000A41B9 /* ReactiveCocoa.framework */; };
+		1EFC5ABD1B2661B300F7400A /* ReactiveCocoa.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1ED9A14A1B1F9B40000A41B9 /* ReactiveCocoa.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1EFC5ABE1B2661B300F7400A /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ED9A14B1B1F9B40000A41B9 /* Result.framework */; };
+		1EFC5ABF1B2661B300F7400A /* Result.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1ED9A14B1B1F9B40000A41B9 /* Result.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DD09CBE81989A46C002DD2FB /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD09CBE71989A46C002DD2FB /* main.swift */; };
 		DD09CBEE1989A46C002DD2FB /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DD09CBED1989A46C002DD2FB /* Images.xcassets */; };
 		DD09CBFD1989A46C002DD2FB /* XCAssetGeneratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD09CBFC1989A46C002DD2FB /* XCAssetGeneratorTests.swift */; };
@@ -67,6 +71,9 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				1EFC5ABF1B2661B300F7400A /* Result.framework in Embed Frameworks */,
+				1EFC5ABB1B2661B300F7400A /* Box.framework in Embed Frameworks */,
+				1EFC5ABD1B2661B300F7400A /* ReactiveCocoa.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -75,6 +82,7 @@
 
 /* Begin PBXFileReference section */
 		1E17A3A01ACF637700785DB2 /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
+		1ED885CA1B27F11200197226 /* Pluralize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pluralize.swift; sourceTree = "<group>"; };
 		1ED9A0F31B1F97CE000A41B9 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1ED9A0F51B1F9810000A41B9 /* AssetCatalog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetCatalog.swift; sourceTree = "<group>"; };
 		1ED9A0F61B1F9810000A41B9 /* AssetGenerationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetGenerationController.swift; sourceTree = "<group>"; };
@@ -103,7 +111,7 @@
 		1ED9A1141B1F9810000A41B9 /* RoundedDropView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundedDropView.swift; sourceTree = "<group>"; };
 		1ED9A1151B1F9810000A41B9 /* SelectedProjectViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectedProjectViewModel.swift; sourceTree = "<group>"; };
 		1ED9A1161B1F9810000A41B9 /* Serializable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Serializable.swift; sourceTree = "<group>"; };
-		1ED9A1171B1F9810000A41B9 /* StatusViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatusViewModel.swift; sourceTree = "<group>"; };
+		1ED9A1171B1F9810000A41B9 /* StatusCrafter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatusCrafter.swift; sourceTree = "<group>"; };
 		1ED9A1181B1F9810000A41B9 /* StringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
 		1ED9A11A1B1F9810000A41B9 /* Validator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Validator.swift; sourceTree = "<group>"; };
 		1ED9A11B1B1F9810000A41B9 /* XcodeFileValidatorProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XcodeFileValidatorProtocol.swift; sourceTree = "<group>"; };
@@ -126,9 +134,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1ED9A14E1B1F9B40000A41B9 /* Result.framework in Frameworks */,
-				1ED9A14C1B1F9B40000A41B9 /* Box.framework in Frameworks */,
-				1ED9A14D1B1F9B40000A41B9 /* ReactiveCocoa.framework in Frameworks */,
+				1EFC5ABE1B2661B300F7400A /* Result.framework in Frameworks */,
+				1EFC5ABA1B2661B300F7400A /* Box.framework in Frameworks */,
+				1EFC5ABC1B2661B300F7400A /* ReactiveCocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -142,13 +150,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1ED885CC1B27F3F400197226 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				1ED9A1171B1F9810000A41B9 /* StatusCrafter.swift */,
+				1ED885CA1B27F11200197226 /* Pluralize.swift */,
+			);
+			name = Helpers;
+			sourceTree = "<group>";
+		};
 		1ED9A1511B1F9FA7000A41B9 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
 				1ED9A0FB1B1F9810000A41B9 /* AssetWindowViewModel.swift */,
 				1ED9A1061B1F9810000A41B9 /* ImagesGroupViewModel.swift */,
 				1ED9A1151B1F9810000A41B9 /* SelectedProjectViewModel.swift */,
-				1ED9A1171B1F9810000A41B9 /* StatusViewModel.swift */,
 				1ED9A10E1B1F9810000A41B9 /* ProgressIndicationViewModel.swift */,
 			);
 			name = ViewModels;
@@ -221,6 +237,7 @@
 				1ED9A0F61B1F9810000A41B9 /* AssetGenerationController.swift */,
 				1ED9A0F71B1F9810000A41B9 /* AssetGenerator.swift */,
 				1ED9A0FC1B1F9810000A41B9 /* BookmarkResolver.swift */,
+				1ED885CC1B27F3F400197226 /* Helpers */,
 				1ED9A0F81B1F9810000A41B9 /* AssetGeneratorInputValidator.swift */,
 				1ED9A1011B1F9810000A41B9 /* FileSystemHelper.swift */,
 				1ED9A1041B1F9810000A41B9 /* FileSystemObserver.swift */,
@@ -310,8 +327,9 @@
 		DD09CBDA1989A46C002DD2FB /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0600;
-				ORGANIZATIONNAME = "Pranav Shah";
+				ORGANIZATIONNAME = "Bader Alabdulrazzaq";
 				TargetAttributes = {
 					DD09CBE11989A46C002DD2FB = {
 						CreatedOnToolsVersion = 6.0;
@@ -351,7 +369,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1ED9A1481B1F983B000A41B9 /* Main.storyboard in Resources */,
+				1E2D9EE31B26620A009A2745 /* Main.storyboard in Resources */,
 				DD09CBEE1989A46C002DD2FB /* Images.xcassets in Resources */,
 				1E17A3A11ACF637700785DB2 /* Localizable.strings in Resources */,
 			);
@@ -372,6 +390,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1ED9A12F1B1F9810000A41B9 /* Keyword Constants.swift in Sources */,
+				1ED885CB1B27F11200197226 /* Pluralize.swift in Sources */,
 				1ED9A1291B1F9810000A41B9 /* FileSystemHelper.swift in Sources */,
 				1ED9A1351B1F9810000A41B9 /* ProgressIndicationViewModel.swift in Sources */,
 				1ED9A13F1B1F9810000A41B9 /* StringExtension.swift in Sources */,
@@ -388,7 +407,7 @@
 				1ED9A1201B1F9810000A41B9 /* AssetGeneratorInputValidator.swift in Sources */,
 				1ED9A11F1B1F9810000A41B9 /* AssetGenerator.swift in Sources */,
 				1ED9A1261B1F9810000A41B9 /* DropView.swift in Sources */,
-				1ED9A13E1B1F9810000A41B9 /* StatusViewModel.swift in Sources */,
+				1ED9A13E1B1F9810000A41B9 /* StatusCrafter.swift in Sources */,
 				1ED9A1331B1F9810000A41B9 /* PathQuery.swift in Sources */,
 				1ED9A1301B1F9810000A41B9 /* NSImage+Extensions.swift in Sources */,
 				1ED9A12E1B1F9810000A41B9 /* JSON.swift in Sources */,
