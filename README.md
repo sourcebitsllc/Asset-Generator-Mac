@@ -1,10 +1,10 @@
 # What Is It?
 
-Asset Generator is a Mac app which takes design assets and adds them to your Xcode project's Xcassets library. Its goal is to bridge the gap between designers and developers: the former can pull project repositories and update assets without bothering the developers in a hopefully intutive way.
+Asset Generator is a Mac app which takes design assets and adds them to your Xcode project's Xcassets library. Its goal is to bridge the gap between designers and developers: the former can pull project repositories and update assets (in a hopefully intutive way) without bothering the latter.
 
 Drag a folder or multiple image files onto the left well, drag an Xcodeproject file onto the right well and hit **Build**.
 
-![Asset Generator Screenshot](/path/to/img.jpg "Asset Generator Screenshot")
+![Asset Generator Screenshot](http://imgur.com/euZriuJ.png "Asset Generator Screenshot")
 
 # Download
 
