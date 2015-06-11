@@ -10,13 +10,16 @@ Drag a folder or multiple image files onto the left well, drag an Xcodeproject f
 
 [Grab the latest build here.](https://github.com/sourcebitsllc/Asset-Generator-Mac/releases)
 
-## Features
+# Features
 
 - Generates iOS, watchOS assets.
 - Partial support for Mac OS assets.
 - Accepts any image file type supported by iOS, watchOS or Mac OS.
+
+# Notes
+
 - It does **not** scale or compress your assets. You need to prepare all different sizes yourself.
-- You need to create Images.xcassets in Xcode beforehand.
+- You need to create Images.xcassets library in Xcode beforehand.
 
 # About
 
