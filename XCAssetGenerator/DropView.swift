@@ -9,25 +9,17 @@
 import Cocoa
 
 protocol DropViewDelegate {
-    
-    func dropViewShouldAcceptDraggedPath(dropView: DropView, paths: [String]) -> Bool
-    func dropViewDidDropFileToView(dropView: DropView, filePath: String)
+    func dropViewShouldAcceptDraggedPath(dropView: DropView, paths: [Path]) -> Bool
+    func dropViewDidDropFileToView(dropView: DropView, paths: [Path])
     func dropViewDidDragValidFileIntoView(dropView: DropView) // Should be called when folder enters drag areas.
     func dropViewDidDragInvalidFileIntoView(dropView: DropView)
     func dropViewDidDragFileOutOfView(dropView: DropView) // should be called file already in drag area, but we drag it out to delete it. May not be nessecary.
 }
 
-protocol DropViewGroupSelectionDelegate {}
 
 class DropView: NSView {
 
     var delegate: DropViewDelegate?
-    var groupDelegate: DropViewGroupSelectionDelegate?
-//    override func drawRect(dirtyRect: NSRect) {
-//        super.drawRect(dirtyRect)
-//        
-//        // Drawing code here.
-//    }
     
     // MARK:- Initializers
     
@@ -55,18 +47,16 @@ class DropView: NSView {
     // MARK:- Drag Handlers.
     
     override func draggingEntered(sender: NSDraggingInfo) -> NSDragOperation {
-        let filenames = sender.draggingPasteboard().propertyListForType(NSFilenamesPboardType) as! [String]
-        let acceptDrag: Bool = delegate?.dropViewShouldAcceptDraggedPath(self, paths: filenames) ?? false
+        let paths = sender.draggingPasteboard().propertyListForType(NSFilenamesPboardType) as! [String]
+        let acceptDrag = delegate?.dropViewShouldAcceptDraggedPath(self, paths: paths) ?? false
         
         if acceptDrag {
             delegate?.dropViewDidDragValidFileIntoView(self)
             return NSDragOperation.Copy
-        
         } else {
             delegate?.dropViewDidDragInvalidFileIntoView(self)
             return NSDragOperation.None
         }
-        
     }
     
     override func draggingExited(sender: NSDraggingInfo?) {
@@ -86,11 +76,7 @@ class DropView: NSView {
     
     override func concludeDragOperation(sender: NSDraggingInfo?) {
         let filenames = sender!.draggingPasteboard().propertyListForType(NSFilenamesPboardType) as! [String]
-        let filename = filenames[0]
-        
-        delegate?.dropViewDidDropFileToView(self, filePath: filename)
+        delegate?.dropViewDidDropFileToView(self, paths: filenames)
     }
-   
-    
     
 }
