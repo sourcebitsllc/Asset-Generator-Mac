@@ -11,6 +11,7 @@
 		1E2D9EE31B26620A009A2745 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1ED9A1461B1F983B000A41B9 /* Main.storyboard */; };
 		1ED885CB1B27F11200197226 /* Pluralize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED885CA1B27F11200197226 /* Pluralize.swift */; };
 		1ED885CE1B280F8200197226 /* NSColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED885CD1B280F8200197226 /* NSColor+Extensions.swift */; };
+		1ED885D01B28F51B00197226 /* ProgressLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED885CF1B28F51B00197226 /* ProgressLineView.swift */; };
 		1ED9A0F41B1F97CE000A41B9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A0F31B1F97CE000A41B9 /* AppDelegate.swift */; };
 		1ED9A11D1B1F9810000A41B9 /* AssetCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A0F51B1F9810000A41B9 /* AssetCatalog.swift */; };
 		1ED9A11E1B1F9810000A41B9 /* AssetGenerationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A0F61B1F9810000A41B9 /* AssetGenerationController.swift */; };
@@ -85,6 +86,7 @@
 		1E17A3A01ACF637700785DB2 /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		1ED885CA1B27F11200197226 /* Pluralize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pluralize.swift; sourceTree = "<group>"; };
 		1ED885CD1B280F8200197226 /* NSColor+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSColor+Extensions.swift"; sourceTree = "<group>"; };
+		1ED885CF1B28F51B00197226 /* ProgressLineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressLineView.swift; sourceTree = "<group>"; };
 		1ED9A0F31B1F97CE000A41B9 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1ED9A0F51B1F9810000A41B9 /* AssetCatalog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetCatalog.swift; sourceTree = "<group>"; };
 		1ED9A0F61B1F9810000A41B9 /* AssetGenerationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetGenerationController.swift; sourceTree = "<group>"; };
@@ -180,6 +182,7 @@
 				1ED9A1051B1F9810000A41B9 /* ImagesDropViewController.swift */,
 				1ED9A1101B1F9810000A41B9 /* ProjectDropViewController.swift */,
 				1ED9A10D1B1F9810000A41B9 /* ProgressViewController.swift */,
+				1ED885CF1B28F51B00197226 /* ProgressLineView.swift */,
 				1ED9A1141B1F9810000A41B9 /* RoundedDropView.swift */,
 				1ED9A0FE1B1F9810000A41B9 /* DropView.swift */,
 			);
@@ -403,6 +406,7 @@
 				1ED9A13B1B1F9810000A41B9 /* RoundedDropView.swift in Sources */,
 				1ED9A12D1B1F9810000A41B9 /* ImagesGroupViewModel.swift in Sources */,
 				1ED9A1381B1F9810000A41B9 /* ProjectSelector.swift in Sources */,
+				1ED885D01B28F51B00197226 /* ProgressLineView.swift in Sources */,
 				1ED9A1271B1F9810000A41B9 /* ErrorType.swift in Sources */,
 				1ED9A1231B1F9810000A41B9 /* AssetWindowViewModel.swift in Sources */,
 				1ED9A1311B1F9810000A41B9 /* NSLayoutConstraint+Extensions.swift in Sources */,
