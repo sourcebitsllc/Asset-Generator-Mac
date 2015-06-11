@@ -78,8 +78,8 @@ class SelectedProjectViewModel {
         }
     }
     
-    func shouldAcceptPath(path: Path) -> Bool {
-        return path.isXCProject() && PathValidator.directoryContainsXCAsset(directory: path.stringByDeletingLastPathComponent + ("/"))
+    func shouldAcceptPath(path: [Path]) -> Bool {
+        return path.count == 1 && path[0].isXCProject() && PathValidator.directoryContainsXCAsset(directory: path[0].stringByDeletingLastPathComponent + ("/"))
     }
     
     private func isValidSelection(project: XCProject) -> Bool {

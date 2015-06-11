@@ -109,11 +109,11 @@ class ProjectDropViewController: NSViewController, DropViewDelegate {
         dropView.layer?.borderColor = NSColor.dropViewHoveringColor().CGColor
     }
     
-    func dropViewDidDropFileToView(dropView: DropView, filePath: String) {
-        viewModel.newPathSelected(filePath)
+    func dropViewDidDropFileToView(dropView: DropView, paths: [Path]) {
+        viewModel.newPathSelected(paths[0])
     }
-    
+
     func dropViewShouldAcceptDraggedPath(dropView: DropView, paths: [String]) -> Bool {
-        return viewModel.shouldAcceptPath(paths[0])
+        return viewModel.shouldAcceptPath(paths)
     }
 }
