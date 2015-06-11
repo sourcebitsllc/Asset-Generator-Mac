@@ -8,7 +8,6 @@
 
 import Cocoa
 
-
 class ProgressLineView: NSView {
     private let line: NSView
     
@@ -31,7 +30,7 @@ class ProgressLineView: NSView {
         line.wantsLayer = true
         line.layer?.masksToBounds = true
         line.layer?.backgroundColor = color.CGColor
-        self.addSubview(line)
+        addSubview(line)
     }
 
     required init?(coder: NSCoder) {
@@ -39,12 +38,12 @@ class ProgressLineView: NSView {
     }
     
     func animateTo(#progress: Float) {
-        let width = self.bounds.size.width * (CGFloat(progress) / 100)
+        let width = bounds.size.width * (CGFloat(progress) / 100)
         line.animator().frame.size.width = width
     }
     
     func forceAnimateFullProgress() {
-        line.animator().frame.size.width = self.frame.size.width
+        line.animator().frame.size.width = bounds.size.width
     }
     
     func animateFadeOut() {
