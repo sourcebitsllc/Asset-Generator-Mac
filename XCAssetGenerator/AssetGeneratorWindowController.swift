@@ -2,21 +2,21 @@
 //  AssetGeneratorWindowController.swift
 //  XCAssetGenerator
 //
-//  Created by Bader on 9/15/14.
+//  Created by Bader on 5/11/15.
 //  Copyright (c) 2014 Bader Alabdulrazzaq. All rights reserved.
 //
 
 import Cocoa
 import ReactiveCocoa
 
-class AssetGeneratorWindowController: NSWindowController  {
+class AssetGeneratorWindowController: NSWindowController {
 
     var statusLabel: NSTextField!
     @IBOutlet var generateButton: NSButton!
     
     var viewModel: AssetWindowViewModel!
     
-    // MARK: ViewControllers
+    // MARK: ViewControllers. Btw, i dont need to reference them but they kinda make for a nice little documentation snippet.
     var progressController: ProgressViewController!
     var imagesViewController: ImagesDropViewController!
     var projectViewController: ProjectDropViewController!
@@ -50,14 +50,12 @@ class AssetGeneratorWindowController: NSWindowController  {
             |> observeOn(QueueScheduler.mainQueueScheduler)
             |> start(next: { enabled in
                 self.generateButton.enabled = enabled
-                println("GenerateButton.enabled = \(enabled)")
         })
         
         viewModel.statusLabel.producer
             |> observeOn(QueueScheduler.mainQueueScheduler)
             |> start(next: { label in
                 self.statusLabel.stringValue = label
-                println("statusLabel.stringValue = \(label)")
         })
                 
         viewModel.generateTitle.producer
@@ -67,18 +65,14 @@ class AssetGeneratorWindowController: NSWindowController  {
         })
 
     }
-    
 
     @IBAction func generateButtonPressed(sneder: AnyObject!) {
         // TODO: Options -> Pushed to 2.0
         var options : [AssetGenerationOptions]? = [AssetGenerationOptions]()
         viewModel.generateAssets()
-//        viewModel.imagesViewModel.test_put()
-//        viewModel.assetGenerator.test_put()
     }
     
-    
-    /// MARK:- Setup Helpers.
+    /// MARK:- UI Setup Helpers.
     
     private func createImagesArea() {
         let imagesViewModel = viewModel.viewModelForImagesGroup()
@@ -135,7 +129,7 @@ class AssetGeneratorWindowController: NSWindowController  {
         
         // Status label.
         statusLabel = setupLabel("Drop a folder with slices you'd like to add to your Xcode project")
-        statusLabel.textColor = NSColor(calibratedWhite: 0.577, alpha: 1)
+        statusLabel.textColor = NSColor(calibratedWhite: 0.4, alpha: 1)
         bottomBar.addSubview(statusLabel)
         
         let posStatusX  = NSLayoutConstraint(item: statusLabel, attribute: NSLayoutAttribute.CenterX, relatedBy: NSLayoutRelation.Equal, toItem: statusLabel.superview, attribute: NSLayoutAttribute.CenterX, multiplier: 1, constant: 0)
