@@ -97,7 +97,7 @@ class ProjectDropViewController: NSViewController, DropViewDelegate {
         if viewModel.isCurrentSelectionValid() {
             dropView.layer?.borderColor = NSColor.dropViewAcceptedColor().CGColor
         } else {
-            dropView.layer?.borderColor = dropView.layer?.backgroundColor
+            dropView.layer?.borderColor = NSColor(calibratedRed: 0.576 , green: 0.713, blue: 0.940, alpha: 1).CGColor
         }
     }
     
