@@ -64,13 +64,13 @@ struct AssetAttributeProcessor {
     static func withAsset(path: Path) -> AssetAttribute {
         let name = path.lastPathComponent
         
-        let is2x = name.rangeOfString(GenerationKeywords.PPI2x) != nil
-        let is3x = name.rangeOfString(GenerationKeywords.PPI3x) != nil
+        let is2x = name.contains(GenerationKeywords.PPI2x)
+        let is3x = name.contains(GenerationKeywords.PPI3x)
         let scale = is2x ? "2x" : is3x ? "3x" : "1x"
 
-        let isiPhone = name.rangeOfString(GenerationKeywords.iPhone) != nil
-        let isiPad = name.rangeOfString(GenerationKeywords.iPad) != nil
-        let isMac = name.rangeOfString(GenerationKeywords.Mac) != nil
+        let isiPhone = name.contains(GenerationKeywords.iPhone)
+        let isiPad = name.contains(GenerationKeywords.iPad)
+        let isMac = name.contains(GenerationKeywords.Mac)
         let idiom = isiPhone ? "iphone" : isiPad ? "ipad" : isMac ? "mac" : "universal"
         
         return AssetAttribute(filename: name, scale: scale, idiom: idiom)
@@ -92,7 +92,7 @@ struct AssetAttributeProcessor {
         case 16:
             break
         case 32:
-            let is2x = name.rangeOfString("16x16") != nil
+            let is2x = name.contains("16x16")
             scale = is2x ? "2x" : "1x"
             size = is2x ? "16x16" : "32x32"
         case 64:
@@ -102,11 +102,11 @@ struct AssetAttributeProcessor {
             scale = "1x"
             size = "128x128"
         case 256:
-            let is2x = name.rangeOfString("128x128") != nil
+            let is2x = name.contains("128x128")
             scale = is2x ? "2x" : "1x"
             size = is2x ? "128x128" : "256x256"
         case 512:
-            let is2x = name.rangeOfString("256x256") != nil
+            let is2x = name.contains("256x256")
             scale = is2x ? "2x" : "1x"
             size = is2x ? "256x256" : "512x512"
         case 1024:

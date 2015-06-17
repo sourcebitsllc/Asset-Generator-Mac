@@ -27,6 +27,10 @@ extension String {
         })
     }
     
+    func contains(substring: String) -> Bool {
+        return self.rangeOfString(substring) != nil
+    }
+    
     func removeAssetSetsComponent() -> String {
         let notAssetSet = { (set: Path) in return !set.isAssetSet() }
 //        return self.pathComponents.filter (notAssetSet) |> String.pathWithComponents
