@@ -15,6 +15,8 @@ struct GenerationKeywords {
     
     static let iPhone = "~iphone"
     static let iPad = "~ipad"
+    static let Mac = "~mac"
+    static let Watch = "~watch"
 }
 
 struct SerializedAssetAttributeKeys {
@@ -33,5 +35,9 @@ struct SerializedAssetAttributeKeys {
     static let HeightClass = "heightClass"
     
     static let Alignment = "alignment-insets"
+    
+    // watch
+    static let ScreenWidth = "screenWidth"
+    static let Role = "role"
 
 }
