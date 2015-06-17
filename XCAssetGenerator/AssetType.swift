@@ -189,7 +189,8 @@ struct Asset: Printable {
                                                                                 GenerationKeywords.PPI3x,
                                                                                 GenerationKeywords.PPI1x,
                                                                                 GenerationKeywords.iPhone,
-                                                                                GenerationKeywords.iPad ])
+                                                                                GenerationKeywords.iPad,
+                                                                                GenerationKeywords.Mac ])
         return name
     }
     
@@ -207,7 +208,8 @@ struct AssetAttributeProcessor {
         
         let isiPhone = name.rangeOfString(GenerationKeywords.iPhone) != nil
         let isiPad = name.rangeOfString(GenerationKeywords.iPad) != nil
-        let idiom = isiPhone ? "iphone" : isiPad ? "ipad" : "universal"
+        let isMac = name.rangeOfString(GenerationKeywords.Mac) != nil
+        let idiom = isiPhone ? "iphone" : isiPad ? "ipad" : isMac ? "mac" : "universal"
         
         return AssetAttribute(filename: name, scale: scale, idiom: idiom)
     }
