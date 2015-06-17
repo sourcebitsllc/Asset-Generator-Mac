@@ -7,8 +7,16 @@
 //
 
 import Foundation
+protocol XCAssetJSONValue {}
+
+extension Bool: XCAssetJSONValue {}
+extension String: XCAssetJSONValue {}
+extension Dictionary: XCAssetJSONValue {}
+extension Array: XCAssetJSONValue {}
+
 
 typealias SerializedAssetAttribute = [String: String]
+//extension SerializedAssetAttribute: XCAssetJSONValue {}
 
 struct AssetAttribute: Serializable {
     var filename: String
@@ -57,10 +65,17 @@ struct AssetAttribute: Serializable {
     }
 }
 
+enum Device {
+    case iPhone
+    case iPad
+    case Universal
+    case Mac
+    case Watch
+}
 
 enum AssetType {
     case Image
-    case Icon
+    case Icon(Device)
     case LaunchImage
     
     static func type(#path: Path) -> AssetType {
@@ -69,7 +84,9 @@ enum AssetType {
     
     static func type(#name: String) -> AssetType {
         if name.hasPrefix("AppIcon") {
-            return .Icon
+            return .Icon(.Universal) // The type here doe snot matter. We only care that its not a Mac. smell?
+        } else if name.hasPrefix("icon_") { // TODO: Add more checks.
+            return .Icon(.Mac)
         } else if name.hasPrefix("LaunchImage") || name.hasPrefix("Default") {
             return .LaunchImage
         } else {
@@ -88,6 +105,9 @@ struct AssetMetaData {
         switch self.type {
         case .Image:
             self.attributes = AssetAttributeProcessor.withAsset(path)
+        case .Icon(let device) where device == .Mac:
+            println("Mac Icon in \(__FUNCTION__)")
+            self.attributes = AssetAttributeProcessor.withMacIcon(path)
         case .Icon:
             self.attributes = AssetAttributeProcessor.withIcon(path)
         case .LaunchImage:
@@ -214,7 +234,51 @@ struct AssetAttributeProcessor {
         return AssetAttribute(filename: name, scale: scale, idiom: idiom)
     }
     
+    static func withMacIcon(path: Path) -> AssetAttribute {
+        let imgURL = NSURL(fileURLWithPath: path)
+        let src = CGImageSourceCreateWithURL(imgURL, nil)
+        let result = CGImageSourceCopyPropertiesAtIndex(src, 0, nil) as NSDictionary
+        
+        let name = path.lastPathComponent
+        let width = result[kCGImagePropertyPixelWidth as String]! as! Int
+        
+        let idion = "mac"
+        var scale = "1x"
+        var size = "16x16"
+        
+        switch width {
+        case 16:
+            break
+        case 32:
+            let is2x = name.rangeOfString("16x16") != nil
+            scale = is2x ? "2x" : "1x"
+            size = is2x ? "16x16" : "32x32"
+        case 64:
+            scale = "2x"
+            size = "32x32"
+        case 128:
+            scale = "1x"
+            size = "128x128"
+        case 256:
+            let is2x = name.rangeOfString("128x128") != nil
+            scale = is2x ? "2x" : "1x"
+            size = is2x ? "128x128" : "256x256"
+        case 512:
+            let is2x = name.rangeOfString("256x256") != nil
+            scale = is2x ? "2x" : "1x"
+            size = is2x ? "256x256" : "512x512"
+        case 1024:
+            scale = "2x"
+            size = "512x512"
+        default:
+            break
+            
+        }
+        
+        return AssetAttribute(filename: name, scale: scale, idiom: idion, size: size)
+    }
     static func withIcon(path: Path) -> AssetAttribute {
+        
         let imgURL = NSURL(fileURLWithPath: path)
         let src = CGImageSourceCreateWithURL(imgURL, nil)
         let result = CGImageSourceCopyPropertiesAtIndex(src, 0, nil) as NSDictionary
@@ -300,14 +364,5 @@ struct AssetAttributeProcessor {
         return AssetAttribute(filename: name, scale: scale, idiom: idiom, extent: extent, subtype: subtype, orientation: orientation, minimumSystemVersion: minimumVersion)
     }
 
-}
-
-// TODO:
-private enum Device {
-    case iPhone
-    case iPad
-    case Universal
-    case Mac
-    case Watch
 }
 
