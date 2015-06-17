@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		1E17A3A11ACF637700785DB2 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1E17A3A01ACF637700785DB2 /* Localizable.strings */; };
 		1E2D9EE31B26620A009A2745 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1ED9A1461B1F983B000A41B9 /* Main.storyboard */; };
+		1E48EF431B31861E00A63FBF /* AssetAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E48EF421B31861E00A63FBF /* AssetAttribute.swift */; };
 		1ED096DC1B2D53D8005337A9 /* AssetDiff.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED096DB1B2D53D8005337A9 /* AssetDiff.swift */; };
 		1ED885CB1B27F11200197226 /* Pluralize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED885CA1B27F11200197226 /* Pluralize.swift */; };
 		1ED885CE1B280F8200197226 /* NSColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED885CD1B280F8200197226 /* NSColor+Extensions.swift */; };
@@ -85,6 +86,7 @@
 
 /* Begin PBXFileReference section */
 		1E17A3A01ACF637700785DB2 /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
+		1E48EF421B31861E00A63FBF /* AssetAttribute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetAttribute.swift; sourceTree = "<group>"; };
 		1ED096DB1B2D53D8005337A9 /* AssetDiff.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetDiff.swift; sourceTree = "<group>"; };
 		1ED885CA1B27F11200197226 /* Pluralize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pluralize.swift; sourceTree = "<group>"; };
 		1ED885CD1B280F8200197226 /* NSColor+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSColor+Extensions.swift"; sourceTree = "<group>"; };
@@ -200,6 +202,7 @@
 				1ED9A0F51B1F9810000A41B9 /* AssetCatalog.swift */,
 				1ED9A0FF1B1F9810000A41B9 /* ErrorType.swift */,
 				1ED9A0FA1B1F9810000A41B9 /* AssetType.swift */,
+				1E48EF421B31861E00A63FBF /* AssetAttribute.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -412,6 +415,7 @@
 				1ED885D01B28F51B00197226 /* ProgressLineView.swift in Sources */,
 				1ED9A1271B1F9810000A41B9 /* ErrorType.swift in Sources */,
 				1ED096DC1B2D53D8005337A9 /* AssetDiff.swift in Sources */,
+				1E48EF431B31861E00A63FBF /* AssetAttribute.swift in Sources */,
 				1ED9A1231B1F9810000A41B9 /* AssetWindowViewModel.swift in Sources */,
 				1ED9A1311B1F9810000A41B9 /* NSLayoutConstraint+Extensions.swift in Sources */,
 				1ED9A1241B1F9810000A41B9 /* BookmarkResolver.swift in Sources */,
