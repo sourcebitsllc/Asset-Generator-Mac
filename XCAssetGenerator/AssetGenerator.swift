@@ -9,179 +9,102 @@
 import Foundation
 import ReactiveCocoa
 
-protocol AssetGeneratorProgessDelegate {
-    func assetGenerationStarted()
-    func assetGenerationFinished(generated: Int)
-    func assetGenerationOngoing(progress: Int)
+enum GenerationState {
+    case Progress(Float)
+    case Assets(Int)
 }
-
-enum AssetGenerationStatus {
-    case Started
-    case Finished(Int)
-    case Ongoing(Int)
-}
-
 
 class AssetGenerator {
+    typealias AssetGeneratorObserver = Signal<GenerationState, AssetGeneratorError>.Observer
     
-    var running: Bool
-    var progressDelegate: AssetGeneratorProgessDelegate?
-    
-    init() {
-        running = false
-    }
-    
-    func executing() -> Bool {
-        return running
-    }
-    
-    func generateAssets(source: Path, target: Path)(observer: SinkOf<Event<Float, NoError>>, generatedObserver: SinkOf<Event<Int, NoError>>, completion: () -> ()) {
-        let temp = source + ".XCAssetTemp/"
+    func generateAssets(source: [Asset], target: Path)(observer: AssetGeneratorObserver, completion: () -> ()) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)) {
-            self.notifyDelegate(.Started)
-            // Step 1
-            FileSystem.deleteDirectory(temp)
-            self.notifyDelegate(.Ongoing(5))
-            sendNext(observer, 5)
-            NSFileManager.defaultManager().createDirectoryAtPath(temp, withIntermediateDirectories: false, attributes: nil, error: nil)
-            self.notifyDelegate(.Ongoing(10))
-            sendNext(observer, 10)
-            // Step 2
-            self.populateTemporaryDirectory(source, temp: temp)
-            self.notifyDelegate(.Ongoing(50))
-            sendNext(observer, 50)
-            // Step 3
-            let total = self.integrateAssets(temp, target: target + "/")
-            self.notifyDelegate(.Ongoing(95))
-            sendNext(observer, 95)
-            // Step 4
-            FileSystem.deleteDirectory(temp)
-            self.notifyDelegate(.Finished(total))
+            sendNext(observer, .Progress(10))
+            let report = self.moveAssetsAndPrepareReport(source, destination: target)
+            sendNext(observer, .Progress(50))
+            self.reticulateReportAndDeploy(report)
+            sendNext(observer, .Progress(95))
+
+            sendNext(observer, .Assets(source.count))
             sendCompleted(observer)
-            sendNext(generatedObserver, total)
             completion()
         }
-        
     }
+
+    /// :param: key: Path the asset `AssetSet` destination.
+    /// :param: value: [Asset] The assets belonging to the said deestination.
+    private typealias AssetsReport = [Path: [Asset]]
     
-    private func populateTemporaryDirectory(source: Path, temp: Path) {
-        // Find all images in our source folder.
-        let images = PathQuery.availableImages(from: source)
-        notifyDelegate(.Ongoing(15))
-        
-        for image in images {
+    private func reticulateReportAndDeploy(rep: AssetsReport) {
+        for (path, assets) in rep {
+            let destinationJSON = path + "Contents.json"
             
-            let asset = Asset.create(image)
-            
-            // Compute the temporary XCAssets folder format for given image.
-            let tempDest: Path
-            switch asset.type {
-            case .Image:
-                let path = image.stringByDeletingLastPathComponent + "/"
-                let subddirectory = path.stringByReplacingOccurrencesOfString(source, withString: "", options: NSStringCompareOptions.LiteralSearch, range: nil)
-                let cleanSubDirectory = subddirectory.replace([".", ":"], withCharacter: "_")
-                tempDest = temp + cleanSubDirectory + asset.enclosingSet + "/"
-                
-            case .Icon:
-                fallthrough
-            case .LaunchImage:
-                tempDest = temp + asset.enclosingSet + "/"
-            }
-            
-            // Create the folder if it does not exist.
-            FileSystem.createDirectoryIfMissing(tempDest)
-            
-            // Compute the temporary image location and grab a copy.
-            let imageTemporaryLocation = tempDest + image.lastPathComponent
-            FileSystem.copy(file: image, toLocation: imageTemporaryLocation)
-            
-        }
-    }
-    
-    
-    private func integrateAssets(temp: Path, target: Path) -> Int {
-        var numberOfAssets = 0
-        let folders = PathQuery.availableAssetSets(from: temp)
-        notifyDelegate(.Ongoing(60))
-        
-        for folder in folders {
-            let images = PathQuery.availableImages(from: folder)
-            numberOfAssets += images.count
-            
-            // Move Images First.
-            for image in images {
-                
-                let dir = image.stringByDeletingLastPathComponent + "/"
-                let path = dir.stringByReplacingOccurrencesOfString(temp, withString: target, options: NSStringCompareOptions.LiteralSearch, range: nil)
-                let xcfolder = path + "/"
-                
-                // If .* doesnt exist, create it.
-                FileSystem.createDirectoryIfMissing(xcfolder)
-                
-                // Compute the images' final location and proceed to copy.
-                let finalImageDestination = xcfolder + image.lastPathComponent
-                FileSystem.copy(file: image, toLocation: finalImageDestination)
-            }
-            
-            // Create the accompanying JSON
-            let destinationJSON = folder.stringByReplacingOccurrencesOfString(temp, withString: target, options: NSStringCompareOptions.LiteralSearch, range: nil) + "/Contents.json"
-            
-            //  If target JSON exists, merge new images into it. Else, Create new JSON with images
             if NSFileManager.defaultManager().fileExistsAtPath(destinationJSON) {
+                var json = JSON.readJSON(destinationJSON) as! NSMutableDictionary
+                let existingJSONImages = json["images"] as! [SerializedAssetAttribute] // TODO: Crash potential == 9001
                 
-                let json = JSON.readJSON(destinationJSON)
-                let existingJSONImages = json["images"] as! [SerializedAssetAttribute]
-                var newJSON = existingJSONImages
-                
-                for i in images {
-                    let image = Asset.create(i)
-                    let attributes = image.attributes
-                    
-                    // If we find a "matching" entry for image, update its name to new image. If not, add new image to json.
-                    let comparator = image.comparator
-                    let entry = (existingJSONImages as [SerializedAssetAttribute]).filter(comparator).first
-                    
-                    if let entry = entry {
-                        let index = find(newJSON as [JSONDictionary], entry)!
-                        newJSON.removeAtIndex(index)
-                        
-                        var newEntry = entry
-                        newEntry[SerializedAssetAttributeKeys.Filename] = attributes.filename
-                        newJSON.insert(newEntry, atIndex: index)
-                    } else {
-                        newJSON.append(attributes.serialized)
-                    }
-                    
-                }
-                // Commit updates and write JSON.
-                (json as! NSMutableDictionary)["images"] = newJSON
-                JSON.writeJSON(json, toFile: destinationJSON)
+                updateAttributesWithAssets(existingJSONImages, assets: assets)
+                    >>> XCAssetsJSON.updateImagesValue(json)
+                    >>> JSON.writeJSON(to: destinationJSON)
                 
             } else {
-                let imagesProperties: [SerializedAssetAttribute] = images.map {
-                    return Asset.create($0).attributes.serialized
-                }
-                
-                let json = JSON.createJSONDefaultWrapper(imagesProperties)
-                JSON.writeJSON(json, toFile: destinationJSON)
+                assets.map { AssetMetaData.create($0).attributes.serialized }
+                    |> XCAssetsJSON.createJSONDefaultWrapper
+                    |> JSON.writeJSON(to: destinationJSON)
             }
         }
-        
-        return numberOfAssets
     }
     
-    private func notifyDelegate(progress: AssetGenerationStatus) {
-        dispatch_async(dispatch_get_main_queue()) {
-            switch progress {
-            case .Started:
-                self.running = true
-                self.progressDelegate?.assetGenerationStarted()
-            case .Finished(let total):
-                self.running = false
-                self.progressDelegate?.assetGenerationFinished(total)
-            case .Ongoing(let progress):
-                self.progressDelegate?.assetGenerationOngoing(progress)
-            }
+    
+    
+    private func moveAssetsAndPrepareReport(assets: [Asset], destination: Path) -> AssetsReport {
+        // Find all images in our source folder.
+        var assetsPerDestination: [Path: [Asset]] = [:]
+        for asset in assets {
+            let path = computeEnclosingSet(asset, target: destination)
+            assetsPerDestination[path] = (assetsPerDestination[path] ?? []) + [asset]
+            
+             //If .* doesnt exist, create it.
+            FileSystem.createDirectoryIfMissing(path)
+             //Compute the images' final location and proceed to copy.
+            let finalImageDestination = path + asset.name
+            FileSystem.copy(file: asset.fullPath, toLocation: finalImageDestination)
         }
+        
+        return assetsPerDestination
+    }
+    
+    func computeEnclosingSet(asset: Asset, target: Path) -> Path {
+        switch asset.type {
+        case .Image:
+            let subddirectory = asset.relativePath.stringByDeletingLastPathComponent
+            let cleanSubDirectory = subddirectory.replace([".", ":"], withCharacter: "_")
+            return target + cleanSubDirectory + "/" + asset.enclosingSet + "/"
+        case .LaunchImage, .Icon:
+            return target.removeTrailingSlash() + "/" + asset.enclosingSet + "/"
+        }
+    }
+    
+    
+    private func updateAttributesWithAssets(list: [SerializedAssetAttribute], assets: [Asset]) -> [SerializedAssetAttribute] {
+        var newJSON = list
+        for i in assets {
+            let image = AssetMetaData.create(i)
+            let attributes = image.attributes
+            let comparator = image.comparator
+            
+            // If we find a "matching" entry for image, update its name to new image. If not, add new image to json.
+            if var entry = list.filter(comparator).first,
+                let index = find(newJSON as [JSONDictionary], entry) {
+                    
+                newJSON.removeAtIndex(index)
+                entry[SerializedAssetAttributeKeys.Filename] = attributes.filename
+                newJSON.insert(entry, atIndex: index)
+            } else {
+                newJSON.append(attributes.serialized)
+            }
+            
+        }
+        return newJSON
     }
 }

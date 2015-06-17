@@ -7,6 +7,7 @@
 //
 
 import Cocoa
+import Result
 import ReactiveCocoa
 
 
@@ -23,6 +24,14 @@ class AssetGeneration {
 }
 */
 
+enum AssetGeneratorError: ErrorType {
+    case InvalidSource
+    case InvalidCatalog
+    
+    var nsError: NSError {
+        return NSError()
+    }
+}
 
 
 enum AssetGenerationOptions {
@@ -33,56 +42,33 @@ enum AssetGenerationOptions {
 class AssetGenerationController: NSObject {
 
     private let assetGenerator: AssetGenerator
-
-    var assetGeneratorSignal: SignalProducer<Float, NoError>!
-    let generatedSignal: Signal<Int, NoError>
-    private let generatedSink: SinkOf<Event<Int, NoError>>
-    
     let running: MutableProperty<Bool> = MutableProperty<Bool>(false)
-    let source: MutableProperty<Path?>
-    let target: MutableProperty<Path?>
-    
     
     override init() {
         assetGenerator = AssetGenerator()
-        source = MutableProperty<Path?>(nil)
-        target = MutableProperty<Path?>(nil)
-        (generatedSignal, generatedSink) = Signal<Int, NoError>.pipe()
         super.init()
-        
-        assetGeneratorSignal = SignalProducer<Float, NoError> { (sink, disposable) -> () in
-            self.running.put(true)
-//            sendNext(sink, 100)
-            // If sources are not ready. Send back Error.
-            let s = self.source.value!
-            let t = self.target.value!
-            self.assetGenerator.generateAssets(s, target: t)(observer: sink, generatedObserver: self.generatedSink) {
-                self.running.put(false)
-            }
-            
-//            return // is this needed?
-        }
-        
-//        running |> start(next: { a in println(a) })
-        
-    }
-    func test_put() {
-        let v = running.value
-        running.put(v)
     }
     
-//    func canPreformAssetGeneration() -> Bool {
-//        return delegate != nil ? delegate!.hasValidGeneratorInputs() && !assetGenerator.running : false
-//        // return (can <^> delegate) ?? false. Which is more readable? // TODO:
-//    }
-//    
-    func executeScript(options: [AssetGenerationOptions]?) {
-        if let ops = options {
-            let generate1x = contains(ops, .GenerateMissingAssets)
-            let createDest = contains(ops, .CreateDesitnationIfMissing)
-            preformAssetGeneration(generate1x: generate1x, extraArgs: nil)
-        } else {
-//            preformAssetGeneration()
+    func assetGenerationProducer(assets: [Asset], destination: Path?) -> SignalProducer<GenerationState, AssetGeneratorError> {
+        return SignalProducer { (sink, disposable) in
+            self.running.put(true)
+            
+            // TODO: Swift 2.0 guard + defer.
+            if assets.count == 0 {
+                sendError(sink, .InvalidSource)
+                self.running.put(false)
+                return
+            }
+            
+            if destination == nil {
+                sendError(sink, .InvalidCatalog)
+                self.running.put(false)
+                return
+            }
+            
+            self.assetGenerator.generateAssets(assets, target: destination!)(observer: sink) {
+                self.running.put(false)
+            }
         }
     }
     
@@ -93,23 +79,8 @@ class AssetGenerationController: NSObject {
         return path
     }
     
-    private func preformAssetGeneration(sink: SinkOf<Event<Float, NoError>>) {
-        let source = prepare("/Users/Bader/Asset Generator Misc./Pew Pew Pew/")
-        let target = prepare("/Users/Bader/Developer/Randomer/Randomer/Images2.xcassets")
-        let s = self.source.value!
-        let t = self.target.value!
-//        assetGenerator.generateAssets(s, target: t)(observer: sink)
-    }
-    
-    private func preformAssetGeneration(#generate1x: Bool, extraArgs args: [String]?) {
-//        let source = prepare(delegate!.source!)
-//        let target = prepare(delegate!.target!)
-        assetGeneratorSignal |> observeOn(QueueScheduler.mainQueueScheduler) |> start(completed: { () -> () in
-            println("COMPLETED")
-//            self._running.put(false)
-            }, next: { r in
-                println("NEXT: \(r)")
-        })
-//        assetGenerator.generateAssets(source, target: target)
+    func intermedieteDirectory() -> Path {
+        let cacheDir = NSSearchPathForDirectoriesInDomains(.CachesDirectory, .UserDomainMask, true).first as! Path
+        return cacheDir + "/.XCAssetTemp/"
     }
 }
