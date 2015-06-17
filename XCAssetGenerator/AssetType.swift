@@ -63,18 +63,28 @@ enum AssetType {
     case Icon
     case LaunchImage
     
+    static func type(#path: Path) -> AssetType {
+        return type(name: path.lastPathComponent)
+    }
+    
+    static func type(#name: String) -> AssetType {
+        if name.hasPrefix("AppIcon") {
+            return .Icon
+        } else if name.hasPrefix("LaunchImage") || name.hasPrefix("Default") {
+            return .LaunchImage
+        } else {
+            return .Image
+        }
+    }
+    
 }
 
-struct Asset {
+struct AssetMetaData {
     let attributes: AssetAttribute
     let type: AssetType
-    let path: Path
-    
-    // MARK: - Initializers
     
     private init(path: Path,type: AssetType) {
         self.type = type
-        self.path = path
         switch self.type {
         case .Image:
             self.attributes = AssetAttributeProcessor.withAsset(path)
@@ -85,28 +95,13 @@ struct Asset {
         }
     }
     
-    static func create(path: Path) -> Asset {
-        let name = path.lastPathComponent
-        if name.hasPrefix("AppIcon") {
-            return Asset(path: path, type: .Icon)
-        } else if name.hasPrefix("LaunchImage") || name.hasPrefix("Default") {
-            return Asset(path: path, type: .LaunchImage)
-        } else {
-            return Asset(path: path, type: .Image)
-        }
+    static func create(path: Path) -> AssetMetaData {
+        let type = AssetType.type(path: path)
+        return AssetMetaData(path: path, type: type)
     }
     
-    // MARK: - Properties
-    
-    var enclosingSet: Path {
-        switch type {
-        case .Image:
-            return stripKeywords(path) + ".imageset"
-        case .Icon:
-            return "AppIcon.appiconset"
-        case .LaunchImage:
-            return "LaunchImage.launchimage"
-        }
+    static func create(asset: Asset) -> AssetMetaData {
+        return create(asset.fullPath)
     }
     
     typealias AssetComparator = (SerializedAssetAttribute -> Bool)
@@ -135,6 +130,49 @@ struct Asset {
                 let sameOrientation = dict[SerializedAssetAttributeKeys.Orientation] as String? == attribute.orientation
                 return sameIdiom && sameScale && sameOrientation && sameSubtype
             }
+        }
+    }
+}
+
+struct Asset: Printable {
+    let type: AssetType
+    
+    let ancestor: Path
+    let fullPath: Path
+    
+    var name: Path {
+        return fullPath.lastPathComponent
+    }
+    
+    var description: String {
+        return fullPath
+    }
+    
+    /// Return path relative to its ancestor.
+    /// Basically fullPath - ancestor
+    var relativePath: Path {
+        return fullPath.remove([ancestor])
+    }
+
+    // MARK: - Initializers
+    
+    init(fullPath path: Path, ancestor: Path) {
+        self.fullPath = path
+        self.ancestor = ancestor
+        self.type = AssetType.type(path: path)
+    }
+
+    
+    // MARK: - Properties
+    
+    var enclosingSet: Path {
+        switch type {
+        case .Image:
+            return stripKeywords(fullPath) + ".imageset"
+        case .Icon:
+            return "AppIcon.appiconset"
+        case .LaunchImage:
+            return "LaunchImage.launchimage"
         }
     }
     
@@ -263,7 +301,7 @@ struct AssetAttributeProcessor {
 }
 
 // TODO:
-private enum DeviceType {
+private enum Device {
     case iPhone
     case iPad
     case Universal
