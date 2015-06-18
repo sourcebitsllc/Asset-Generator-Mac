@@ -7,13 +7,6 @@
 //
 
 import Foundation
-protocol XCAssetJSONValue {}
-
-extension Bool: XCAssetJSONValue {}
-extension String: XCAssetJSONValue {}
-extension Dictionary: XCAssetJSONValue {}
-extension Array: XCAssetJSONValue {}
-
 
 enum Device {
     case iPhone

@@ -24,7 +24,6 @@ class AssetGenerator {
             sendNext(observer, .Progress(50))
             self.reticulateReportAndDeploy(report)
             sendNext(observer, .Progress(95))
-
             sendNext(observer, .Assets(source.count))
             sendCompleted(observer)
             completion()
@@ -41,8 +40,8 @@ class AssetGenerator {
             
             if NSFileManager.defaultManager().fileExistsAtPath(destinationJSON) {
                 var json = JSON.readJSON(destinationJSON) as! NSMutableDictionary
-                let existingJSONImages = json["images"] as! [SerializedAssetAttribute] // TODO: Crash potential == 9001
-                
+                let existingJSONImages = AssetAttribute.sanitizeJSON(json["images"] as! [JSONDictionary])
+
                 updateAttributesWithAssets(existingJSONImages, assets: assets)
                     >>> XCAssetsJSON.updateImagesValue(json)
                     >>> JSON.writeJSON(to: destinationJSON)
@@ -94,17 +93,15 @@ class AssetGenerator {
             let comparator = image.comparator
             
             // If we find a "matching" entry for image, update its name to new image. If not, add new image to json.
-            if var entry = list.filter(comparator).first,
-                let index = find(newJSON as [JSONDictionary], entry) {
-                    
+            if var entry = list.filter(comparator).first, let index = find(newJSON as [JSONDictionary], entry) {
                 newJSON.removeAtIndex(index)
                 entry[SerializedAssetAttributeKeys.Filename] = attributes.filename
                 newJSON.insert(entry, atIndex: index)
             } else {
                 newJSON.append(attributes.serialized)
             }
-            
         }
+        
         return newJSON
     }
 }

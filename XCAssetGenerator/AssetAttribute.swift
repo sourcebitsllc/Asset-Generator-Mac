@@ -8,11 +8,10 @@
 
 import Cocoa
 
-
 typealias SerializedAssetAttribute = [String: String]
 
 struct AssetAttribute: Serializable {
-    var filename: String
+    var filename: String?
     let scale: String
     let idiom: String
     let size: String?
@@ -23,7 +22,7 @@ struct AssetAttribute: Serializable {
     
     // MARK: - Initializers
     
-    private init (filename: String, scale: String, idiom: String, size: String? = nil, subtype: String? = nil, orientation: String? = nil, minimumSystemVersion: String? = nil, extent: String? = nil) {
+    private init (filename: String?, scale: String, idiom: String, size: String? = nil, subtype: String? = nil, orientation: String? = nil, minimumSystemVersion: String? = nil, extent: String? = nil) {
         self.filename = filename
         self.scale = scale
         self.idiom = idiom
@@ -34,11 +33,27 @@ struct AssetAttribute: Serializable {
         self.minimumSystemVersion = minimumSystemVersion
     }
     
+    static func sanitizeJSON(json: [JSONDictionary]) -> [SerializedAssetAttribute] {
+        return json.map {
+            return AssetAttribute(filename: $0[SerializedAssetAttributeKeys.Filename] as! String? ,
+                scale: $0[SerializedAssetAttributeKeys.Scale]! as! String,
+                idiom: $0[SerializedAssetAttributeKeys.Idiom] as! String,
+                size: $0[SerializedAssetAttributeKeys.Size] as! String?,
+                subtype: $0[SerializedAssetAttributeKeys.Subtype] as! String?,
+                orientation: $0[SerializedAssetAttributeKeys.Orientation] as! String?,
+                minimumSystemVersion: $0[SerializedAssetAttributeKeys.MinimumSystemVersion] as! String?,
+                extent: $0[SerializedAssetAttributeKeys.Extent] as! String?).serialized
+        }
+    }
+    
     // MARK: - Serializable
     
     typealias Serialized = SerializedAssetAttribute
     var serialized: Serialized {
-        var s = [SerializedAssetAttributeKeys.Filename: filename, SerializedAssetAttributeKeys.Scale: scale, SerializedAssetAttributeKeys.Idiom: idiom]
+        var s = [SerializedAssetAttributeKeys.Scale: scale, SerializedAssetAttributeKeys.Idiom: idiom]
+        if let filename = filename {
+            s.updateValue(filename, forKey: SerializedAssetAttributeKeys.Filename)
+        }
         if let size = size {
             s.updateValue(size, forKey: SerializedAssetAttributeKeys.Size)
         }
