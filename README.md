@@ -12,9 +12,9 @@ Drag a folder or multiple image files onto the left well, drag an Xcodeproject f
 
 # Features
 
-- Generates iOS, watchOS assets.
+- Generates iOS assets.
 - Partial support for Mac OS assets.
-- Accepts any image file type supported by iOS, watchOS or Mac OS.
+- Accepts any image file type supported by iOS or Mac OS.
 
 # Notes
 
