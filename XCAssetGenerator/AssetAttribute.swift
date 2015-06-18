@@ -52,22 +52,22 @@ struct AssetAttribute: Serializable {
     var serialized: Serialized {
         var s = [SerializedAssetAttributeKeys.Scale: scale, SerializedAssetAttributeKeys.Idiom: idiom]
         if let filename = filename {
-            s.updateValue(filename, forKey: SerializedAssetAttributeKeys.Filename)
+            s[SerializedAssetAttributeKeys.Filename] = filename
         }
         if let size = size {
-            s.updateValue(size, forKey: SerializedAssetAttributeKeys.Size)
+            s[SerializedAssetAttributeKeys.Size] = size
         }
         if let extent = extent {
-            s.updateValue(extent, forKey: SerializedAssetAttributeKeys.Extent)
+            s[SerializedAssetAttributeKeys.Extent] = extent
         }
         if let subtype = subtype {
-            s.updateValue(subtype, forKey: SerializedAssetAttributeKeys.Subtype)
+            s[SerializedAssetAttributeKeys.Subtype] = subtype
         }
         if let orientation = orientation {
-            s.updateValue(orientation, forKey: SerializedAssetAttributeKeys.Orientation)
+            s[SerializedAssetAttributeKeys.Orientation] = orientation
         }
         if let minimumSystemVersion = minimumSystemVersion {
-            s.updateValue(minimumSystemVersion, forKey: SerializedAssetAttributeKeys.MinimumSystemVersion)
+            s[SerializedAssetAttributeKeys.MinimumSystemVersion] = minimumSystemVersion
         }
         return s
     }
