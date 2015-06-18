@@ -84,16 +84,15 @@ struct AssetAttributeProcessor {
         let name = path.lastPathComponent
         let width = result[kCGImagePropertyPixelWidth as String]! as! Int
         
+        let is2x = name.contains("@2x")
         let idion = "mac"
-        var scale = "1x"
+        var scale = is2x ? "2x" : "1x"
         var size = "16x16"
         
         switch width {
         case 16:
             break
         case 32:
-            let is2x = name.contains("16x16")
-            scale = is2x ? "2x" : "1x"
             size = is2x ? "16x16" : "32x32"
         case 64:
             scale = "2x"
@@ -102,12 +101,8 @@ struct AssetAttributeProcessor {
             scale = "1x"
             size = "128x128"
         case 256:
-            let is2x = name.contains("128x128")
-            scale = is2x ? "2x" : "1x"
             size = is2x ? "128x128" : "256x256"
         case 512:
-            let is2x = name.contains("256x256")
-            scale = is2x ? "2x" : "1x"
             size = is2x ? "256x256" : "512x512"
         case 1024:
             scale = "2x"
