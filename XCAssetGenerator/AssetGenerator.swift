@@ -93,7 +93,7 @@ class AssetGenerator {
             let comparator = image.comparator
             
             // If we find a "matching" entry for image, update its name to new image. If not, add new image to json.
-            if var entry = list.filter(comparator).first, let index = find(newJSON as [JSONDictionary], entry) {
+            if var entry = list.filter(comparator).first, let index = find(newJSON as [XCAssetsJSONDictionary], entry) {
                 newJSON.removeAtIndex(index)
                 entry[SerializedAssetAttributeKeys.Filename] = attributes.filename
                 newJSON.insert(entry, atIndex: index)

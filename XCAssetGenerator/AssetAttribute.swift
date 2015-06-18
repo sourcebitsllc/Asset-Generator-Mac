@@ -10,6 +10,10 @@ import Cocoa
 
 typealias SerializedAssetAttribute = [String: String]
 
+/// A JSON representations which will always contains atleast .Scale and .Idiom keys available.
+/// Other available keys as specified in SerializedAssetAttributeKeys.
+typealias XCAssetsJSONDictionary = NSDictionary
+
 struct AssetAttribute: Serializable {
     var filename: String?
     let scale: String
@@ -33,7 +37,7 @@ struct AssetAttribute: Serializable {
         self.minimumSystemVersion = minimumSystemVersion
     }
     
-    static func sanitizeJSON(json: [JSONDictionary]) -> [SerializedAssetAttribute] {
+    static func sanitizeJSON(json: [XCAssetsJSONDictionary]) -> [SerializedAssetAttribute] {
         return json.map {
             return AssetAttribute(filename: $0[SerializedAssetAttributeKeys.Filename] as! String? ,
                 scale: $0[SerializedAssetAttributeKeys.Scale]! as! String,
