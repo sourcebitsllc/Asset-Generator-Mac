@@ -10,7 +10,7 @@ import Foundation
 import Cocoa
 import ReactiveCocoa
 
-// TODO: Find better way to incorporate VCs and VMs
+// TODO: Find better way to incorporate VCs and VMs. Current workaround is making all properties mutable and unwrapped. Ew.
 
 class ProjectDropViewController: NSViewController, DropViewDelegate {
     
@@ -25,17 +25,18 @@ class ProjectDropViewController: NSViewController, DropViewDelegate {
     static func instantiate(viewModel: SelectedProjectViewModel) -> ProjectDropViewController {
         let controller = NSStoryboard(name: "Main", bundle: nil)!.instantiateControllerWithIdentifier("ProjectDroppa") as! ProjectDropViewController
         controller.viewModel = viewModel
-        controller.setup()
         return controller
     }
-    
-    func setup() {
-        self.view.wantsLayer = true
 
+    override func viewDidLoad() {
+ 
+        self.view.wantsLayer = true
+        self.view.translatesAutoresizingMaskIntoConstraints = false
         // Intialize RoundedDropView
         dropView.translatesAutoresizingMaskIntoConstraints = false
         dropView.delegate = self
         dropView.layer?.borderWidth = borderWidth
+        dropView.layer?.backgroundColor = NSColor.redColor().CGColor
         
         let fillDropView = NSLayoutConstraint.centeringConstraints(dropView, into: view, size: NSSize(width: 125+borderWidth, height: 125 + borderWidth))
         NSLayoutConstraint.activateConstraints(fillDropView)
@@ -48,7 +49,7 @@ class ProjectDropViewController: NSViewController, DropViewDelegate {
         
         let centerImage = NSLayoutConstraint.centeringConstraints(dropImageView, into: view)
         NSLayoutConstraint.activateConstraints(centerImage)
-        
+
         // Initialize well
         well = NSImageView()
         well.image = NSImage(named: "uiWell")
@@ -57,7 +58,8 @@ class ProjectDropViewController: NSViewController, DropViewDelegate {
         view.addSubview(well)
         let centerWell = NSLayoutConstraint.centeringConstraints(well, into: view)
         NSLayoutConstraint.activateConstraints(centerWell)
-        
+
+       
         label = NSTextField()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.editable = false
@@ -68,20 +70,19 @@ class ProjectDropViewController: NSViewController, DropViewDelegate {
         view.addSubview(label)
         let labelX  = NSLayoutConstraint(item: label, attribute: NSLayoutAttribute.CenterX, relatedBy: NSLayoutRelation.Equal, toItem: view, attribute: NSLayoutAttribute.CenterX, multiplier: 1, constant: 0)
         let labelY = NSLayoutConstraint(item: label, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: view, attribute: NSLayoutAttribute.CenterY, multiplier: 1.6, constant: 0)
-        
         NSLayoutConstraint.activateConstraints([labelX, labelY])
+
         
         viewModel.label.producer
-            |> observeOn(QueueScheduler.mainQueueScheduler)
             |> start(next: { label in
-                self.label.stringValue = label
+               self.label.stringValue = label
             })
-        
+
         viewModel.currentSelectionValid.producer
-            |> observeOn(QueueScheduler.mainQueueScheduler)
             |> on(next: { valid in
                 self.layoutUI(valid) })
             |> start()
+        
     }
     
     private func layoutUI(set: Bool) {
@@ -114,6 +115,21 @@ class ProjectDropViewController: NSViewController, DropViewDelegate {
     }
 
     func dropViewShouldAcceptDraggedPath(dropView: DropView, paths: [String]) -> Bool {
-        return viewModel.shouldAcceptPath(paths)
+        let acceptable = viewModel.shouldAcceptPath(paths)
+        
+        if !acceptable {
+            let anim = CABasicAnimation(keyPath: "position.x")
+            anim.duration = 0.05
+            anim.repeatCount = 3
+            anim.autoreverses = true
+            anim.fromValue = view.frame.origin.x + 10
+            anim.toValue = view.frame.origin.x - 10
+            view.layer?.addAnimation(anim, forKey: "x")
+        }
+        return acceptable
+    }
+    
+    func dropViewNumberOfAcceptableItems(dropView: DropView, items: [Path]) -> Int {
+        return 1
     }
 }
