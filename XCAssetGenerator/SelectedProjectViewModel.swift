@@ -9,7 +9,6 @@
 import Foundation
 import ReactiveCocoa
 
-
 class SelectedProjectViewModel {
     private let project: MutableProperty<XCProject?>
     private let contentChanged: MutableProperty<Void>
@@ -37,14 +36,15 @@ class SelectedProjectViewModel {
     init() {
         storage = ProjectStorage()
         project = MutableProperty(storage.loadRecentProject())
-        label = MutableProperty("Xcode Project")
         currentSelectionValid = MutableProperty(false)
+        currentSelectionValid <~ project.producer |> map { $0 != nil }
+        label = MutableProperty("Xcode Project")
+        
         contentChanged = MutableProperty()
         
         projectObserver = FileSystemSignal()
         catalogObserver = FileSystemSignal()
         
-        currentSelectionValid <~ project.producer |> map { $0 != nil }
         project <~ projectObserver.renameSignal |> map { XCProject(path: $0) }
         project <~ projectObserver.deleteSignal |> map { nil }
         
@@ -94,17 +94,14 @@ class SelectedProjectViewModel {
         }
     }
     
-    func systemImageForCurrentPath() -> NSImage {
-        return systemImageForPath(project.value!.path)
-    }
-    
-    func systemImageForPath(path: Path) -> NSImage {
-        return NSImage.systemImage(path)
+    func systemImageForCurrentPath() -> NSImage? {
+        return project.value != nil ? NSImage.systemImage(project.value!.path) : nil
     }
     
     private func forceSyncSelectionValidity() {
         currentSelectionValid.put(currentSelectionValid.value)
     }
+    
     func newPathSelected(path: Path) {
 //        let project = ProjectSelector.excavateProject(path)
 //        switch project {
@@ -124,7 +121,21 @@ class SelectedProjectViewModel {
                 self.project.put(project)
             })
     }
+    
+    
+    func clearSelection() {
+        project.put(nil)
+    }
+    
+    func urlRepresentation() -> NSURL? {
+        if let project = project.value {
+            return NSURL(fileURLWithPath: project.path)
+        }
+        
+        return nil
+    }
 }
+
 
 // TODO: Find new home for this.
 func setupError(message: String) -> NSAlert {
