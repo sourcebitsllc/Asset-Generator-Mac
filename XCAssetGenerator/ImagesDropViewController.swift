@@ -6,16 +6,10 @@
 //  Copyright (c) 2015 Bader Alabdulrazzaq. All rights reserved.
 //
 
-import Foundation
 import Cocoa
 import ReactiveCocoa
 
-// TODO: Find better way to incorporate VCs and VMs
-
-/// TODO:
-/// Replace the DropView delegate with somehting signal based.
-/// Have the backgorund color changes be observer based. Observe Path and change directly
-/// Maybe even have the backgorund color observe the drag and dorp state and change accordingly.
+// TODO: Find better way to incorporate VCs and VMs. Current workaround is making all properties mutable and unwrapped. Ew.
 
 class ImagesDropViewController: NSViewController, DropViewDelegate {
  
@@ -28,11 +22,10 @@ class ImagesDropViewController: NSViewController, DropViewDelegate {
     static func instantiate(viewModel: ImagesGroupViewModel) -> ImagesDropViewController  {
         let controller = NSStoryboard(name: "Main", bundle: nil)?.instantiateControllerWithIdentifier("ImagesDroppa") as! ImagesDropViewController
         controller.viewModel = viewModel
-        controller.setup()
         return controller
     }
     
-    func setup() {
+    override func viewDidLoad() {
         view.wantsLayer = true
         view.translatesAutoresizingMaskIntoConstraints = false
         
@@ -75,19 +68,15 @@ class ImagesDropViewController: NSViewController, DropViewDelegate {
         
         NSLayoutConstraint.activateConstraints([labelX, labelY])
         
-//        layoutUI(viewModel.currentPathValid())
-        viewModel.currentPathValid.producer
-            |> observeOn(QueueScheduler.mainQueueScheduler)
-//            |> skip(1)
-            |> start(next: { valid in
-                self.layoutUI(valid)
-            })
+        viewModel.currentSelectionValid.producer
+            |> on(next: { valid in
+                self.layoutUI(valid) })
+            |> start()
         
         viewModel.label.producer
-            |> observeOn(QueueScheduler.mainQueueScheduler)
-            |> start(next: { label in
-                self.label.stringValue = label
-            })
+            |> on(next: { label in
+                self.label.stringValue = label })
+            |> start()
     }
     
     func layoutUI(set: Bool) {
@@ -98,10 +87,10 @@ class ImagesDropViewController: NSViewController, DropViewDelegate {
     }
     
     func dropViewDidDragFileOutOfView(dropView: DropView) {
-        if viewModel.isCurrentPathValid() {
-            dropView.layer?.borderColor = NSColor.greenColor().CGColor
+        if viewModel.isCurrentSelectionValid() {
+            dropView.layer?.borderColor = NSColor.dropViewAcceptedColor().CGColor
         } else {
-            dropView.layer?.borderColor = dropView.layer?.backgroundColor
+            dropView.layer?.borderColor = NSColor(calibratedRed: 0.576 , green: 0.713, blue: 0.940, alpha: 1).CGColor
         }
     }
     
@@ -113,12 +102,25 @@ class ImagesDropViewController: NSViewController, DropViewDelegate {
         dropView.layer?.borderColor = NSColor.dropViewHoveringColor().CGColor
     }
     
-    func dropViewDidDropFileToView(dropView: DropView, filePath: String) {
-        viewModel.newPathSelected(filePath)
+    func dropViewDidDropFileToView(dropView: DropView, paths: [Path]) {
+        viewModel.newPathSelected(paths)
     }
     
-    func dropViewShouldAcceptDraggedPath(dropView: DropView, paths: [String]) -> Bool {
-        return viewModel.shouldAcceptPath(paths[0])
+    func dropViewShouldAcceptDraggedPath(dropView: DropView, paths: [Path]) -> Bool {
+        let valid = viewModel.shouldAcceptSelection(paths)
+        if !valid {
+            let anim = CABasicAnimation(keyPath: "position.x")
+            anim.duration = 0.05
+            anim.repeatCount = 3
+            anim.autoreverses = true
+            anim.fromValue = view.frame.origin.x + 10
+            anim.toValue = view.frame.origin.x - 10
+            view.layer?.addAnimation(anim, forKey: "x")
+        }
+        return valid
     }
     
+    func dropViewNumberOfAcceptableItems(dropView: DropView, items: [Path]) -> Int {
+        return viewModel.acceptableItemsOfSelection(items)
+    }
 }
