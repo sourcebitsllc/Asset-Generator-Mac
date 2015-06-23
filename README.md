@@ -14,11 +14,11 @@ Simply drag a folder with images or multiple image files onto the left well, dra
 
 # Features
 
+- Supports iOS and Mac OS assets.
 - AG takes any image file type supported by iOS or Mac OS, adds JSON metadata and packages into an Xcassets library, ready for push to your repo.
 - If you modify images in the source folder, AG detects it and you can build again right away.
 - When you build again, AG appends new assets to the library.
 - Dynamically tracks location of both source and destinations when moved.
-- Partial support for Mac OS assets.
 
 # Notes
 
