@@ -20,6 +20,7 @@ Drag a folder or multiple image files onto the left well, drag an Xcodeproject f
 
 - It does **not** scale or compress your assets. You need to prepare all different sizes yourself.
 - You need to create Images.xcassets library in Xcode beforehand.
+- If you have multiple *.xcassets libraries in your project, Asset Generator will use the first one (alphabetically).
 
 # About
 
