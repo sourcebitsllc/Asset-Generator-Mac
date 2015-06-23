@@ -4,7 +4,7 @@ Asset Generator is a Mac app which takes design assets and adds them to your Xco
 
 # How to Use?
 
-Simply drag a folder with images or multiple image files onto the left well, drag an Xcodeproject file onto the right well and hit **Build**. If you modify images in the source folder, the app detects it and you can build again without hassle.
+Simply drag a folder with images or multiple image files onto the left well, drag an Xcodeproject file onto the right well and hit **Build**.
 
 ![Asset Generator Screenshot](http://i.imgur.com/pLNIH0l.jpg "Asset Generator Screenshot")
 
@@ -14,14 +14,16 @@ Simply drag a folder with images or multiple image files onto the left well, dra
 
 # Features
 
-- Generates iOS assets.
+- AG takes any image file type supported by iOS or Mac OS, adds JSON metadata and packages into an Xcassets library, ready for push to your repo.
+- If you modify images in the source folder, AG detects it and you can build again right away.
+- When you build again, AG appends new assets to the library.
+- Dynamically tracks location of both source and destinations when moved.
 - Partial support for Mac OS assets.
-- Accepts any image file type supported by iOS or Mac OS.
 
 # Notes
 
-- It does **not** scale or compress your assets. You need to prepare all different sizes yourself.
-- You need to create Images.xcassets library in Xcode beforehand.
+- It does **not** scale or compress your assets. You need to prepare all different dimensions yourself.
+- You need to create Images.xcassets library in Xcode before you use AG.
 - If you have multiple *.xcassets libraries in your project, Asset Generator will use the first one (alphabetically).
 
 # About
