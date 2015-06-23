@@ -13,14 +13,19 @@ protocol DropViewDelegate {
     func dropViewDidDropFileToView(dropView: DropView, paths: [Path])
     func dropViewDidDragValidFileIntoView(dropView: DropView) // Should be called when folder enters drag areas.
     func dropViewDidDragInvalidFileIntoView(dropView: DropView)
-    func dropViewDidDragFileOutOfView(dropView: DropView) // should be called file already in drag area, but we drag it out to delete it. May not be nessecary.
+    func dropViewDidDragFileOutOfView(dropView: DropView)
+    func dropViewNumberOfAcceptableItems(dropView: DropView, items: [Path]) -> Int
+}
+
+protocol DropViewMouseDelegate {
+    func dropViewDidRightClick(dropView: DropView, event: NSEvent)
 }
 
 
 class DropView: NSView {
 
     var delegate: DropViewDelegate?
-    
+    var mouse: DropViewMouseDelegate?
     // MARK:- Initializers
     
     override init(frame frameRect: NSRect) {
@@ -49,8 +54,9 @@ class DropView: NSView {
     override func draggingEntered(sender: NSDraggingInfo) -> NSDragOperation {
         let paths = sender.draggingPasteboard().propertyListForType(NSFilenamesPboardType) as! [String]
         let acceptDrag = delegate?.dropViewShouldAcceptDraggedPath(self, paths: paths) ?? false
-        
         if acceptDrag {
+            sender.numberOfValidItemsForDrop = delegate?.dropViewNumberOfAcceptableItems(self, items: paths)
+                                               ?? sender.numberOfValidItemsForDrop
             delegate?.dropViewDidDragValidFileIntoView(self)
             return NSDragOperation.Copy
         } else {
@@ -79,4 +85,10 @@ class DropView: NSView {
         delegate?.dropViewDidDropFileToView(self, paths: filenames)
     }
     
+}
+
+extension DropView {
+    override func rightMouseDown(theEvent: NSEvent) {
+        mouse?.dropViewDidRightClick(self, event: theEvent)
+    }
 }
