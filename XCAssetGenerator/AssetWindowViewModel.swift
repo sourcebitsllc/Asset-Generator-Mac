@@ -54,8 +54,8 @@ struct AssetWindowViewModel {
         // RAC3 TODO: this can be refactored to be prettier.
         canGenerate <~ combineLatest(imagesViewModel.selectionSignal, projectViewModel.projectSignal, assetGenerator.running.producer)
 //            |> throttle(0.5, onScheduler: QueueScheduler.mainQueueScheduler)
-            |> map { path, project, running in
-                        let validSource = AssetGeneratorInputValidator.validateSource(path.asAssets())
+            |> map { selection, project, running in
+                        let validSource = AssetGeneratorInputValidator.validateSource(self.imagesViewModel.assetRepresentation())
                         let validTarget = AssetGeneratorInputValidator.validateTarget(project)
                         let notRunning  = running == false
 //                        println("Can Generate")

@@ -37,13 +37,6 @@ enum ImageSelection: Printable, Serializable {
         }
     }
     
-    func asAssets() -> [Asset] {
-        return analysis(
-            ifNone: { [] },
-            ifImages: { $0.map { Asset(fullPath: $0, ancestor: $0.stringByDeletingLastPathComponent) } },
-            ifFolder: { folder in PathQuery.availableImages(from: folder).map { Asset(fullPath: $0, ancestor: folder) }})
-    }
-    
     var description: String {
         return analysis(
             ifNone: { "None:" },
