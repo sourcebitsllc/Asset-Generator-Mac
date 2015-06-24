@@ -32,6 +32,7 @@ class ImagesDropViewController: NSViewController, DropViewDelegate {
         // Intialize RoundedDropView
         dropView.translatesAutoresizingMaskIntoConstraints = false
         dropView.delegate = self
+        dropView.mouse = self
         dropView.layer?.borderWidth = 3
         dropView.layer?.backgroundColor = NSColor.redColor().CGColor
         let fillDropView = NSLayoutConstraint.centeringConstraints(dropView, into: view, size: NSSize(width: 128, height: 128))
@@ -122,5 +123,32 @@ class ImagesDropViewController: NSViewController, DropViewDelegate {
     
     func dropViewNumberOfAcceptableItems(dropView: DropView, items: [Path]) -> Int {
         return viewModel.acceptableItemsOfSelection(items)
+    }
+}
+
+extension ImagesDropViewController: DropViewMouseDelegate {
+    func dropViewDidRightClick(dropView: DropView, event: NSEvent) {
+        let enabled = viewModel.isCurrentSelectionValid()
+        
+        let reveal = NSMenuItem(title: "Show in Finder", action:Selector("revealMenuPressed"), keyEquivalent: "")
+        reveal.enabled = enabled
+        
+        let clear = NSMenuItem(title: "Clear Selection", action: Selector("clearMenuPressed"), keyEquivalent: "")
+        clear.enabled = enabled
+       
+        let menu = NSMenu(title: "Asset Generator")
+        menu.autoenablesItems = false
+        menu.insertItem(reveal, atIndex: 0)
+        menu.insertItem(clear, atIndex: 1)
+        NSMenu.popUpContextMenu(menu, withEvent: event, forView: self.view)
+    }
+    
+    func clearMenuPressed() {
+        viewModel.clearSelection()
+    }
+    
+    func revealMenuPressed() {
+        let items = viewModel.urlRepresentation()
+        NSWorkspace.sharedWorkspace().activateFileViewerSelectingURLs(items)
     }
 }
