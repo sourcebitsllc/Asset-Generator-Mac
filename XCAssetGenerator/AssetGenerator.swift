@@ -43,8 +43,8 @@ class AssetGenerator {
                 let existingJSONImages = AssetAttribute.sanitizeJSON(json["images"] as! [JSONDictionary])
 
                 updateAttributesWithAssets(existingJSONImages, assets: assets)
-                    >>> XCAssetsJSON.updateImagesValue(json)
-                    >>> JSON.writeJSON(to: destinationJSON)
+                    |> XCAssetsJSON.updateImagesValue(json)
+                    |> JSON.writeJSON(to: destinationJSON)
                 
             } else {
                 assets.map { AssetMetaData.create($0).attributes.serialized }
