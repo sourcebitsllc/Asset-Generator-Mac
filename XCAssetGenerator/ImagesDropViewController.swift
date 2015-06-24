@@ -62,6 +62,8 @@ class ImagesDropViewController: NSViewController, DropViewDelegate {
         label.backgroundColor = NSColor.controlColor()
         label.bordered = false
         label.alignment = .CenterTextAlignment
+        label.preferredMaxLayoutWidth = 170 // 20 characters wide.
+        label.lineBreakMode = NSLineBreakMode.ByTruncatingTail
         label.font = NSFont.systemFontOfSize(13)
         view.addSubview(label)
         let labelX  = NSLayoutConstraint(item: label, attribute: NSLayoutAttribute.CenterX, relatedBy: NSLayoutRelation.Equal, toItem: view, attribute: NSLayoutAttribute.CenterX, multiplier: 1, constant: 0)
