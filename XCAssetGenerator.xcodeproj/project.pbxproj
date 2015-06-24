@@ -201,6 +201,8 @@
 				1ED9A11C1B1F9810000A41B9 /* XCProject.swift */,
 				1ED9A0F51B1F9810000A41B9 /* AssetCatalog.swift */,
 				1ED9A0FF1B1F9810000A41B9 /* ErrorType.swift */,
+				1ED9A0F61B1F9810000A41B9 /* AssetGenerationController.swift */,
+				1ED9A0F71B1F9810000A41B9 /* AssetGenerator.swift */,
 				1ED9A0FA1B1F9810000A41B9 /* AssetType.swift */,
 				1E48EF421B31861E00A63FBF /* AssetAttribute.swift */,
 			);
@@ -249,8 +251,6 @@
 				1ED9A1521B1F9FBE000A41B9 /* Views */,
 				1ED9A1541B1FA013000A41B9 /* Extensions and Operators */,
 				1ED885CC1B27F3F400197226 /* Helpers */,
-				1ED9A0F61B1F9810000A41B9 /* AssetGenerationController.swift */,
-				1ED9A0F71B1F9810000A41B9 /* AssetGenerator.swift */,
 				1ED9A0F81B1F9810000A41B9 /* AssetGeneratorInputValidator.swift */,
 				1ED9A1041B1F9810000A41B9 /* FileSystemObserver.swift */,
 				1ED9A1071B1F9810000A41B9 /* JSON.swift */,

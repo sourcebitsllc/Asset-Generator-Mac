@@ -190,6 +190,7 @@
         <!--Project Drop View Controller-->
         <scene sceneID="xmg-PV-Dbz">
             <objects>
+                <customObject id="1oC-CS-VQZ" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="ProjectDroppa" id="eLI-Ni-zv4" customClass="ProjectDropViewController" customModule="XCAssetGenerator" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" horizontalCompressionResistancePriority="1000" id="roB-xS-oMs">
                         <rect key="frame" x="0.0" y="0.0" width="150" height="150"/>
@@ -205,7 +206,6 @@
                         <outlet property="dropView" destination="DSQ-gO-8E1" id="CIM-UG-pSB"/>
                     </connections>
                 </viewController>
-                <customObject id="1oC-CS-VQZ" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-732" y="913"/>
         </scene>
