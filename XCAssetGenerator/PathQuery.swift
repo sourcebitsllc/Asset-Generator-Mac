@@ -8,11 +8,15 @@
 
 import Foundation
 
+func isSupportedImage(path: Path) -> Bool {
+    return path.hasSuffix(".png") || path.hasSuffix(".jpg") || path.hasSuffix(".jpeg")
+}
+
 struct PathQuery {
 
     static func availableImages(from path: Path) -> [Path] {
         return queryWith(path, searchOption: NSDirectoryEnumerationOptions.SkipsHiddenFiles) {
-            return $0.hasSuffix(".png") || $0.hasSuffix(".jpg") || $0.hasSuffix(".jpeg")
+            return isSupportedImage($0)
         }
     }
     

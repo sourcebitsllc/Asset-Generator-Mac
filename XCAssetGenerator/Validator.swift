@@ -21,18 +21,11 @@ extension BookmarkResolver: Validator {
     }
 }
 
-
+// TODO:
 class ProjectValidator: Validator {
     class func isProjectValid(project: XCProject) -> Bool {
-        return BookmarkResolver.isBookmarkValid(project.bookmark)
-    }
-    
-    class func isAssetValid(project: XCProject) -> Bool {
-        return BookmarkResolver.isBookmarkValid(project.assetBookmark)
-    }
-    
-    class func isAssetValid(asset: AssetCatalog) -> Bool {
-        return BookmarkResolver.isBookmarkValid(asset.bookmark)
+        return PathValidator.directoryExists(path: project.path)
+//        return BookmarkResolver.isBookmarkValid(project.bookmark)
     }
 }
 
@@ -51,6 +44,19 @@ class PathValidator: Validator {
             if isDirectory && url.path!.isAssetCatalog() { return true }
             return nil
         } ?? false
+        
+//        let url = NSURL(fileURLWithPath: directory, isDirectory: true)
+//        
+//        let generator = NSFileManager.defaultManager().enumeratorAtURL(url!, includingPropertiesForKeys: nil, options: NSDirectoryEnumerationOptions.SkipsHiddenFiles, errorHandler: nil)
+//        
+//        while let element = generator?.nextObject() as? NSURL {
+//            if element.path!.isAssetCatalog() {
+//                return true
+//            }
+//        }
+//        
+//        return false
+
     }
 
     

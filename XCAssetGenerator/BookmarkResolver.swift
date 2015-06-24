@@ -13,13 +13,13 @@ typealias Bookmark = NSData
 
 class BookmarkResolver {
     
-    class func resolvePathFromBookmark(data: Bookmark) -> String? {
+    class func resolvePathFromBookmark(data: Bookmark) -> Path? {
         let url = NSURL(byResolvingBookmarkData: data, options: NSURLBookmarkResolutionOptions.WithoutMounting, relativeToURL: nil, bookmarkDataIsStale: nil, error: nil)
         return url?.path ?? nil
     }
     
     class func resolveBookmarkFromPath(path: Path) -> Bookmark {
-        let url: NSURL = NSURL(fileURLWithPath: path, isDirectory: true)!
+        let url: NSURL = NSURL(fileURLWithPath: path)!
         return resolveBookmarkFromURL(url)
     }
     

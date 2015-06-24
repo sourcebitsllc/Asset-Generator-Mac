@@ -10,8 +10,8 @@ import Foundation
 
 struct AssetGeneratorInputValidator: Validator {
     
-    static func validateSource(path: Path?) -> Bool {
-        return (path != nil) ? PathValidator.directoryContainsImages(path: path!) : false
+    static func validateSource(selection: [Asset]?) -> Bool {
+        return selection?.count > 0
     }
     
 //    static func validateTarget(project: XCProject?) -> Bool {

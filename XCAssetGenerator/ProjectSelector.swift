@@ -8,19 +8,18 @@
 
 import Foundation
 import Result
+import ReactiveCocoa
 
 
 struct ProjectSelector {
-    
-    // Can this be done to be more linear? something like >>-,<^> withouth ??
-    
+        
     /// Given a URL, find a project with an AssetCatalog. Return ProjectSelectionError if none.
     static func excavateProject(url: Path) -> Result<XCProject, ProjectSelectionError> {
         let fromProject = assetFromProject <^> asProject(url)
         return fromProject ?? assetFromDirectory(url)
     }
     
-    static func circumsizeProject(url: Path) -> Result<XCProject, ProjectSelectionError> {
+    static func inspectProject(url: Path) -> Result<XCProject, ProjectSelectionError> {
         let fromProject = assetFromProject <^> asProject(url)
         return fromProject!
     }

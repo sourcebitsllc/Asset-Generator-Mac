@@ -11,6 +11,22 @@ import Foundation
 // NOPE
 // TODO:
 typealias JSONDictionary = NSDictionary
+typealias MutableJSONDictionary = NSMutableDictionary
+
+struct XCAssetsJSON {
+    static func createJSONDefaultWrapper(images: [SerializedAssetAttribute]) -> JSONDictionary {
+        let info = ["version": "1", "author": "xcode"]
+        let json = ["images": images, "info": info]
+        return json
+    }
+    
+    static func updateImagesValue(json: MutableJSONDictionary)(value: [SerializedAssetAttribute]) -> JSONDictionary {
+        var copy = json
+        copy["images"] = value
+        return copy
+    }
+    
+}
 
 struct JSON {
     
@@ -21,15 +37,13 @@ struct JSON {
         outputStream?.close()
     }
     
-    ///
-    /// :param:
-    /// :returns:
-    static func createJSONDefaultWrapper(images: [SerializedAssetAttribute]) -> JSONDictionary {
-        let info = ["version": "1", "author": "xcode"]
-        let json = ["images": images, "info": info]
-        return json
+    static func writeJSON(to file: Path)(withJSON json: JSONDictionary) {
+        let outputStream = NSOutputStream(toFileAtPath: file, append: false)
+        outputStream?.open()
+        NSJSONSerialization.writeJSONObject(json, toStream: outputStream!, options: NSJSONWritingOptions.PrettyPrinted, error: nil)
+        outputStream?.close()
     }
-    
+
     static func readJSON(path: Path) -> JSONDictionary {
         var error: NSError?
         let d = NSData(contentsOfFile: path, options: NSDataReadingOptions.DataReadingMappedIfSafe, error: &error)
@@ -38,3 +52,4 @@ struct JSON {
         return json
     }
 }
+

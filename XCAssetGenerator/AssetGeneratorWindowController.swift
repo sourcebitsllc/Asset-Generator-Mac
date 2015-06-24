@@ -53,7 +53,6 @@ class AssetGeneratorWindowController: NSWindowController {
         })
         
         viewModel.statusLabel.producer
-            |> observeOn(QueueScheduler.mainQueueScheduler)
             |> start(next: { label in
                 self.statusLabel.stringValue = label
         })
@@ -92,6 +91,7 @@ class AssetGeneratorWindowController: NSWindowController {
     private func createProjectArea() {
         let projectViewModel = viewModel.viewModelForSelectedProject()
         projectViewController = ProjectDropViewController.instantiate(projectViewModel)
+//        projectViewController = ProjectDropViewController(viewModel: projectViewModel)
         projectViewController.view.translatesAutoresizingMaskIntoConstraints = false
         contentViewController?.view.addSubview(projectViewController.view)
         
