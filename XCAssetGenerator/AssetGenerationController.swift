@@ -49,12 +49,12 @@ class AssetGenerationController: NSObject {
         super.init()
     }
     
-    func assetGenerationProducer(assets: [Asset], destination: Path?) -> SignalProducer<GenerationState, AssetGeneratorError> {
+    func assetGenerationProducer(assets: [Asset]?, destination: Path?) -> SignalProducer<GenerationState, AssetGeneratorError> {
         return SignalProducer { (sink, disposable) in
             self.running.put(true)
             
             // TODO: Swift 2.0 guard + defer.
-            if assets.count == 0 {
+            if assets == nil {
                 sendError(sink, .InvalidSource)
                 self.running.put(false)
                 return
@@ -66,7 +66,7 @@ class AssetGenerationController: NSObject {
                 return
             }
             
-            self.assetGenerator.generateAssets(assets, target: destination!)(observer: sink) {
+            self.assetGenerator.generateAssets(assets!, target: destination!)(observer: sink) {
                 self.running.put(false)
             }
         }

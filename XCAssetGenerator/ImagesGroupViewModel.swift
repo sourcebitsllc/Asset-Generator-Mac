@@ -138,9 +138,9 @@ class ImagesGroupViewModel {
         return path.filter(isSupportedImage).count
     }
     
-    func assetRepresentation() -> [Asset] {
+    func assetRepresentation() -> [Asset]? {
         return selection.value.analysis(
-            ifNone: { [] },
+            ifNone: { nil },
             ifImages: { $0.map { Asset(fullPath: $0, ancestor: $0.stringByDeletingLastPathComponent) } },
             ifFolder: { folder in PathQuery.availableImages(from: folder).map { Asset(fullPath: $0, ancestor: folder)}})
     }

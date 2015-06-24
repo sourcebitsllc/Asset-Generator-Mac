@@ -15,11 +15,11 @@ struct AssetWindowViewModel {
     let canGenerate = MutableProperty<Bool>(false)
     let generateTitle = MutableProperty<String>("Build")
     
-    private let imagesViewModel: ImagesGroupViewModel!
-    private let projectViewModel: SelectedProjectViewModel!
-    private var progressViewModel: ProgressIndicationViewModel!
+    private let imagesViewModel: ImagesGroupViewModel
+    private let projectViewModel: SelectedProjectViewModel
+    private var progressViewModel: ProgressIndicationViewModel
     
-    /*private*/ let assetGenerator: AssetGenerationController!
+    private let assetGenerator: AssetGenerationController!
     
     // RAC3 TODO: Main WindowController Initialization.
     init() {
@@ -27,41 +27,44 @@ struct AssetWindowViewModel {
         projectViewModel = SelectedProjectViewModel()
         progressViewModel = ProgressIndicationViewModel()
         assetGenerator  = AssetGenerationController()
-        
-        assetGenerator.source <~ imagesViewModel.pathSignal
-        assetGenerator.target <~ projectViewModel.projectSignal |> map { project in return project?.assetPath }
-        
-
+      
         statusLabel = MutableProperty<String>("")
-        statusLabel <~ combineLatest(imagesViewModel.pathSignal, projectViewModel.projectSignal, imagesViewModel.contentSignal, projectViewModel.contentSignal)
+        
+        let c = combineLatest(imagesViewModel.selectionSignal, projectViewModel.projectSignal, imagesViewModel.contentSignal, projectViewModel.contentSignal) |> map { a in
+            return ""
+        }
+        
+        statusLabel <~ combineLatest(imagesViewModel.selectionSignal, projectViewModel.projectSignal, imagesViewModel.contentSignal, projectViewModel.contentSignal)
             |> filter { _,_,_,_ in
                 let stable = self.progressViewModel.animating.value == false
                 return stable
             }
-            |> map { path, project, _, _ in
-                return StatusViewModel.status(path, target: project)
-        }
-
-        statusLabel <~ assetGenerator.generatedSignal |> map { generated in
-            let catalog = self.projectViewModel.currentCatalog!
-            return StatusViewModel.postGeneration(catalog, amount: generated)
+            |> map { selection, project, _, _ in
+                let assets = self.imagesViewModel.assetRepresentation()
+                return StatusCrafter.status(assets: assets, target: project)
         }
         
+        
+//        statusLabel <~ assetGenerator.generatedSignal |> map { generated in
+//            let catalog = self.projectViewModel.currentCatalog!
+//            return StatusCrafter.postGeneration(catalog, amount: generated)
+//        }
         
         //
         // RAC3 TODO: this can be refactored to be prettier.
-        canGenerate <~ combineLatest(imagesViewModel.pathSignal, projectViewModel.projectSignal, assetGenerator.running.producer)
+        canGenerate <~ combineLatest(imagesViewModel.selectionSignal, projectViewModel.projectSignal, assetGenerator.running.producer)
 //            |> throttle(0.5, onScheduler: QueueScheduler.mainQueueScheduler)
             |> map { path, project, running in
-                        let validSource = AssetGeneratorInputValidator.validateSource(path)
+                        let validSource = AssetGeneratorInputValidator.validateSource(path.asAssets())
                         let validTarget = AssetGeneratorInputValidator.validateTarget(project)
                         let notRunning  = running == false
-                        println("Can Generate")
+//                        println("Can Generate")
                         return validSource && validTarget && notRunning
             }
-        generateTitle <~ assetGenerator.generatedSignal
-//            |> throttle(0.5, onScheduler: QueueScheduler.mainQueueScheduler)
-            |> map { _ in return "Build Again" }
+//        generateTitle <~ assetGenerator.generatedSignal
+////            |> throttle(0.5, onScheduler: QueueScheduler.mainQueueScheduler)
+//            |> map { _ in return "Build Again" }
+        
     }
     
     func viewModelForImagesGroup() -> ImagesGroupViewModel {
@@ -77,12 +80,28 @@ struct AssetWindowViewModel {
     }
     
     func generateAssets() {
-        assetGenerator.assetGeneratorSignal
+        // Wut
+        let assets = imagesViewModel.assetRepresentation()
+        let catalog: MutableProperty<Path?> = MutableProperty(nil)
+        catalog <~ projectViewModel.projectSignal |> take(1) |> map { project in return project?.catalog?.path }
+//        println(catalog.value)
+        // End Wut
+        assetGenerator.assetGenerationProducer(assets, destination: catalog.value)
             |> startOn(QueueScheduler.mainQueueScheduler)
-            |> on(completed: {
-                self.progressViewModel.progressFinished()
-                }, next: { r in
-                    self.progressViewModel.updateProgress(r) })
+            |> on(started: {
+                self.progressViewModel.progressStarted()
+                }, completed: {
+                    self.generateTitle.put("Build Again")
+                    self.progressViewModel.progressFinished()
+                }, next: { report in
+                    switch report {
+                    case .Progress(let p):
+                        self.progressViewModel.updateProgress(p)
+                    case .Assets(let a):
+                        let catalog = self.projectViewModel.currentCatalog!
+                        StatusCrafter.postGeneration(catalog, amount: a) |> self.statusLabel.put
+                    }
+            })
             |> start()
     }
     

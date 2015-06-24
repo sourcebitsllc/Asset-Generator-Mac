@@ -14,29 +14,28 @@ struct StatusCrafter {
 
     static func postGeneration(catalog: Path, amount: Int) -> Status {
         let s = pluralize(amount, singular: "asset was", plural: "assets were")
-        return "\(s) added to \(catalog)"
+        return "\(s) added to \(catalog)."
     }
     
-    static func status(selection: ImageSelection, target: XCProject?) -> Status {
-        switch (selection, target?.catalog) {
-        case (.Folder, .Some(let catalog)):
-            return newAssetsStatus(selection.asAssets(), catalog: catalog)
-        case (.Images, .Some(let catalog)):
-            return newAssetsStatus(selection.asAssets(), catalog: catalog)
-        case (.None ,_):
+    static func status(#assets: [Asset]?, target: XCProject?) -> Status {
+        switch (assets, target?.catalog) {
+        case (.None, _):
             fallthrough
         case (_, .None):
-            return "Drop a folder with slices you'd like to add to your Xcode project"
+            return "Drop a folder with slices you'd like to add to your Xcode project."
+        case (.Some(let a), .Some(let catalog)) where a.count == 0:
+            return "Add slices to the folder in order to build assets."
+        case (.Some(let a), .Some(let catalog)):
+            return newAssetsStatus(a, catalog: catalog)
         default:
             return ""
         }
-        
     }
     
     private static func newAssetsStatus(assets: [Asset], catalog: AssetCatalog) -> Status {
         let total = AssetDiff.diffWithOperation(assets, catalog: catalog)(operation: .NewAssets)
         let n = pluralize(total, singular: "new asset", plural: "new assets")
-        return  "Hit Build to add \(n) to your project"
+        return  "Hit Build to add \(n) to your project."
     }
     
 }
