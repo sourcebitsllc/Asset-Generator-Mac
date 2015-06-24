@@ -79,7 +79,6 @@ struct AssetAttribute: Serializable {
 
 struct AssetAttributeProcessor {
     
-    // usingAsset? withAsset? assetProcessor. process(asset:), with(asset:)
     static func withAsset(path: Path) -> AssetAttribute {
         let name = path.lastPathComponent
         
@@ -104,7 +103,7 @@ struct AssetAttributeProcessor {
         let width = result[kCGImagePropertyPixelWidth as String]! as! Int
         
         let is2x = name.contains("@2x")
-        let idion = "mac"
+        let idiom = "mac"
         var scale = is2x ? "2x" : "1x"
         var size = "16x16"
         
@@ -131,7 +130,7 @@ struct AssetAttributeProcessor {
             
         }
         
-        return AssetAttribute(filename: name, scale: scale, idiom: idion, size: size)
+        return AssetAttribute(filename: name, scale: scale, idiom: idiom, size: size)
     }
     
     static func withIcon(path: Path) -> AssetAttribute {
