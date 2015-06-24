@@ -26,39 +26,38 @@ enum ImageSelection: Printable, Serializable {
         return acceptable.count > 0 ? .Images(acceptable) : .None
     }
     
-    func asAssets() -> [Asset] {
+    func analysis<T>(@noescape #ifNone: () -> T, @noescape ifImages: [Path] -> T, @noescape ifFolder: Path -> T) -> T {
         switch self {
         case .None:
-            return []
+            return ifNone()
         case .Images(let images):
-            return images.map { Asset(fullPath: $0, ancestor: $0.stringByDeletingLastPathComponent) }
+            return ifImages(images)
         case .Folder(let folder):
-            return PathQuery.availableImages(from: folder).map { Asset(fullPath: $0, ancestor: folder) }
+            return ifFolder(folder)
         }
     }
     
+    func asAssets() -> [Asset] {
+        return analysis(
+            ifNone: { [] },
+            ifImages: { $0.map { Asset(fullPath: $0, ancestor: $0.stringByDeletingLastPathComponent) } },
+            ifFolder: { folder in PathQuery.availableImages(from: folder).map { Asset(fullPath: $0, ancestor: folder) }})
+    }
+    
     var description: String {
-        switch self {
-        case .None:
-            return "None:"
-        case .Images(let path):
-            return "Image: \(path)"
-        case .Folder(let folder):
-            return "Folder: \(folder)"
-        }
+        return analysis(
+            ifNone: { "None:" },
+            ifImages: { "Image: \($0)" },
+            ifFolder: { "Folder: \($0)" })
     }
     
     typealias Serialized = [Bookmark]?
     
     var serialized: Serialized {
-        switch self {
-        case .None:
-            return nil
-        case .Images(let i):
-            return i.map(BookmarkResolver.resolveBookmarkFromPath)
-        case .Folder(let f):
-            return [BookmarkResolver.resolveBookmarkFromPath(f)]
-        }
+        return analysis(
+            ifNone: { nil },
+            ifImages: { $0.map(BookmarkResolver.resolveBookmarkFromPath) },
+            ifFolder: { [BookmarkResolver.resolveBookmarkFromPath($0)] })
     }
     
     static func deserialize(serial: Serialized) -> ImageSelection {
@@ -80,8 +79,6 @@ class ImagesGroupViewModel {
     let currentSelectionValid: MutableProperty<Bool>
     
     private let contentChanged: MutableProperty<Void>
-    // let image
-    // let colors
     
     var selectionSignal: SignalProducer<ImageSelection, NoError> {
         return selection.producer
@@ -120,14 +117,10 @@ class ImagesGroupViewModel {
     }
     
     func labelForCurrentSelection() -> String {
-        switch selection.value {
-        case .None:
-            return "Xcode Slices"
-        case .Folder(let path):
-            return path.lastPathComponent
-        case .Images(let images):
-            return images.count == 1 ? images[0].lastPathComponent : "Multiple Images"
-        }
+        return selection.value.analysis(
+            ifNone: { "Xcode Slices" },
+            ifImages: { $0.count == 1 ? $0[0].lastPathComponent : "Multiple Images" },
+            ifFolder: { $0.lastPathComponent })
     }
     
     func shouldAcceptSelection(paths: [Path]) -> Bool {
@@ -146,14 +139,10 @@ class ImagesGroupViewModel {
     }
     
     func assetRepresentation() -> [Asset] {
-        switch selection.value {
-        case .None:
-            return []
-        case .Images(let images):
-            return images.map { Asset(fullPath: $0, ancestor: $0.stringByDeletingLastPathComponent) }
-        case .Folder(let folder):
-            return PathQuery.availableImages(from: folder).map { Asset(fullPath: $0, ancestor: folder) }
-        }
+        return selection.value.analysis(
+            ifNone: { [] },
+            ifImages: { $0.map { Asset(fullPath: $0, ancestor: $0.stringByDeletingLastPathComponent) } },
+            ifFolder: { folder in PathQuery.availableImages(from: folder).map { Asset(fullPath: $0, ancestor: folder)}})
     }
 
     
@@ -170,34 +159,24 @@ class ImagesGroupViewModel {
     }
     
     func newPathSelected(paths: [Path]) {
-//        let selection = ImageSelection.create(paths)
         // Which is more readable?
-//        selection.put(.create(paths))
+        // selection.put(.create(paths))
         paths |> ImageSelection.create |> selection.put
-//        ImageSelection.create(paths) |> selection.put
-//        self.selection.put(selection)
 //        self.path.put(path + "/")
     }
     
     func isCurrentSelectionValid() -> Bool {
-        switch selection.value {
-        case .None:
-            return false
-        default:
-            return true
-        }
+        return selection.value.analysis(
+            ifNone: { _ in false },
+            ifImages: { _ in true },
+            ifFolder: { _ in true })
     }
     
-    func systemImageForCurrentPath() -> NSImage {
-        switch selection.value {
-        case .Folder(let path):
-            return NSImage.systemImage(path)
-        case .Images(let paths):
-            return NSImage.systemImageForGroup(paths)
-        default:
-            fatalError("wu")
-        }
-        
+    func systemImageForCurrentPath() -> NSImage? {
+        return selection.value.analysis(
+            ifNone: { nil },
+            ifImages: { NSImage.systemImageForGroup($0) },
+            ifFolder: { NSImage.systemImage($0) })
     }
     
     func clearSelection() {
@@ -205,14 +184,10 @@ class ImagesGroupViewModel {
     }
     
     func urlRepresentation() -> [NSURL] {
-        switch selection.value {
-        case .None:
-            return []
-        case .Images(let images):
-            return images.map { NSURL(fileURLWithPath: $0)! }
-        case .Folder(let folder):
-            return [NSURL(fileURLWithPath: folder)!]
-        }
+        return selection.value.analysis(
+            ifNone: { [] },
+            ifImages: { $0.map { NSURL(fileURLWithPath: $0)! }},
+            ifFolder: { [NSURL(fileURLWithPath: $0)!] })
     }
     
     struct PathStorage {
