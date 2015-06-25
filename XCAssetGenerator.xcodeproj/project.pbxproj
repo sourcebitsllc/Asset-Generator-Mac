@@ -11,6 +11,7 @@
 		1E2D9EE31B26620A009A2745 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1ED9A1461B1F983B000A41B9 /* Main.storyboard */; };
 		1E48EF431B31861E00A63FBF /* AssetAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E48EF421B31861E00A63FBF /* AssetAttribute.swift */; };
 		1EAC3B1F1B3C3EA600B75DD6 /* CABasicAnimation+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EAC3B1E1B3C3EA600B75DD6 /* CABasicAnimation+Extensions.swift */; };
+		1EAC3B211B3CC7D300B75DD6 /* ImageSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EAC3B201B3CC7D300B75DD6 /* ImageSelection.swift */; };
 		1ED096DC1B2D53D8005337A9 /* AssetDiff.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED096DB1B2D53D8005337A9 /* AssetDiff.swift */; };
 		1ED885CB1B27F11200197226 /* Pluralize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED885CA1B27F11200197226 /* Pluralize.swift */; };
 		1ED885CE1B280F8200197226 /* NSColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED885CD1B280F8200197226 /* NSColor+Extensions.swift */; };
@@ -89,6 +90,7 @@
 		1E17A3A01ACF637700785DB2 /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		1E48EF421B31861E00A63FBF /* AssetAttribute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetAttribute.swift; sourceTree = "<group>"; };
 		1EAC3B1E1B3C3EA600B75DD6 /* CABasicAnimation+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CABasicAnimation+Extensions.swift"; sourceTree = "<group>"; };
+		1EAC3B201B3CC7D300B75DD6 /* ImageSelection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageSelection.swift; sourceTree = "<group>"; };
 		1ED096DB1B2D53D8005337A9 /* AssetDiff.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetDiff.swift; sourceTree = "<group>"; };
 		1ED885CA1B27F11200197226 /* Pluralize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pluralize.swift; sourceTree = "<group>"; };
 		1ED885CD1B280F8200197226 /* NSColor+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSColor+Extensions.swift"; sourceTree = "<group>"; };
@@ -160,6 +162,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1EAC3B221B3CC92E00B75DD6 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				1ED9A0F61B1F9810000A41B9 /* AssetGenerationController.swift */,
+				1ED9A0F71B1F9810000A41B9 /* AssetGenerator.swift */,
+			);
+			name = Services;
+			sourceTree = "<group>";
+		};
 		1ED885CC1B27F3F400197226 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
@@ -202,9 +213,8 @@
 			children = (
 				1ED9A11C1B1F9810000A41B9 /* XCProject.swift */,
 				1ED9A0F51B1F9810000A41B9 /* AssetCatalog.swift */,
+				1EAC3B201B3CC7D300B75DD6 /* ImageSelection.swift */,
 				1ED9A0FF1B1F9810000A41B9 /* ErrorType.swift */,
-				1ED9A0F61B1F9810000A41B9 /* AssetGenerationController.swift */,
-				1ED9A0F71B1F9810000A41B9 /* AssetGenerator.swift */,
 				1ED9A0FA1B1F9810000A41B9 /* AssetType.swift */,
 				1E48EF421B31861E00A63FBF /* AssetAttribute.swift */,
 			);
@@ -249,6 +259,7 @@
 			isa = PBXGroup;
 			children = (
 				1ED9A0F31B1F97CE000A41B9 /* AppDelegate.swift */,
+				1EAC3B221B3CC92E00B75DD6 /* Services */,
 				1ED9A1531B1F9FEC000A41B9 /* Models */,
 				1ED9A1511B1F9FA7000A41B9 /* ViewModels */,
 				1ED9A1521B1F9FBE000A41B9 /* Views */,
@@ -420,6 +431,7 @@
 				1ED096DC1B2D53D8005337A9 /* AssetDiff.swift in Sources */,
 				1E48EF431B31861E00A63FBF /* AssetAttribute.swift in Sources */,
 				1EAC3B1F1B3C3EA600B75DD6 /* CABasicAnimation+Extensions.swift in Sources */,
+				1EAC3B211B3CC7D300B75DD6 /* ImageSelection.swift in Sources */,
 				1ED9A1231B1F9810000A41B9 /* AssetWindowViewModel.swift in Sources */,
 				1ED9A1311B1F9810000A41B9 /* NSLayoutConstraint+Extensions.swift in Sources */,
 				1ED9A1241B1F9810000A41B9 /* BookmarkResolver.swift in Sources */,
