@@ -10,19 +10,10 @@ import Cocoa
 import Result
 import ReactiveCocoa
 
-
-/*
-
-class AssetGeneration {
-    var progress: Enum Progress. Or signal
-    var running/executing: MutableProperty<Bool>(false)
-    var assetGenerationSignalProducer: SignalProducer<ENUM,ERROR>
-
-    var assetsGenerated: Signal // MAYBE but not necessarily necessary.
-
-    + Need to refactor assetGeneration to integrate SignalProducer with my logic. (in essense, delegate calls become sink dumps.
+enum GenerationState {
+    case Progress(Float)
+    case Assets(Int)
 }
-*/
 
 enum AssetGeneratorError: ErrorType {
     case InvalidSource
@@ -33,20 +24,13 @@ enum AssetGeneratorError: ErrorType {
     }
 }
 
-
-enum AssetGenerationOptions {
-    case GenerateMissingAssets
-    case CreateDesitnationIfMissing
-}
-
-class AssetGenerationController: NSObject {
+class AssetGenerationController {
 
     private let assetGenerator: AssetGenerator
     let running: MutableProperty<Bool> = MutableProperty<Bool>(false)
     
-    override init() {
+    init() {
         assetGenerator = AssetGenerator()
-        super.init()
     }
     
     func assetGenerationProducer(assets: [Asset]?, destination: Path?) -> SignalProducer<GenerationState, AssetGeneratorError> {

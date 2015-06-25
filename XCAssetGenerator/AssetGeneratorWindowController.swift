@@ -67,7 +67,6 @@ class AssetGeneratorWindowController: NSWindowController {
 
     @IBAction func generateButtonPressed(sneder: AnyObject!) {
         // TODO: Options -> Pushed to 2.0
-        var options : [AssetGenerationOptions]? = [AssetGenerationOptions]()
         viewModel.generateAssets()
     }
     

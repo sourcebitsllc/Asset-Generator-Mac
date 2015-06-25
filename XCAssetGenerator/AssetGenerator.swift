@@ -9,10 +9,6 @@
 import Foundation
 import ReactiveCocoa
 
-enum GenerationState {
-    case Progress(Float)
-    case Assets(Int)
-}
 
 class AssetGenerator {
     typealias AssetGeneratorObserver = Signal<GenerationState, AssetGeneratorError>.Observer
