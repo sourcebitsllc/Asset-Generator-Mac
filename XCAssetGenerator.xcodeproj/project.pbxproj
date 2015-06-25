@@ -41,7 +41,7 @@
 		1ED9A1371B1F9810000A41B9 /* ProjectDropViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A1101B1F9810000A41B9 /* ProjectDropViewController.swift */; };
 		1ED9A1381B1F9810000A41B9 /* ProjectSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A1111B1F9810000A41B9 /* ProjectSelector.swift */; };
 		1ED9A13B1B1F9810000A41B9 /* RoundedDropView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A1141B1F9810000A41B9 /* RoundedDropView.swift */; };
-		1ED9A13C1B1F9810000A41B9 /* SelectedProjectViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A1151B1F9810000A41B9 /* SelectedProjectViewModel.swift */; };
+		1ED9A13C1B1F9810000A41B9 /* ProjectSelectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A1151B1F9810000A41B9 /* ProjectSelectionViewModel.swift */; };
 		1ED9A13D1B1F9810000A41B9 /* Serializable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A1161B1F9810000A41B9 /* Serializable.swift */; };
 		1ED9A13E1B1F9810000A41B9 /* StatusCrafter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A1171B1F9810000A41B9 /* StatusCrafter.swift */; };
 		1ED9A13F1B1F9810000A41B9 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A1181B1F9810000A41B9 /* StringExtension.swift */; };
@@ -119,7 +119,7 @@
 		1ED9A1101B1F9810000A41B9 /* ProjectDropViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectDropViewController.swift; sourceTree = "<group>"; };
 		1ED9A1111B1F9810000A41B9 /* ProjectSelector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectSelector.swift; sourceTree = "<group>"; };
 		1ED9A1141B1F9810000A41B9 /* RoundedDropView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundedDropView.swift; sourceTree = "<group>"; };
-		1ED9A1151B1F9810000A41B9 /* SelectedProjectViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectedProjectViewModel.swift; sourceTree = "<group>"; };
+		1ED9A1151B1F9810000A41B9 /* ProjectSelectionViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProjectSelectionViewModel.swift; sourceTree = "<group>"; };
 		1ED9A1161B1F9810000A41B9 /* Serializable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Serializable.swift; sourceTree = "<group>"; };
 		1ED9A1171B1F9810000A41B9 /* StatusCrafter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatusCrafter.swift; sourceTree = "<group>"; };
 		1ED9A1181B1F9810000A41B9 /* StringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
@@ -177,7 +177,7 @@
 			children = (
 				1ED9A0FB1B1F9810000A41B9 /* AssetWindowViewModel.swift */,
 				1ED9A1061B1F9810000A41B9 /* ImagesGroupViewModel.swift */,
-				1ED9A1151B1F9810000A41B9 /* SelectedProjectViewModel.swift */,
+				1ED9A1151B1F9810000A41B9 /* ProjectSelectionViewModel.swift */,
 				1ED9A10E1B1F9810000A41B9 /* ProgressIndicationViewModel.swift */,
 			);
 			name = ViewModels;
@@ -441,7 +441,7 @@
 				1ED9A1211B1F9810000A41B9 /* AssetGeneratorWindowController.swift in Sources */,
 				1ED9A11D1B1F9810000A41B9 /* AssetCatalog.swift in Sources */,
 				1ED9A1371B1F9810000A41B9 /* ProjectDropViewController.swift in Sources */,
-				1ED9A13C1B1F9810000A41B9 /* SelectedProjectViewModel.swift in Sources */,
+				1ED9A13C1B1F9810000A41B9 /* ProjectSelectionViewModel.swift in Sources */,
 				1ED9A1321B1F9810000A41B9 /* Optionals+Operators.swift in Sources */,
 				1ED9A1431B1F9810000A41B9 /* XCProject.swift in Sources */,
 			);

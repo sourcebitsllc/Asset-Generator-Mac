@@ -16,7 +16,7 @@ struct AssetWindowViewModel {
     let generateTitle = MutableProperty<String>("Build")
     
     private let imagesViewModel: ImagesGroupViewModel
-    private let projectViewModel: SelectedProjectViewModel
+    private let projectViewModel: ProjectSelectionViewModel
     private var progressViewModel: ProgressIndicationViewModel
     
     private let assetGenerator: AssetGenerationController!
@@ -24,7 +24,7 @@ struct AssetWindowViewModel {
     // RAC3 TODO: Main WindowController Initialization.
     init() {
         imagesViewModel = ImagesGroupViewModel()
-        projectViewModel = SelectedProjectViewModel()
+        projectViewModel = ProjectSelectionViewModel()
         progressViewModel = ProgressIndicationViewModel()
         assetGenerator  = AssetGenerationController()
       
@@ -71,7 +71,7 @@ struct AssetWindowViewModel {
         return imagesViewModel
     }
     
-    func viewModelForSelectedProject() -> SelectedProjectViewModel {
+    func viewModelForSelectedProject() -> ProjectSelectionViewModel {
         return projectViewModel
     }
     

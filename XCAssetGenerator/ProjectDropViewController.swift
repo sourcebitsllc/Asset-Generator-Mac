@@ -18,11 +18,11 @@ class ProjectDropViewController: NSViewController, DropViewDelegate {
     var dropImageView: NSImageView!
     var well: NSImageView!
     var label: NSTextField!
-    var viewModel: SelectedProjectViewModel!
+    var viewModel: ProjectSelectionViewModel!
     
     let borderWidth: CGFloat = 3
     
-    static func instantiate(viewModel: SelectedProjectViewModel) -> ProjectDropViewController {
+    static func instantiate(viewModel: ProjectSelectionViewModel) -> ProjectDropViewController {
         let controller = NSStoryboard(name: "Main", bundle: nil)!.instantiateControllerWithIdentifier("ProjectDroppa") as! ProjectDropViewController
         controller.viewModel = viewModel
         return controller

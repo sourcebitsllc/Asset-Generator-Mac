@@ -17,7 +17,7 @@ enum Progress {
 class ProgressIndicationViewModel {
     let animating: MutableProperty<Bool>
     
-    let progress: Signal<Progress, NoError> // faux Hot signal. "Warm". How do i make model one signal in terms of other operations, even when it does not incur sideeffects by itself.
+    let progress: Signal<Progress, NoError>
     private let sink: SinkOf<Event<Progress, NoError>>
     
     let lineWidth: CGFloat = 3

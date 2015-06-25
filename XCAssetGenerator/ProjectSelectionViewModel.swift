@@ -1,5 +1,5 @@
 //
-//  SelectedProjectViewModel.swift
+//  ProjectSelectionViewModel.swift
 //  XCAssetGenerator
 //
 //  Created by Bader on 5/26/15.
@@ -9,7 +9,7 @@
 import Foundation
 import ReactiveCocoa
 
-class SelectedProjectViewModel {
+class ProjectSelectionViewModel {
     private let project: MutableProperty<XCProject?>
     private let contentChanged: MutableProperty<Void>
     
