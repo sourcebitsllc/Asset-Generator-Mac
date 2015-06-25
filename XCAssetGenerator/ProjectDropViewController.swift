@@ -118,18 +118,13 @@ class ProjectDropViewController: NSViewController, DropViewDelegate {
     }
 
     func dropViewShouldAcceptDraggedPath(dropView: DropView, paths: [String]) -> Bool {
-        let acceptable = viewModel.shouldAcceptPath(paths)
+        let valid = viewModel.shouldAcceptPath(paths)
         
-        if !acceptable {
-            let anim = CABasicAnimation(keyPath: "position.x")
-            anim.duration = 0.05
-            anim.repeatCount = 3
-            anim.autoreverses = true
-            anim.fromValue = view.frame.origin.x + 10
-            anim.toValue = view.frame.origin.x - 10
+        if !valid {
+            let anim = CABasicAnimation.shakeAnimation(magnitude: 10)
             view.layer?.addAnimation(anim, forKey: "x")
         }
-        return acceptable
+        return valid
     }
     
     func dropViewNumberOfAcceptableItems(dropView: DropView, items: [Path]) -> Int {

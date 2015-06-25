@@ -111,13 +111,9 @@ class ImagesDropViewController: NSViewController, DropViewDelegate {
     
     func dropViewShouldAcceptDraggedPath(dropView: DropView, paths: [Path]) -> Bool {
         let valid = viewModel.shouldAcceptSelection(paths)
+        
         if !valid {
-            let anim = CABasicAnimation(keyPath: "position.x")
-            anim.duration = 0.05
-            anim.repeatCount = 3
-            anim.autoreverses = true
-            anim.fromValue = view.frame.origin.x + 10
-            anim.toValue = view.frame.origin.x - 10
+            let anim = CABasicAnimation.shakeAnimation(magnitude: 10)
             view.layer?.addAnimation(anim, forKey: "x")
         }
         return valid
