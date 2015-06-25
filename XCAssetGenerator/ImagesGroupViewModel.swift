@@ -111,7 +111,7 @@ class ImagesGroupViewModel {
     
     func labelForCurrentSelection() -> String {
         return selection.value.analysis(
-            ifNone: { "Xcode Slices" },
+            ifNone: { "Slices Folder" },
             ifImages: { $0.count == 1 ? $0[0].lastPathComponent : "Multiple Images" },
             ifFolder: { $0.lastPathComponent })
     }
