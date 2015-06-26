@@ -54,7 +54,7 @@ class ImagesGroupViewModel {
     
     func labelForCurrentSelection() -> String {
         return selection.value.analysis(
-            ifNone: { "Slices Folder" },
+            ifNone: { "Image assets" },
             ifImages: { $0.count == 1 ? $0[0].lastPathComponent : "Multiple Images" },
             ifFolder: { $0.lastPathComponent })
     }
@@ -81,7 +81,6 @@ class ImagesGroupViewModel {
             ifFolder: { folder in PathQuery.availableImages(from: folder).map { Asset(fullPath: $0, ancestor: folder)}})
     }
 
-    
     private func isValidPath(path: Path) -> Bool {
         return PathValidator.directoryExists(path: path) && !path.isXCProject()
     }
@@ -145,6 +144,4 @@ class ImagesGroupViewModel {
             // Filter out invalid/corrupted projects
         }
     }
-    
-    
 }
