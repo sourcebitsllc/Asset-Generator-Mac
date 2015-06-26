@@ -6,7 +6,7 @@ Asset Generator is a Mac app which takes design assets and adds them to your Xco
 
 Simply drag a folder with images or multiple image files onto the left well, drag an Xcodeproject file onto the right well and hit **Build**.
 
-![Asset Generator Screenshot](http://i.imgur.com/pLNIH0l.jpg "Asset Generator Screenshot")
+![Asset Generator Screenshot](http://imgur.com/SPz0i7K.jpg "Asset Generator Screenshot")
 
 # Download
 
