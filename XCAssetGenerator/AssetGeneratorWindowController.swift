@@ -53,6 +53,7 @@ class AssetGeneratorWindowController: NSWindowController {
         })
         
         viewModel.statusLabel.producer
+            |> observeOn(QueueScheduler.mainQueueScheduler)
             |> start(next: { label in
                 self.statusLabel.stringValue = label
         })
