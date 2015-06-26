@@ -18,8 +18,7 @@ struct AssetWindowViewModel {
     private let imagesViewModel: ImagesGroupViewModel
     private let projectViewModel: ProjectSelectionViewModel
     private var progressViewModel: ProgressIndicationViewModel
-    
-    private let assetGenerator: AssetGenerationController!
+    private let assetGenerator: AssetGenerationController
     
     // RAC3 TODO: Main WindowController Initialization.
     init() {
@@ -37,10 +36,8 @@ struct AssetWindowViewModel {
         statusLabel <~ combineLatest(imagesViewModel.selectionSignal, projectViewModel.projectSignal, imagesViewModel.contentSignal, projectViewModel.contentSignal)
             |> filter { _,_,_,_ in
                 let stable = self.progressViewModel.animating.value == false
-                return stable
-            }
-            |> map { selection, project, _, _ in
-                let assets = self.imagesViewModel.assetRepresentation()
+                return stable }
+            |> map { assets, project, _, _ in
                 return StatusCrafter.status(assets: assets, target: project)
         }
         
@@ -54,8 +51,8 @@ struct AssetWindowViewModel {
         // RAC3 TODO: this can be refactored to be prettier.
         canGenerate <~ combineLatest(imagesViewModel.selectionSignal, projectViewModel.projectSignal, assetGenerator.running.producer)
 //            |> throttle(0.5, onScheduler: QueueScheduler.mainQueueScheduler)
-            |> map { selection, project, running in
-                        let validSource = AssetGeneratorInputValidator.validateSource(self.imagesViewModel.assetRepresentation())
+            |> map { assets, project, running in
+                        let validSource = AssetGeneratorInputValidator.validateSource(assets)
                         let validTarget = AssetGeneratorInputValidator.validateTarget(project)
                         let notRunning  = running == false
 //                        println("Can Generate")

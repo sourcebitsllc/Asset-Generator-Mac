@@ -11,20 +11,21 @@ import ReactiveCocoa
 
 class ImagesGroupViewModel {
     private let selection: MutableProperty<ImageSelection>
+    private let contentChanged: MutableProperty<Void>
+    private let storage: PathStorage = PathStorage()
+
     let label: MutableProperty<String>
     let currentSelectionValid: MutableProperty<Bool>
+    let systemObserver: FileSystemSignal
     
-    private let contentChanged: MutableProperty<Void>
-    
-    var selectionSignal: SignalProducer<ImageSelection, NoError> {
+    var selectionSignal: SignalProducer<[Asset]?, NoError> {
         return selection.producer
+            |> map { $0.asAssets() }
     }
+    
     var contentSignal: SignalProducer<Void, NoError> {
         return contentChanged.producer
     }
-    
-    let systemObserver: FileSystemSignal
-    private let storage: PathStorage = PathStorage()
     
     init() {
         
@@ -63,7 +64,7 @@ class ImagesGroupViewModel {
         if paths.count == 1 {
             return paths.filter { isSupportedImage($0) || self.isValidPath($0) }.count > 0
         } else {
-            return paths.filter {isSupportedImage($0)}.count > 0
+            return paths.filter(isSupportedImage).count > 0
         }
     }
     
@@ -75,10 +76,7 @@ class ImagesGroupViewModel {
     }
     
     func assetRepresentation() -> [Asset]? {
-        return selection.value.analysis(
-            ifNone: { nil },
-            ifImages: { $0.map { Asset(fullPath: $0, ancestor: $0.stringByDeletingLastPathComponent) } },
-            ifFolder: { folder in PathQuery.availableImages(from: folder).map { Asset(fullPath: $0, ancestor: folder)}})
+        return selection.value.asAssets()
     }
 
     private func isValidPath(path: Path) -> Bool {
