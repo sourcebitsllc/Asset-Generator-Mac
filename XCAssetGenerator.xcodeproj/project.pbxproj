@@ -132,7 +132,7 @@
 		1ED9A1491B1F9B40000A41B9 /* Box.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Box.framework; path = Carthage/Build/Mac/Box.framework; sourceTree = "<group>"; };
 		1ED9A14A1B1F9B40000A41B9 /* ReactiveCocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ReactiveCocoa.framework; path = Carthage/Build/Mac/ReactiveCocoa.framework; sourceTree = "<group>"; };
 		1ED9A14B1B1F9B40000A41B9 /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Result.framework; path = Carthage/Build/Mac/Result.framework; sourceTree = "<group>"; };
-		DD09CBE21989A46C002DD2FB /* XCAssetGenerator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XCAssetGenerator.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DD09CBE21989A46C002DD2FB /* Asset Generator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Asset Generator.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD09CBE61989A46C002DD2FB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DD09CBE71989A46C002DD2FB /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		DD09CBED1989A46C002DD2FB /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -249,7 +249,7 @@
 		DD09CBE31989A46C002DD2FB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				DD09CBE21989A46C002DD2FB /* XCAssetGenerator.app */,
+				DD09CBE21989A46C002DD2FB /* Asset Generator.app */,
 				DD09CBF61989A46C002DD2FB /* XCAssetGeneratorTests.xctest */,
 			);
 			name = Products;
@@ -259,10 +259,10 @@
 			isa = PBXGroup;
 			children = (
 				1ED9A0F31B1F97CE000A41B9 /* AppDelegate.swift */,
-				1EAC3B221B3CC92E00B75DD6 /* Services */,
 				1ED9A1531B1F9FEC000A41B9 /* Models */,
 				1ED9A1511B1F9FA7000A41B9 /* ViewModels */,
 				1ED9A1521B1F9FBE000A41B9 /* Views */,
+				1EAC3B221B3CC92E00B75DD6 /* Services */,
 				1ED9A1541B1FA013000A41B9 /* Extensions and Operators */,
 				1ED885CC1B27F3F400197226 /* Helpers */,
 				1ED9A0F81B1F9810000A41B9 /* AssetGeneratorInputValidator.swift */,
@@ -326,7 +326,7 @@
 			);
 			name = XCAssetGenerator;
 			productName = XCAssetGenerator;
-			productReference = DD09CBE21989A46C002DD2FB /* XCAssetGenerator.app */;
+			productReference = DD09CBE21989A46C002DD2FB /* Asset Generator.app */;
 			productType = "com.apple.product-type.application";
 		};
 		DD09CBF51989A46C002DD2FB /* XCAssetGeneratorTests */ = {
@@ -580,7 +580,7 @@
 				INFOPLIST_FILE = XCAssetGenerator/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Asset Generator";
 				SDKROOT = macosx;
 				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "";
@@ -603,7 +603,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Asset Generator";
 				SDKROOT = macosx;
 				SWIFT_INSTALL_OBJC_HEADER = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "";
