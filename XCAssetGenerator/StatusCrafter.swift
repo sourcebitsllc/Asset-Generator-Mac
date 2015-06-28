@@ -17,8 +17,8 @@ struct StatusCrafter {
         return "\(s) added to \(catalog)."
     }
     
-    static func status(#assets: [Asset]?, target: XCProject?) -> Status {
-        switch (assets, target?.catalog) {
+    static func status(#assets: [Asset]?, target: AssetCatalog?) -> Status {
+        switch (assets, target) {
         case (.None, _):
             fallthrough
         case (_, .None):

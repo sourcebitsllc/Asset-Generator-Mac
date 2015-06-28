@@ -15,23 +15,21 @@ class ProjectSelectionViewModel {
     
     let label: MutableProperty<String>
     let currentSelectionValid: MutableProperty<Bool>
-    // let image
-    // let colors
-    var projectSignal: SignalProducer<XCProject?, NoError> {
-        return project.producer
+    let projectObserver: FileSystemSignal
+    let catalogObserver: FileSystemSignal
+    let storage: ProjectStorage
+
+    var selectionSignal: SignalProducer<AssetCatalog?, NoError> {
+        return project.producer |> map { $0?.catalog }
     }
     
     var contentSignal: SignalProducer<Void, NoError> {
         return contentChanged.producer
     }
     
-    var currentCatalog: Path? {
-        return project.value?.catalog?.title
+    var currentCatalog: AssetCatalog? {
+        return project.value?.catalog
     }
-    
-    let projectObserver: FileSystemSignal
-    let catalogObserver: FileSystemSignal
-    let storage: ProjectStorage
     
     init() {
         storage = ProjectStorage()

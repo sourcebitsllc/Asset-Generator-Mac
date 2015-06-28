@@ -14,11 +14,7 @@ struct AssetGeneratorInputValidator: Validator {
         return selection?.count > 0
     }
     
-//    static func validateTarget(project: XCProject?) -> Bool {
-//        return (project != nil) ? ProjectValidator.isProjectValid(project!) && project!.hasValidAssetsPath() : false
-//    }
-    
-    static func validateTarget(project: XCProject?) -> Bool {
-        return (project != nil) ? ProjectValidator.isProjectValid(project!) && project!.hasValidAssetsPath() : false
+    static func validateTarget(catalog: AssetCatalog?) -> Bool {
+        return catalog != nil ? PathValidator.directoryExists(path: catalog!.path) : false
     }
 }
