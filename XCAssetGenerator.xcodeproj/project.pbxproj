@@ -167,6 +167,7 @@
 			children = (
 				1ED9A0F61B1F9810000A41B9 /* AssetGenerationController.swift */,
 				1ED9A0F71B1F9810000A41B9 /* AssetGenerator.swift */,
+				1ED096DB1B2D53D8005337A9 /* AssetDiff.swift */,
 			);
 			name = Services;
 			sourceTree = "<group>";
@@ -177,7 +178,6 @@
 				1ED9A0FC1B1F9810000A41B9 /* BookmarkResolver.swift */,
 				1ED9A1011B1F9810000A41B9 /* FileSystemHelper.swift */,
 				1ED9A1171B1F9810000A41B9 /* StatusCrafter.swift */,
-				1ED096DB1B2D53D8005337A9 /* AssetDiff.swift */,
 				1ED885CA1B27F11200197226 /* Pluralize.swift */,
 			);
 			name = Helpers;
