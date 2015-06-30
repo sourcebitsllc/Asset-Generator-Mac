@@ -155,7 +155,10 @@ struct AssetAttributeProcessor {
         case 60:
             break
         case 120:
-            scale = "2x"
+            idiom = "iphone"
+            let isSpotlight = name.contains("@3x") // Spotlight 40@3x or iPhone icon 60@2x
+            scale = isSpotlight ? "3x" : "2x"
+            size = isSpotlight ? "40x40" : "60x60"
         case 180:
             scale = "3x"
         case 76:
@@ -165,6 +168,26 @@ struct AssetAttributeProcessor {
             idiom = "ipad"
             scale = "2x"
             size = "76x76"
+        case 40:
+            idiom = "ipad"
+            scale = "1x"
+            size = "40x40"
+        case 80:
+            idiom = name.contains(GenerationKeywords.iPad) ? "ipad" : "iphone"
+            scale = "2x"
+            size = "40x40"
+        case 29:
+            idiom = "ipad"
+            scale = "1x"
+            size = "29x29"
+        case 58:
+            idiom = name.contains(GenerationKeywords.iPad) ? "ipad" : "iphone"
+            scale = "2x"
+            size = "29x29"
+        case 87:
+            idiom = "iphone"
+            scale = "3x"
+            size = "29x29"
         default:
             break
         }
@@ -224,5 +247,4 @@ struct AssetAttributeProcessor {
         
         return AssetAttribute(filename: name, scale: scale, idiom: idiom, extent: extent, subtype: subtype, orientation: orientation, minimumSystemVersion: minimumVersion)
     }
-    
 }
