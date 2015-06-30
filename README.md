@@ -1,6 +1,6 @@
 # What Is It?
 
-Asset Generator is a Mac app which takes design assets and adds them to your Xcode project's Asset Catalog. Its goal is to bridge the gap between designers and developers: the former can pull project repositories and update assets (in a hopefully intutive way) without bothering the latter.
+Asset Generator is a Mac app which takes design assets and adds them to your Xcode project's [asset catalog](https://developer.apple.com/library/ios/recipes/xcode_help-image_catalog-1.0/Recipe.html#//apple_ref/doc/uid/TP40013303-CH1-SW1). Its goal is to bridge the gap between designers and developers: the former can pull project repositories and update assets (in a hopefully intutive way) without bothering the latter.
 
 # How to Use?
 
@@ -32,10 +32,10 @@ Simply drag a folder with images or multiple image files onto the left well, dra
 # [?]
 1. Clone the repo into your machine.
 2. To build the project dependencies, install [Carthage](http://github.com/Carthage/Carthage/) with [Homebrew](http://brew.sh/) as follows:
-```bash
-$ brew update
-$ brew install carthage
-```
+	```bash
+	$ brew update
+	$ brew install carthage
+	```
 3. run `carthage update` to setup the dependencies.
 
 # About
