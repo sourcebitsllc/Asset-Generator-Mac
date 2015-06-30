@@ -28,7 +28,7 @@ struct SerializedAssetAttributeKeys {
     
     static let Orientation = "orientation"
     static let Extent = "extent"
-    static let Subtype = "sub-type"
+    static let Subtype = "subtype"
     static let MinimumSystemVersion = "minimum-system-version"
     
     static let WidthClass = "widthClass"
@@ -39,5 +39,4 @@ struct SerializedAssetAttributeKeys {
     // watch
     static let ScreenWidth = "screenWidth"
     static let Role = "role"
-
 }
