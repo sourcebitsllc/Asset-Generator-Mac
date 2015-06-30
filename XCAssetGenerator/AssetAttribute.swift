@@ -156,9 +156,9 @@ struct AssetAttributeProcessor {
             break
         case 120:
             idiom = "iphone"
-            let isSpotlight = name.contains("@3x") // Spotlight 40@3x or iPhone icon 60@2x
-            scale = isSpotlight ? "3x" : "2x"
-            size = isSpotlight ? "40x40" : "60x60"
+            let spotlight = name.contains("@3x") || name.contains("Icon-Small") // Spotlight 40@3x or iPhone icon 60@2x
+            scale = spotlight ? "3x" : "2x"
+            size = spotlight ? "40x40" : "60x60"
         case 180:
             scale = "3x"
         case 76:
