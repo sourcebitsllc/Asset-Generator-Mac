@@ -37,7 +37,7 @@ enum AssetType {
     }
     
     static func isIcon(name: String) -> Bool {
-        return name.hasPrefix("AppIcon") || isMacIcon(name)
+        return name.hasPrefix("AppIcon") || name.hasPrefix("Icon") || isMacIcon(name)
     }
     static func isMacIcon(name: String) -> Bool {
         return name.hasPrefix("icon_")
