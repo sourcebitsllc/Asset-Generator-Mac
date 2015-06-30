@@ -12,9 +12,6 @@ Simply drag a folder with images or multiple image files onto the left well, dra
 
 [Grab the latest build here.](https://github.com/sourcebitsllc/Asset-Generator-Mac/releases)
 
-###### Requirements
- 
-
 # Features
 
 - Automatically detects asset types based on keywords and image metadata.
@@ -29,14 +26,15 @@ Simply drag a folder with images or multiple image files onto the left well, dra
 - You need to have an asset catalog in your project to use AG.
 - If you have multiple catalogs in your project, Asset Generator will use the first one (alphabetically).
 
-# [?]
+# How to Build
+
 1. Clone the repo into your machine.
 2. To build the project dependencies, install [Carthage](http://github.com/Carthage/Carthage/) with [Homebrew](http://brew.sh/) as follows:
 	```bash
 	$ brew update
 	$ brew install carthage
 	```
-3. run `carthage update` to setup the dependencies.
+3. Run `carthage update` to setup the dependencies.
 
 # About
 
