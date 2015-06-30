@@ -30,6 +30,7 @@ Simply drag a folder with images or multiple image files onto the left well, dra
 
 1. Clone the repo into your machine.
 2. To build the project dependencies, install [Carthage](http://github.com/Carthage/Carthage/) with [Homebrew](http://brew.sh/) as follows:
+
 	```bash
 	$ brew update
 	$ brew install carthage
