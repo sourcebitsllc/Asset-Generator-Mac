@@ -1,6 +1,6 @@
 # What Is It?
 
-Asset Generator is a Mac app which takes design assets and adds them to your Xcode project's Xcassets library. Its goal is to bridge the gap between designers and developers: the former can pull project repositories and update assets (in a hopefully intutive way) without bothering the latter.
+Asset Generator is a Mac app which takes design assets and adds them to your Xcode project's Asset Catalog. Its goal is to bridge the gap between designers and developers: the former can pull project repositories and update assets (in a hopefully intutive way) without bothering the latter.
 
 # How to Use?
 
@@ -12,23 +12,35 @@ Simply drag a folder with images or multiple image files onto the left well, dra
 
 [Grab the latest build here.](https://github.com/sourcebitsllc/Asset-Generator-Mac/releases)
 
+###### Requirements
+ 
+
 # Features
 
-- Supports iOS and Mac OS assets.
-- AG takes any image file type supported by iOS or Mac OS, adds JSON metadata and packages into an Xcassets library, ready for push to your repo.
-- If you modify images in the source folder, AG detects it and you can build again right away.
-- When you build again, AG appends new assets to the library.
+- Automatically detects asset types based on keywords and image metadata.
+- Supports iOS and Mac assets.
+- Merges new assets with existing catalog data so you can incrementally build assets as you go in a safe manner.
+- Preserves content created through Xcode such as slicing information and size classes.
 - Dynamically tracks location of both source and destinations when moved.
 
 # Notes
 
 - It does **not** scale or compress your assets. You need to prepare all different dimensions yourself.
-- You need to create Images.xcassets library in Xcode before you use AG.
-- If you have multiple *.xcassets libraries in your project, Asset Generator will use the first one (alphabetically).
+- You need to have an asset catalog in your project to use AG.
+- If you have multiple catalogs in your project, Asset Generator will use the first one (alphabetically).
+
+# [?]
+1. Clone the repo into your machine.
+2. To build the project dependencies, install [Carthage](http://github.com/Carthage/Carthage/) with [Homebrew](http://brew.sh/) as follows:
+```bash
+$ brew update
+$ brew install carthage
+```
+3. run `carthage update` to setup the dependencies.
 
 # About
 
-Asset Generator is a collaboration between [Bader Alabdulrazzaq](https://twitter.com/BHAlRezzaga), iOS engineer who graciously greeted Sourcebits for an internship in late 2014, and Sourcebits' Chief Innovation Officer [Piotr Gajos](https://twitter.com/Pe8er). App icon was designed by Sourcebits' senior interaction designer, Rick Patrick.
+Asset Generator is a collaboration between [Bader Alabdulrazzaq](https://twitter.com/BHAlRezzaga), iOS and Mac OS engineer who graciously greeted Sourcebits for an internship in late 2014, and Sourcebits' Chief Innovation Officer [Piotr Gajos](https://twitter.com/Pe8er). App icon was designed by Sourcebits' senior interaction designer, Rick Patrick.
 
 The app was designed in Sketch, written in Swift and released under the [GNU GPL](http://www.gnu.org/licenses/gpl.html) license.
 
