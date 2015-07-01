@@ -20,9 +20,9 @@ struct StatusCrafter {
     static func status(#assets: [Asset]?, target: AssetCatalog?) -> Status {
         switch (assets, target) {
         case (.None, _):
-            fallthrough
-        case (_, .None):
             return "Drop a folder with slices you'd like to add to your Xcode project."
+        case (.Some(let a), .None):
+            return "Choose an Xcode project to add \(a.count) assets to."
         case (.Some(let a), .Some(let catalog)) where a.count == 0:
             return "Add slices to the folder in order to build assets."
         case (.Some(let a), .Some(let catalog)):
