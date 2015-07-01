@@ -43,17 +43,3 @@ func isAssetSet(path: Path) -> Bool {
     return path.hasSuffix(".imageset") || path.hasSuffix(".appiconset") || path.hasSuffix(".launchimage")
 }
 
-extension Bookmark: XcodeFileValidator {
-    
-    func isXCProject() -> Bool {
-        let path: Path? = BookmarkResolver.resolvePathFromBookmark(self)
-        return (path != nil) ? path!.isXCProject() : false
-    }
-    
-    func isAssetCatalog() -> Bool {
-        let path: String? = BookmarkResolver.resolvePathFromBookmark(self)
-        return (path != nil) ? path!.isAssetCatalog() : false
-    }
-    
-}
-

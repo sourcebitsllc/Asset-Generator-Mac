@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct AssetGeneratorInputValidator: Validator {
+struct AssetGeneratorInputValidator {
     
     static func validateSource(selection: [Asset]?) -> Bool {
         return selection?.count > 0

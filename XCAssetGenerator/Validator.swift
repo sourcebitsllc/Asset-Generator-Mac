@@ -8,9 +8,7 @@
 
 import Foundation
 
-protocol Validator {}
-
-extension BookmarkResolver: Validator {
+extension BookmarkResolver {
     
     class func isBookmarkValid(bookmark: Bookmark?) -> Bool {
         if let b = bookmark, let path = resolvePathFromBookmark(b) {
@@ -21,16 +19,14 @@ extension BookmarkResolver: Validator {
     }
 }
 
-// TODO:
-class ProjectValidator: Validator {
+class ProjectValidator {
     class func isProjectValid(project: XCProject) -> Bool {
         return PathValidator.directoryExists(path: project.path)
-//        return BookmarkResolver.isBookmarkValid(project.bookmark)
     }
 }
 
 
-class PathValidator: Validator {
+class PathValidator {
     
     class func directoryContainsInvalidCharacters(#path: Path, options: AnyObject?) -> Bool {
         return directoryWith(path, searchOption: NSDirectoryEnumerationOptions.SkipsHiddenFiles) { (url, isDirectory) -> Bool? in
@@ -44,19 +40,6 @@ class PathValidator: Validator {
             if isDirectory && url.path!.isAssetCatalog() { return true }
             return nil
         } ?? false
-        
-//        let url = NSURL(fileURLWithPath: directory, isDirectory: true)
-//        
-//        let generator = NSFileManager.defaultManager().enumeratorAtURL(url!, includingPropertiesForKeys: nil, options: NSDirectoryEnumerationOptions.SkipsHiddenFiles, errorHandler: nil)
-//        
-//        while let element = generator?.nextObject() as? NSURL {
-//            if element.path!.isAssetCatalog() {
-//                return true
-//            }
-//        }
-//        
-//        return false
-
     }
 
     

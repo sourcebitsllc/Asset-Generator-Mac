@@ -35,13 +35,14 @@ class ProjectSelectionViewModel {
         storage = ProjectStorage()
         project = MutableProperty(storage.loadRecentProject())
         currentSelectionValid = MutableProperty(false)
-        currentSelectionValid <~ project.producer |> map { $0 != nil }
         label = MutableProperty("Xcode Project")
         
         contentChanged = MutableProperty()
         observer = FileSystemProjectObserver()
         
 
+        currentSelectionValid <~ project.producer |> map { $0 != nil }
+        
         project <~ observer.projectSignal
         project <~ observer.catalogSignal |> map { catalog in
             if let project = self.project.value where project.ownsCatalog(catalog) {

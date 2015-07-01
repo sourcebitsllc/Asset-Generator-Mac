@@ -32,7 +32,7 @@
 		1ED9A1291B1F9810000A41B9 /* FileSystemHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A1011B1F9810000A41B9 /* FileSystemHelper.swift */; };
 		1ED9A12C1B1F9810000A41B9 /* ImagesDropViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A1051B1F9810000A41B9 /* ImagesDropViewController.swift */; };
 		1ED9A12D1B1F9810000A41B9 /* ImagesGroupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A1061B1F9810000A41B9 /* ImagesGroupViewModel.swift */; };
-		1ED9A12E1B1F9810000A41B9 /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A1071B1F9810000A41B9 /* JSON.swift */; };
+		1ED9A12E1B1F9810000A41B9 /* XCAssetsJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A1071B1F9810000A41B9 /* XCAssetsJSON.swift */; };
 		1ED9A12F1B1F9810000A41B9 /* Keyword Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A1081B1F9810000A41B9 /* Keyword Constants.swift */; };
 		1ED9A1301B1F9810000A41B9 /* NSImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A1091B1F9810000A41B9 /* NSImage+Extensions.swift */; };
 		1ED9A1311B1F9810000A41B9 /* NSLayoutConstraint+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A10A1B1F9810000A41B9 /* NSLayoutConstraint+Extensions.swift */; };
@@ -48,7 +48,7 @@
 		1ED9A13E1B1F9810000A41B9 /* StatusCrafter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A1171B1F9810000A41B9 /* StatusCrafter.swift */; };
 		1ED9A13F1B1F9810000A41B9 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A1181B1F9810000A41B9 /* StringExtension.swift */; };
 		1ED9A1411B1F9810000A41B9 /* Validator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A11A1B1F9810000A41B9 /* Validator.swift */; };
-		1ED9A1421B1F9810000A41B9 /* XcodeFileValidatorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A11B1B1F9810000A41B9 /* XcodeFileValidatorProtocol.swift */; };
+		1ED9A1421B1F9810000A41B9 /* XcodeFileValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A11B1B1F9810000A41B9 /* XcodeFileValidator.swift */; };
 		1ED9A1431B1F9810000A41B9 /* XCProject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A11C1B1F9810000A41B9 /* XCProject.swift */; };
 		1EFC5ABA1B2661B300F7400A /* Box.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1ED9A1491B1F9B40000A41B9 /* Box.framework */; };
 		1EFC5ABB1B2661B300F7400A /* Box.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1ED9A1491B1F9B40000A41B9 /* Box.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -114,7 +114,7 @@
 		1ED9A1011B1F9810000A41B9 /* FileSystemHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileSystemHelper.swift; sourceTree = "<group>"; };
 		1ED9A1051B1F9810000A41B9 /* ImagesDropViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagesDropViewController.swift; sourceTree = "<group>"; };
 		1ED9A1061B1F9810000A41B9 /* ImagesGroupViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagesGroupViewModel.swift; sourceTree = "<group>"; };
-		1ED9A1071B1F9810000A41B9 /* JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSON.swift; sourceTree = "<group>"; };
+		1ED9A1071B1F9810000A41B9 /* XCAssetsJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XCAssetsJSON.swift; sourceTree = "<group>"; };
 		1ED9A1081B1F9810000A41B9 /* Keyword Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Keyword Constants.swift"; sourceTree = "<group>"; };
 		1ED9A1091B1F9810000A41B9 /* NSImage+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSImage+Extensions.swift"; sourceTree = "<group>"; };
 		1ED9A10A1B1F9810000A41B9 /* NSLayoutConstraint+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSLayoutConstraint+Extensions.swift"; sourceTree = "<group>"; };
@@ -130,7 +130,7 @@
 		1ED9A1171B1F9810000A41B9 /* StatusCrafter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatusCrafter.swift; sourceTree = "<group>"; };
 		1ED9A1181B1F9810000A41B9 /* StringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
 		1ED9A11A1B1F9810000A41B9 /* Validator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Validator.swift; sourceTree = "<group>"; };
-		1ED9A11B1B1F9810000A41B9 /* XcodeFileValidatorProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XcodeFileValidatorProtocol.swift; sourceTree = "<group>"; };
+		1ED9A11B1B1F9810000A41B9 /* XcodeFileValidator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XcodeFileValidator.swift; sourceTree = "<group>"; };
 		1ED9A11C1B1F9810000A41B9 /* XCProject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XCProject.swift; sourceTree = "<group>"; };
 		1ED9A1471B1F983B000A41B9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		1ED9A1491B1F9B40000A41B9 /* Box.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Box.framework; path = Carthage/Build/Mac/Box.framework; sourceTree = "<group>"; };
@@ -172,7 +172,9 @@
 				1ED9A0F61B1F9810000A41B9 /* AssetGenerationController.swift */,
 				1ED9A0F71B1F9810000A41B9 /* AssetGenerator.swift */,
 				1ED096DB1B2D53D8005337A9 /* AssetDiff.swift */,
+				1ED9A1171B1F9810000A41B9 /* StatusCrafter.swift */,
 				1E8D12EF1B4363ED004A3FCB /* FileSystemObserverSignal.swift */,
+				1ED9A1111B1F9810000A41B9 /* ProjectSelector.swift */,
 			);
 			name = Services;
 			sourceTree = "<group>";
@@ -180,10 +182,14 @@
 		1ED885CC1B27F3F400197226 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				1ED9A1071B1F9810000A41B9 /* XCAssetsJSON.swift */,
 				1ED9A0FC1B1F9810000A41B9 /* BookmarkResolver.swift */,
 				1ED9A1011B1F9810000A41B9 /* FileSystemHelper.swift */,
-				1ED9A1171B1F9810000A41B9 /* StatusCrafter.swift */,
 				1ED885CA1B27F11200197226 /* Pluralize.swift */,
+				1ED9A0F81B1F9810000A41B9 /* AssetGeneratorInputValidator.swift */,
+				1ED9A10C1B1F9810000A41B9 /* PathQuery.swift */,
+				1ED9A11B1B1F9810000A41B9 /* XcodeFileValidator.swift */,
+				1ED9A11A1B1F9810000A41B9 /* Validator.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -205,10 +211,10 @@
 				1ED9A0F91B1F9810000A41B9 /* AssetGeneratorWindowController.swift */,
 				1ED9A1051B1F9810000A41B9 /* ImagesDropViewController.swift */,
 				1ED9A1101B1F9810000A41B9 /* ProjectDropViewController.swift */,
-				1ED9A10D1B1F9810000A41B9 /* ProgressViewController.swift */,
-				1ED885CF1B28F51B00197226 /* ProgressLineView.swift */,
 				1ED9A1141B1F9810000A41B9 /* RoundedDropView.swift */,
 				1ED9A0FE1B1F9810000A41B9 /* DropView.swift */,
+				1ED9A10D1B1F9810000A41B9 /* ProgressViewController.swift */,
+				1ED885CF1B28F51B00197226 /* ProgressLineView.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -222,6 +228,7 @@
 				1ED9A0FF1B1F9810000A41B9 /* ErrorType.swift */,
 				1ED9A0FA1B1F9810000A41B9 /* AssetType.swift */,
 				1E48EF421B31861E00A63FBF /* AssetAttribute.swift */,
+				1ED9A1161B1F9810000A41B9 /* Serializable.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -270,16 +277,9 @@
 				1EAC3B221B3CC92E00B75DD6 /* Services */,
 				1ED9A1541B1FA013000A41B9 /* Extensions and Operators */,
 				1ED885CC1B27F3F400197226 /* Helpers */,
-				1ED9A0F81B1F9810000A41B9 /* AssetGeneratorInputValidator.swift */,
-				1ED9A1071B1F9810000A41B9 /* JSON.swift */,
+				1ED9A1081B1F9810000A41B9 /* Keyword Constants.swift */,
 				1E8D12EE1B436358004A3FCB /* FileSystemObserver.h */,
 				1E8D12EC1B43634C004A3FCB /* FileSystemObserver.m */,
-				1ED9A10C1B1F9810000A41B9 /* PathQuery.swift */,
-				1ED9A1111B1F9810000A41B9 /* ProjectSelector.swift */,
-				1ED9A1161B1F9810000A41B9 /* Serializable.swift */,
-				1ED9A11A1B1F9810000A41B9 /* Validator.swift */,
-				1ED9A11B1B1F9810000A41B9 /* XcodeFileValidatorProtocol.swift */,
-				1ED9A1081B1F9810000A41B9 /* Keyword Constants.swift */,
 				1ED9A1461B1F983B000A41B9 /* Main.storyboard */,
 				DD09CBED1989A46C002DD2FB /* Images.xcassets */,
 				DD09CBE51989A46C002DD2FB /* Supporting Files */,
@@ -428,7 +428,7 @@
 				1ED9A1291B1F9810000A41B9 /* FileSystemHelper.swift in Sources */,
 				1ED9A1351B1F9810000A41B9 /* ProgressIndicationViewModel.swift in Sources */,
 				1ED9A13F1B1F9810000A41B9 /* StringExtension.swift in Sources */,
-				1ED9A1421B1F9810000A41B9 /* XcodeFileValidatorProtocol.swift in Sources */,
+				1ED9A1421B1F9810000A41B9 /* XcodeFileValidator.swift in Sources */,
 				1ED9A1411B1F9810000A41B9 /* Validator.swift in Sources */,
 				1ED9A13B1B1F9810000A41B9 /* RoundedDropView.swift in Sources */,
 				1ED9A12D1B1F9810000A41B9 /* ImagesGroupViewModel.swift in Sources */,
@@ -450,7 +450,7 @@
 				1ED9A1331B1F9810000A41B9 /* PathQuery.swift in Sources */,
 				1E8D12ED1B43634C004A3FCB /* FileSystemObserver.m in Sources */,
 				1ED9A1301B1F9810000A41B9 /* NSImage+Extensions.swift in Sources */,
-				1ED9A12E1B1F9810000A41B9 /* JSON.swift in Sources */,
+				1ED9A12E1B1F9810000A41B9 /* XCAssetsJSON.swift in Sources */,
 				1ED9A0F41B1F97CE000A41B9 /* AppDelegate.swift in Sources */,
 				1ED9A13D1B1F9810000A41B9 /* Serializable.swift in Sources */,
 				DD09CBE81989A46C002DD2FB /* main.swift in Sources */,

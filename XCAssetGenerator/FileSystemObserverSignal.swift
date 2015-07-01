@@ -10,6 +10,10 @@
 import Foundation
 import ReactiveCocoa
 
+/*
+    This is gonna get the Sunset treatment soon.
+*/
+
 class FileSystemProjectObserver: NSObject, FileSystemObserverDelegate {
     var observer: FileSystemObserver
     
@@ -76,7 +80,6 @@ class FileSystemImagesObserver: NSObject, FileSystemObserverDelegate {
     
     private var current: ImageSelection
 
-
     let selectionSignal: Signal<ImageSelection, NoError>
     private let selectionChangedSink: Signal<ImageSelection, NoError>.Observer
     
@@ -114,8 +117,7 @@ class FileSystemImagesObserver: NSObject, FileSystemObserverDelegate {
         case .Folder:
             sendNext(selectionChangedSink, ImageSelection.create(newPath))
         case .Images(var paths):
-            let idx = find(paths, oldPath)
-            if let idx = idx {
+            if let idx = find(paths, oldPath) {
                 paths.removeAtIndex(idx)
                 paths.append(newPath)
                 sendNext(selectionChangedSink, ImageSelection.create(paths))
@@ -135,8 +137,7 @@ class FileSystemImagesObserver: NSObject, FileSystemObserverDelegate {
         case .Folder:
             sendNext(selectionChangedSink, .None)
         case .Images(var paths):
-            let idx = find(paths, path)
-            if let idx = idx {
+            if let idx = find(paths, path) {
                 paths.removeAtIndex(idx)
                 sendNext(selectionChangedSink, ImageSelection.create(paths))
             }

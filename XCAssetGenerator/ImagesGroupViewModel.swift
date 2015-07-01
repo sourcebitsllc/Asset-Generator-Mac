@@ -84,7 +84,6 @@ class ImagesGroupViewModel {
         // Which is more readable?
         // selection.put(.create(paths))
         paths |> ImageSelection.create |> selection.put
-//        self.path.put(path + "/")
     }
     
     func isCurrentSelectionValid() -> Bool {

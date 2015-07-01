@@ -9,7 +9,6 @@
 import Foundation
 
 struct AssetCatalog: Printable {
-    
     let path: Path
     
     init(path: Path) {
