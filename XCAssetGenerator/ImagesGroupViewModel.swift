@@ -128,8 +128,5 @@ struct PathStorage {
         let selection = ImageSelection.deserialize(srlz)
         store(selection)
         return selection
-        
-        // Make sure the current selected project is valid and adjust the selection state accordingly.
-        // Filter out invalid/corrupted projects
     }
 }

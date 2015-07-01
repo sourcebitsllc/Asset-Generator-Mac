@@ -53,7 +53,7 @@ class ProjectSelectionViewModel {
         contentChanged <~ observer.catalogContentSignal
         
         project.producer
-            |> throttle(0.25, onScheduler: QueueScheduler.mainQueueScheduler)
+            |> throttle(0.5, onScheduler: QueueScheduler.mainQueueScheduler)
             |> on(next: { project in
                 self.storage.storeRecentProject(project)
                 self.observer.observe(project)
