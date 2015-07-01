@@ -23,7 +23,7 @@ Simply drag a folder with images or multiple image files onto the left well, dra
 # <a name="Keywords"></a>Keywords
 Keywords are tags added to the image filename that help the app determine the proper information of the image. The good news is, if you follow Apple's naming convention you're already done! If not, it's very simple. Asset Generator keywords take the following form:
 
-		 `<ImageName>``<PixelDensity>``<Device>``.``<Extension>`
+`<ImageName><PixelDensity><Device>.<Extension>`
 
 where:
 
