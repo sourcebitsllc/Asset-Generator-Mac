@@ -20,18 +20,19 @@ Simply drag a folder with images or multiple image files onto the left well, dra
 - Preserves content created through Xcode such as slicing information and size classes.
 - Dynamically tracks location of both source and destinations when moved.
 
-# <a name="Keywords"></a>Keywords
+# Keywords
+
 Keywords are tags added to the image filename that help the app determine the proper information of the image. The good news is, if you follow Apple's naming convention you're already done! If not, it's very simple. Asset Generator keywords take the following form:
 
 `<ImageName><PixelDensity><Device>.<Extension>`
 
 where:
 
-- `<PixelDensity>` is either _@2x_, _@3x_ or blank for @1x.
+- `<PixelDensity>` is either _@2x_, _@3x_ or blank for _@1x_.
 - `<Device>`  specifies the target device which can be either _~iphone_, _~ipad_, _~mac_, or blank for universal.
 - `<Extension>` are the support image extensions which are _png_, _jpg_ and _jpeg_. 
 
-## App Icons
+### App Icons
 
 For iOS icons, the `<ImageName>` must start with either **"AppIcon"** or _**"Icon"**_ and AG takes care of the rest!
 
@@ -39,20 +40,20 @@ Mac OS icons must start with _**"icon\_"**_ and must follow Apple's naming conve
 
 More information about iOS icons can be found [here](https://developer.apple.com/library/ios/qa/qa1686/_index.html) and [here](https://developer.apple.com/library/prerelease/ios/documentation/UserExperience/Conceptual/MobileHIG/IconMatrix.html#//apple_ref/doc/uid/TP40006556-CH27-SW2)
 
-## Launch Images
+### Launch Images
 
 For launch images, the `<ImageName>` must start with either _**"Default"**_ or _**"LaunchImage"**_ and the app takes care of the rest!
 
 More information about launch images can be found [here](https://developer.apple.com/library/prerelease/ios/documentation/UserExperience/Conceptual/MobileHIG/LaunchImages.html#//apple_ref/doc/uid/TP40006556-CH22-SW1) and [here](https://developer.apple.com/library/prerelease/ios/documentation/UserExperience/Conceptual/MobileHIG/IconMatrix.html#//apple_ref/doc/uid/TP40006556-CH27-SW2).
 
-## General Images
+### General Images
 
 For all other assets, you need to provide all the keywords mentioned above and the app will parse the data as such. For example `Button@3x~iphone.png` is a @3x iPhone button image and `Spinner@2x.png` is a @2x universal spinner image.
   
 # Notes
 
-- It does **not** scale or compress your assets. You need to prepare all different dimensions yourself.
-- You need to have an asset catalog in your project to use AG.
+- Asset Generator does **not** scale or compress your assets. You need to prepare all different dimensions yourself.
+- You need to have an asset catalog in your project to use Asset Generator.
 - If you have multiple catalogs in your project, Asset Generator will use the first one (alphabetically).
 
 # How to Build
