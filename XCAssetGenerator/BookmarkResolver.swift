@@ -18,14 +18,13 @@ class BookmarkResolver {
         return url?.path ?? nil
     }
     
-    class func resolveBookmarkFromPath(path: Path) -> Bookmark {
+    class func resolveBookmarkFromPath(path: Path) -> Bookmark? {
         let url: NSURL = NSURL(fileURLWithPath: path)!
         return resolveBookmarkFromURL(url)
     }
     
     // TODO: Potential bugs here. Reduce the amount
-    class func resolveBookmarkFromURL(url: NSURL) -> Bookmark {
-        var data: Bookmark = url.bookmarkDataWithOptions(NSURLBookmarkCreationOptions.SuitableForBookmarkFile, includingResourceValuesForKeys: nil, relativeToURL: nil, error: nil)!
-        return data
+    class func resolveBookmarkFromURL(url: NSURL) -> Bookmark? {
+        return url.bookmarkDataWithOptions(NSURLBookmarkCreationOptions.SuitableForBookmarkFile, includingResourceValuesForKeys: nil, relativeToURL: nil, error: nil)
     }
 }

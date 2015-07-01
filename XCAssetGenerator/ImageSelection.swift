@@ -59,8 +59,15 @@ enum ImageSelection: Printable, Serializable {
     var serialized: Serialized {
         return analysis(
             ifNone: { nil },
-            ifImages: { $0.map(BookmarkResolver.resolveBookmarkFromPath) },
-            ifFolder: { [BookmarkResolver.resolveBookmarkFromPath($0)] })
+            ifImages: { paths in
+                let a = paths.map(BookmarkResolver.resolveBookmarkFromPath).flatMap { $0 != nil ? [$0!] : [] }
+                
+                return a.count > 0 ? a : nil
+            },
+            ifFolder: { folder in
+                let s = BookmarkResolver.resolveBookmarkFromPath(folder)
+                return s != nil ? [s!] : nil
+        })
     }
     
     static func deserialize(serial: Serialized) -> ImageSelection {

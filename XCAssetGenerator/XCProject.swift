@@ -55,7 +55,7 @@ extension XCProject: Serializable {
     
     var serialized: Serialized {
         get {
-            let bookmark = BookmarkResolver.resolveBookmarkFromPath(path)
+            let bookmark = BookmarkResolver.resolveBookmarkFromPath(path)!
             let assets = xcassets?.serialized ?? Bookmark()
             return [PathKey: bookmark, AssetPathsKey: assets]
         }

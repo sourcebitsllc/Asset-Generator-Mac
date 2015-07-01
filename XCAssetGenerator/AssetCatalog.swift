@@ -33,6 +33,6 @@ extension AssetCatalog: Serializable {
     typealias Serialized = Bookmark
     
     var serialized: Serialized {
-        return BookmarkResolver.resolveBookmarkFromPath(path)
+        return BookmarkResolver.resolveBookmarkFromPath(path)!
     }
 }

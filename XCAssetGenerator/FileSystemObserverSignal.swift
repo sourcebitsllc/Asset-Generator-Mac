@@ -132,14 +132,15 @@ class FileSystemImagesObserver: NSObject, FileSystemObserverDelegate {
     }
     
     func FileSystemDirectoryDeleted(path: String!) {
-
         switch current {
         case .Folder:
+            current = .None
             sendNext(selectionChangedSink, .None)
         case .Images(var paths):
             if let idx = find(paths, path) {
                 paths.removeAtIndex(idx)
-                sendNext(selectionChangedSink, ImageSelection.create(paths))
+                current = ImageSelection.create(paths)
+                sendNext(selectionChangedSink, current)
             }
         case .None:
             break
