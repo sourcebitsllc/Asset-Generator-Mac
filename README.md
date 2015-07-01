@@ -14,7 +14,7 @@ Simply drag a folder with images or multiple image files onto the left well, dra
 
 # Features
 
-- Automatically detects asset types based on [keywords](#Keywords) and image metadata.
+- Automatically detects asset types based on [keywords](#keywords) and image metadata.
 - Supports iOS and Mac assets (including icons, launch images, Spotlight and settings assets, and more).
 - Merges new assets with existing catalog data so you can incrementally build assets as you go in a safe manner.
 - Preserves content created through Xcode such as slicing information and size classes.
@@ -23,7 +23,6 @@ Simply drag a folder with images or multiple image files onto the left well, dra
 # Keywords
 
 Keywords are tags added to the image filename that help the app determine the proper information of the image. The good news is, if you follow Apple's naming convention you're already done! If not, it's very simple. Asset Generator keywords take the following form:
-
 `<ImageName><PixelDensity><Device>.<Extension>`
 
 where:
@@ -34,8 +33,8 @@ where:
 
 ### App Icons
 
-- For iOS icons, the `<ImageName>` must start with either **"AppIcon"** or _**"Icon"**_ and Asset Generator takes care of the rest.
-- Mac OS icons must start with _**"icon\_"**_ and must follow Apple's naming convention [found here](https://developer.apple.com/library/mac/documentation/UserExperience/Conceptual/OSXHIGuidelines/Designing.htm).
+- For iOS icons, the `<ImageName>` must start with either _**"AppIcon"**_ or _**"Icon"**_ and Asset Generator takes care of the rest.
+- Mac OS icons must start with ***"icon_"*** and must follow Apple's naming convention [found here](https://developer.apple.com/library/mac/documentation/UserExperience/Conceptual/OSXHIGuidelines/Designing.html).
 - More information about iOS icons can be found [here](https://developer.apple.com/library/ios/qa/qa1686/_index.html) and [here](https://developer.apple.com/library/prerelease/ios/documentation/UserExperience/Conceptual/MobileHIG/IconMatrix.html#//apple_ref/doc/uid/TP40006556-CH27-SW2).
 
 ### Launch Images
@@ -58,8 +57,7 @@ For all other assets, you need to provide all the keywords mentioned above and t
 1. Clone the repo into your machine.
 2. To build the project dependencies, install [Carthage](http://github.com/Carthage/Carthage/) with [Homebrew](http://brew.sh/) as follows:
 
-	```
-	bash
+	```bash
 	$ brew update
 	$ brew install carthage
 	```
@@ -72,3 +70,4 @@ Asset Generator is a collaboration between [Bader Alabdulrazzaq](https://twitter
 The app was designed in Sketch, written in Swift and released under the [GNU GPL](http://www.gnu.org/licenses/gpl.html) license.
 
 We would like to thank all Sourcebits developers and designers who helped us with feature ideas and relentless bug reports.
+
