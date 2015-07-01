@@ -318,9 +318,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		DD09CBE11989A46C002DD2FB /* XCAssetGenerator */ = {
+		DD09CBE11989A46C002DD2FB /* Asset Generator */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = DD09CC001989A46C002DD2FB /* Build configuration list for PBXNativeTarget "XCAssetGenerator" */;
+			buildConfigurationList = DD09CC001989A46C002DD2FB /* Build configuration list for PBXNativeTarget "Asset Generator" */;
 			buildPhases = (
 				DD09CBDE1989A46C002DD2FB /* Sources */,
 				DD09CBDF1989A46C002DD2FB /* Frameworks */,
@@ -331,7 +331,7 @@
 			);
 			dependencies = (
 			);
-			name = XCAssetGenerator;
+			name = "Asset Generator";
 			productName = XCAssetGenerator;
 			productReference = DD09CBE21989A46C002DD2FB /* Asset Generator.app */;
 			productType = "com.apple.product-type.application";
@@ -391,7 +391,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				DD09CBE11989A46C002DD2FB /* XCAssetGenerator */,
+				DD09CBE11989A46C002DD2FB /* Asset Generator */,
 				DD09CBF51989A46C002DD2FB /* XCAssetGeneratorTests */,
 			);
 		};
@@ -480,7 +480,7 @@
 /* Begin PBXTargetDependency section */
 		DD09CBF81989A46C002DD2FB /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = DD09CBE11989A46C002DD2FB /* XCAssetGenerator */;
+			target = DD09CBE11989A46C002DD2FB /* Asset Generator */;
 			targetProxy = DD09CBF71989A46C002DD2FB /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -534,6 +534,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "Asset Generator";
 				SDKROOT = macosx;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -570,6 +571,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "Asset Generator";
 				SDKROOT = macosx;
 			};
 			name = Release;
@@ -666,7 +668,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		DD09CC001989A46C002DD2FB /* Build configuration list for PBXNativeTarget "XCAssetGenerator" */ = {
+		DD09CC001989A46C002DD2FB /* Build configuration list for PBXNativeTarget "Asset Generator" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DD09CC011989A46C002DD2FB /* Debug */,
