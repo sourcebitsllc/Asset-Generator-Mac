@@ -60,14 +60,12 @@ enum ImageSelection: Printable, Serializable {
         return analysis(
             ifNone: { nil },
             ifImages: { paths in
-                let a = paths.map(BookmarkResolver.resolveBookmarkFromPath).flatMap { $0 != nil ? [$0!] : [] }
-                
-                return a.count > 0 ? a : nil
-            },
+                // Swift 2.0 TODO:
+                let valid = paths.map(BookmarkResolver.resolveBookmarkFromPath).flatMap { $0 != nil ? [$0!] : [] }
+                return valid.count > 0 ? valid : nil },
             ifFolder: { folder in
-                let s = BookmarkResolver.resolveBookmarkFromPath(folder)
-                return s != nil ? [s!] : nil
-        })
+                let valid = BookmarkResolver.resolveBookmarkFromPath(folder)
+                return valid != nil ? [valid!] : nil })
     }
     
     static func deserialize(serial: Serialized) -> ImageSelection {
