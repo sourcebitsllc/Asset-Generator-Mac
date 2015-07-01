@@ -14,12 +14,47 @@ Simply drag a folder with images or multiple image files onto the left well, dra
 
 # Features
 
-- Automatically detects asset types based on keywords and image metadata.
-- Supports iOS and Mac assets.
+- Automatically detects asset types based on [keywords](#Keywords) and image metadata.
+- Supports iOS and Mac assets (including icons, launch images, Spotlight and settings assets, and more).
 - Merges new assets with existing catalog data so you can incrementally build assets as you go in a safe manner.
 - Preserves content created through Xcode such as slicing information and size classes.
 - Dynamically tracks location of both source and destinations when moved.
 
+# <a name="Keywords"></a>Keywords
+Keywords are tags added to the image filename that help the app determine the proper information of the image. The good news is, if you follow Apple's naming convention you're already done! If not, its simple;
+
+Asset Generator keywords take the following form:
+			 `<ImageName>``<PixelDensity>``<Device>``.``<Extension>`
+			 
+where:
+
+- `<PixelDensity>` is either _@2x_, _@3x_ or blank for @1x.
+
+- `<Device>`  specifies the target device which can be either _~iphone_, _~ipad_, _~mac_, or blank for universal.
+
+- `<Extension>` are the support image extensions which are _png_, _jpg_ and _jpeg_. 
+
+
+
+### App Icons
+
+For iOS icons, the `<ImageName>` must start with either **"AppIcon"** or _**"Icon"**_ and AG takes care of the rest!
+
+Mac OS icons must start with _**"icon\_"**_ and must follow Apple's naming convention [found here](https://developer.apple.com/library/mac/documentation/UserExperience/Conceptual/OSXHIGuidelines/Designing.htm) 
+
+More information about iOS icons can be found [here](https://developer.apple.com/library/ios/qa/qa1686/_index.html) and [here](https://developer.apple.com/library/prerelease/ios/documentation/UserExperience/Conceptual/MobileHIG/IconMatrix.html#//apple_ref/doc/uid/TP40006556-CH27-SW2)
+
+### Launch Images
+
+For launch images, the `<ImageName>` must start with either _**"Default"**_ or _**"LaunchImage"**_ and the app takes care of the rest!
+
+More information about launch images can be found [here](https://developer.apple.com/library/prerelease/ios/documentation/UserExperience/Conceptual/MobileHIG/LaunchImages.html#//apple_ref/doc/uid/TP40006556-CH22-SW1) and [here](https://developer.apple.com/library/prerelease/ios/documentation/UserExperience/Conceptual/MobileHIG/IconMatrix.html#//apple_ref/doc/uid/TP40006556-CH27-SW2)
+
+### General Images
+For regular assets, you must provide all the keywords mentioned above and the app will parse the data as such.
+
+_e.g._ Button@3x~iphone.png is a @3x iphone button and Spinner@2x.png is a @2x universal Spinner image.
+  
 # Notes
 
 - It does **not** scale or compress your assets. You need to prepare all different dimensions yourself.
