@@ -15,8 +15,8 @@ class ProjectSelectionViewModel {
     
     let label: MutableProperty<String>
     let currentSelectionValid: MutableProperty<Bool>
-    let projectObserver: FileSystemSignal
-    let catalogObserver: FileSystemSignal
+
+    let observer: FileSystemProjectObserver
     let storage: ProjectStorage
 
     var selectionSignal: SignalProducer<AssetCatalog?, NoError> {
@@ -39,26 +39,23 @@ class ProjectSelectionViewModel {
         label = MutableProperty("Xcode Project")
         
         contentChanged = MutableProperty()
+        observer = FileSystemProjectObserver()
         
-        projectObserver = FileSystemSignal()
-        catalogObserver = FileSystemSignal()
-        
-        project <~ projectObserver.renameSignal |> map { XCProject(path: $0) }
-        project <~ projectObserver.deleteSignal |> map { nil }
-        
-        project <~ catalogObserver.renameSignal |> map { catalog in
+
+        project <~ observer.projectSignal
+        project <~ observer.catalogSignal |> map { catalog in
             if let project = self.project.value where project.ownsCatalog(catalog) {
                 return XCProject(path: project.path)
             } else { return nil }
         }
-        project <~ catalogObserver.deleteSignal |> map { nil }
-        contentChanged <~ catalogObserver.contentChangedSignal
+        
+        contentChanged <~ observer.catalogContentSignal
         
         project.producer
-            |> observeOn(QueueScheduler(priority: DISPATCH_QUEUE_PRIORITY_LOW, name: "StoreAndObserveQueue"))
+            |> throttle(0.25, onScheduler: QueueScheduler.mainQueueScheduler)
             |> on(next: { project in
                 self.storage.storeRecentProject(project)
-                self.observe(project)
+                self.observer.observe(project)
             })
             |> start()
         
@@ -66,15 +63,6 @@ class ProjectSelectionViewModel {
         label <~ project.producer |> map { $0?.title ?? "Xcode Project" }
     }
     
-    private func observe(project: XCProject?) {
-        if let project = project {
-            projectObserver.observe(project.path)
-            catalogObserver.observe(project.catalog!.path)
-        } else {
-            projectObserver.cancel()
-            catalogObserver.cancel()
-        }
-    }
     
     func shouldAcceptPath(path: [Path]) -> Bool {
         return path.count == 1 && path[0].isXCProject() && PathValidator.directoryContainsXCAsset(directory: path[0].stringByDeletingLastPathComponent + ("/"))
@@ -101,14 +89,6 @@ class ProjectSelectionViewModel {
     }
     
     func newPathSelected(path: Path) {
-//        let project = ProjectSelector.excavateProject(path)
-//        switch project {
-//            case .Success(let box):
-//                self.project.put(box.value)
-//            case .Failure(let box):
-//                self.setupError(box.value.message).runModal()
-//        }
-        
         SignalProducer(result: ProjectSelector.excavateProject(path))
             |> startOn(QueueScheduler(priority: DISPATCH_QUEUE_PRIORITY_DEFAULT, name: "StoreAndObserveQueue"))
             |> observeOn(QueueScheduler.mainQueueScheduler)
@@ -146,18 +126,20 @@ func setupError(message: String) -> NSAlert {
 
 //// Refactor. TODO:
 struct ProjectStorage {
+    private let ProjectKey = "com.sourcebits.AssetGenerator.ProjectStorageKey"
+    
     private func storeRecentProject(project: XCProject?) {
         if let project = project {
-            NSUserDefaults.standardUserDefaults().setObject(project.serialized, forKey: "ProjectsWuzzHurr")
+            NSUserDefaults.standardUserDefaults().setObject(project.serialized, forKey: ProjectKey)
         } else {
-            NSUserDefaults.standardUserDefaults().removeObjectForKey("ProjectsWuzzHurr")
+            NSUserDefaults.standardUserDefaults().removeObjectForKey(ProjectKey)
         }
     }
     
     
     ///
     private func loadRecentProject() -> XCProject? {
-        let projectDict = NSUserDefaults.standardUserDefaults().objectForKey("ProjectsWuzzHurr") as? [String: NSData]
+        let projectDict = NSUserDefaults.standardUserDefaults().objectForKey(ProjectKey) as? [String: NSData]
         var project: XCProject? = nil
         func validProject(dict: [String: NSData]) -> Bool {
             let validPath =  BookmarkResolver.isBookmarkValid(dict[PathKey])

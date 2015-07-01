@@ -29,18 +29,21 @@ struct AssetWindowViewModel {
       
         statusLabel = MutableProperty<String>("")
         
-        let c = combineLatest(imagesViewModel.selectionSignal, projectViewModel.selectionSignal, imagesViewModel.contentSignal, projectViewModel.contentSignal) |> map { a in
-            return ""
-        }
-        
-        statusLabel <~ combineLatest(imagesViewModel.selectionSignal, projectViewModel.selectionSignal, imagesViewModel.contentSignal, projectViewModel.contentSignal)
-            |> filter { _,_,_,_ in
-                let stable = self.progressViewModel.animating.value == false
-                return stable }
-            |> map { assets, project, _, _ in
+        statusLabel <~ combineLatest(imagesViewModel.selectionSignal, projectViewModel.selectionSignal)
+            |> map { assets, project in
                 return StatusCrafter.status(assets: assets, target: project)
         }
         
+        statusLabel <~ combineLatest(imagesViewModel.contentSignal, projectViewModel.contentSignal)
+            |> filter { _ in
+                let stable = self.progressViewModel.animating.value == false
+                return stable }
+            |> map { _ in
+                let assets = self.imagesViewModel.assetRepresentation()
+                let catalog = self.projectViewModel.currentCatalog
+                return StatusCrafter.status(assets: assets, target: catalog)
+        }
+    
         
 //        statusLabel <~ assetGenerator.generatedSignal |> map { generated in
 //            let catalog = self.projectViewModel.currentCatalog!
@@ -79,7 +82,6 @@ struct AssetWindowViewModel {
         // Wut
         let assets = imagesViewModel.assetRepresentation()
         let catalog = projectViewModel.currentCatalog
-//        println(catalog.value)
         // End Wut
         assetGenerator.assetGenerationProducer(assets, destination: catalog?.path)
             |> startOn(QueueScheduler.mainQueueScheduler)

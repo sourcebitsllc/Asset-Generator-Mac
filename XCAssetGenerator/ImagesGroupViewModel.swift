@@ -16,8 +16,8 @@ class ImagesGroupViewModel {
 
     let label: MutableProperty<String>
     let currentSelectionValid: MutableProperty<Bool>
-    let systemObserver: FileSystemSignal
-    
+    let observer: FileSystemImagesObserver
+
     var selectionSignal: SignalProducer<[Asset]?, NoError> {
         return selection.producer
             |> map { $0.asAssets() }
@@ -33,22 +33,19 @@ class ImagesGroupViewModel {
         self.label = MutableProperty<String>("Xcode Slices")
         self.currentSelectionValid = MutableProperty(false)
         self.contentChanged = MutableProperty<Void>()
-        self.systemObserver = FileSystemSignal()
-
+        self.observer = FileSystemImagesObserver()
+        
         currentSelectionValid <~ selection.producer |> map { _ in return self.isCurrentSelectionValid() }
         label <~ selection.producer |> map { _ in return self.labelForCurrentSelection() }
         
-//        
-//        path <~ systemObserver.renameSignal |> map { Optional($0) }
-//        path <~ systemObserver.deleteSignal |> map { nil }
-//        contentChanged <~ systemObserver.contentChangedSignal |> throttle(0.5, onScheduler: QueueScheduler(priority: 0, name: ""))
-        
+        selection <~ observer.selectionSignal
+        contentChanged <~ observer.contentChangedSignal
         
         selection.producer
-            |> observeOn(QueueScheduler(priority: DISPATCH_QUEUE_PRIORITY_LOW, name: "StoreAndObserveQueue"))
+            |> throttle(0.5, onScheduler: QueueScheduler.mainQueueScheduler)
             |> on(next: { s in
                 self.storage.store(s)
-//                self.observe(path)
+                self.observer.observe(s)
             })
             |> start()
     }
@@ -83,14 +80,6 @@ class ImagesGroupViewModel {
         return PathValidator.directoryExists(path: path) && !path.isXCProject()
     }
     
-    private func observe(path: Path?) {
-        if let path = path {
-            systemObserver.observe(path)
-        } else {
-            systemObserver.cancel()
-        }
-    }
-    
     func newPathSelected(paths: [Path]) {
         // Which is more readable?
         // selection.put(.create(paths))
@@ -123,23 +112,25 @@ class ImagesGroupViewModel {
             ifFolder: { [NSURL(fileURLWithPath: $0)!] })
     }
     
-    struct PathStorage {
-        func store(selection: ImageSelection) {
-            if let serialized = selection.serialized {
-                NSUserDefaults.standardUserDefaults().setObject(serialized, forKey: "ImagesFolderWuzHere")
-            } else {
-                NSUserDefaults.standardUserDefaults().removeObjectForKey("ImagesFolderWuzHere")
-            }
+}
+
+struct PathStorage {
+    private let SelectionKey = "com.sourcebits.AssetGenerator.ImagesStorageKey"
+    func store(selection: ImageSelection) {
+        if let serialized = selection.serialized {
+            NSUserDefaults.standardUserDefaults().setObject(serialized, forKey: SelectionKey)
+        } else {
+            NSUserDefaults.standardUserDefaults().removeObjectForKey(SelectionKey)
         }
+    }
+    
+    func load() -> ImageSelection {
+        let srlz = NSUserDefaults.standardUserDefaults().objectForKey(SelectionKey) as? [Bookmark]
+        let selection = ImageSelection.deserialize(srlz)
+        store(selection)
+        return selection
         
-        func load() -> ImageSelection {
-            let srlz = NSUserDefaults.standardUserDefaults().objectForKey("ImagesFolderWuzHere") as? [Bookmark]
-            let selection = ImageSelection.deserialize(srlz)
-            store(selection)
-            return selection
-            
-            // Make sure the current selected project is valid and adjust the selection state accordingly.
-            // Filter out invalid/corrupted projects
-        }
+        // Make sure the current selected project is valid and adjust the selection state accordingly.
+        // Filter out invalid/corrupted projects
     }
 }

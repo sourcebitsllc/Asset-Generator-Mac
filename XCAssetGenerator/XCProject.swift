@@ -11,7 +11,6 @@ import Foundation
 let PathKey = "XCAssetGeneratorXcodeProjectPath"
 let AssetPathsKey = "XCAssetGeneratorXcodeAssetsPath"
 
-
 // MARK:-
 struct XCProject: Printable {
     
@@ -19,10 +18,6 @@ struct XCProject: Printable {
     private var xcassets: AssetCatalog?
     
     // MARK:- Initializers
-    
-    static func create(path: Path) -> XCProject {
-        return XCProject(path: path)
-    }
     
     internal init(path: Path) {
         self.path = path
@@ -93,8 +88,8 @@ extension XCProject {
         return false
     }
     
-    func ownsCatalog(catalog: Path) -> Bool {
-        return catalog.hasPrefix(currentWorkingDirectory)
+    func ownsCatalog(catalog: AssetCatalog) -> Bool {
+        return catalog.path.hasPrefix(currentWorkingDirectory)
     }
 }
 

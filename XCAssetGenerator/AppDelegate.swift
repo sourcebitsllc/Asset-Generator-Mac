@@ -7,15 +7,10 @@
 //
 
 import Cocoa
-import ReactiveCocoa
-//let source = "/Users/Bader/Asset Generator Misc./Melissa Test Slices/"
-//let target = "/Users/Bader/Developer/Randomer/Randomer/Images.xcassets/"
-//let temp = source + ".XCAssetTemp/"
+
 class AppDelegate: NSObject, NSApplicationDelegate {
     var windowController: NSWindowController!
-    var queue: dispatch_queue_t!
-    var fildes: CInt!
-    var source: dispatch_queue_t!
+
     func applicationDidFinishLaunching(aNotification: NSNotification) {
         
         let viewModel = AssetWindowViewModel()
@@ -26,7 +21,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         windowController.showWindow(nil)
         windowController.window?.makeKeyAndOrderFront(nil)
     }
-    
     
     func applicationWillTerminate(aNotification: NSNotification) {
         // Insert code here to tear down your application
