@@ -34,13 +34,13 @@ where:
 
 ### App Icons
 
-- For iOS icons, the `<ImageName>` must start with either **"AppIcon"** or _**"Icon"**_ and AG takes care of the rest!
+- For iOS icons, the `<ImageName>` must start with either **"AppIcon"** or _**"Icon"**_ and Asset Generator takes care of the rest.
 - Mac OS icons must start with _**"icon\_"**_ and must follow Apple's naming convention [found here](https://developer.apple.com/library/mac/documentation/UserExperience/Conceptual/OSXHIGuidelines/Designing.htm).
-- More information about iOS icons can be found [here](https://developer.apple.com/library/ios/qa/qa1686/_index.html) and [here](https://developer.apple.com/library/prerelease/ios/documentation/UserExperience/Conceptual/MobileHIG/IconMatrix.html#//apple_ref/doc/uid/TP40006556-CH27-SW2)
+- More information about iOS icons can be found [here](https://developer.apple.com/library/ios/qa/qa1686/_index.html) and [here](https://developer.apple.com/library/prerelease/ios/documentation/UserExperience/Conceptual/MobileHIG/IconMatrix.html#//apple_ref/doc/uid/TP40006556-CH27-SW2).
 
 ### Launch Images
 
-- For launch images, the `<ImageName>` must start with either _**"Default"**_ or _**"LaunchImage"**_ and the app takes care of the rest!
+- For launch images, the `<ImageName>` must start with either _**"Default"**_ or _**"LaunchImage"**_ and Asset Generator takes care of the rest.
 - More information about launch images can be found [here](https://developer.apple.com/library/prerelease/ios/documentation/UserExperience/Conceptual/MobileHIG/LaunchImages.html#//apple_ref/doc/uid/TP40006556-CH22-SW1) and [here](https://developer.apple.com/library/prerelease/ios/documentation/UserExperience/Conceptual/MobileHIG/IconMatrix.html#//apple_ref/doc/uid/TP40006556-CH27-SW2).
 
 ### General Images
