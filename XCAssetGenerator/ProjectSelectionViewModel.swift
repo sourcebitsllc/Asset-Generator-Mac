@@ -12,12 +12,11 @@ import ReactiveCocoa
 class ProjectSelectionViewModel {
     private let project: MutableProperty<XCProject?>
     private let contentChanged: MutableProperty<Void>
+    private let storage: ProjectStorage
+    private let observer: FileSystemProjectObserver
     
     let label: MutableProperty<String>
     let currentSelectionValid: MutableProperty<Bool>
-
-    let observer: FileSystemProjectObserver
-    let storage: ProjectStorage
 
     var selectionSignal: SignalProducer<AssetCatalog?, NoError> {
         return project.producer |> map { $0?.catalog }

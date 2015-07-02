@@ -13,10 +13,10 @@ class ImagesGroupViewModel {
     private let selection: MutableProperty<ImageSelection>
     private let contentChanged: MutableProperty<Void>
     private let storage: PathStorage = PathStorage()
+    private let observer: FileSystemImagesObserver
 
     let label: MutableProperty<String>
     let currentSelectionValid: MutableProperty<Bool>
-    let observer: FileSystemImagesObserver
 
     var selectionSignal: SignalProducer<[Asset]?, NoError> {
         return selection.producer
