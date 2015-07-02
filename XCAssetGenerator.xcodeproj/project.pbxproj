@@ -12,8 +12,10 @@
 		1E48EF431B31861E00A63FBF /* AssetAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E48EF421B31861E00A63FBF /* AssetAttribute.swift */; };
 		1E8D12ED1B43634C004A3FCB /* FileSystemObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E8D12EC1B43634C004A3FCB /* FileSystemObserver.m */; };
 		1E8D12F01B4363ED004A3FCB /* FileSystemObserverSignal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E8D12EF1B4363ED004A3FCB /* FileSystemObserverSignal.swift */; };
+		1E95006C1B44F1F200D7632D /* ImagesDropView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1E95006B1B44F1F200D7632D /* ImagesDropView.xib */; };
 		1EAC3B1F1B3C3EA600B75DD6 /* CABasicAnimation+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EAC3B1E1B3C3EA600B75DD6 /* CABasicAnimation+Extensions.swift */; };
 		1EAC3B211B3CC7D300B75DD6 /* ImageSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EAC3B201B3CC7D300B75DD6 /* ImageSelection.swift */; };
+		1EC4854C1B44DCE300784756 /* ProjectDropView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1EC4854B1B44DCE300784756 /* ProjectDropView.xib */; };
 		1ED096DC1B2D53D8005337A9 /* AssetDiff.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED096DB1B2D53D8005337A9 /* AssetDiff.swift */; };
 		1ED885CB1B27F11200197226 /* Pluralize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED885CA1B27F11200197226 /* Pluralize.swift */; };
 		1ED885CE1B280F8200197226 /* NSColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED885CD1B280F8200197226 /* NSColor+Extensions.swift */; };
@@ -94,8 +96,10 @@
 		1E8D12EC1B43634C004A3FCB /* FileSystemObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileSystemObserver.m; sourceTree = "<group>"; };
 		1E8D12EE1B436358004A3FCB /* FileSystemObserver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileSystemObserver.h; sourceTree = "<group>"; };
 		1E8D12EF1B4363ED004A3FCB /* FileSystemObserverSignal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileSystemObserverSignal.swift; sourceTree = "<group>"; };
+		1E95006B1B44F1F200D7632D /* ImagesDropView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ImagesDropView.xib; sourceTree = "<group>"; };
 		1EAC3B1E1B3C3EA600B75DD6 /* CABasicAnimation+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CABasicAnimation+Extensions.swift"; sourceTree = "<group>"; };
 		1EAC3B201B3CC7D300B75DD6 /* ImageSelection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageSelection.swift; sourceTree = "<group>"; };
+		1EC4854B1B44DCE300784756 /* ProjectDropView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ProjectDropView.xib; sourceTree = "<group>"; };
 		1ED096DB1B2D53D8005337A9 /* AssetDiff.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetDiff.swift; sourceTree = "<group>"; };
 		1ED885CA1B27F11200197226 /* Pluralize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pluralize.swift; sourceTree = "<group>"; };
 		1ED885CD1B280F8200197226 /* NSColor+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSColor+Extensions.swift"; sourceTree = "<group>"; };
@@ -210,7 +214,9 @@
 			children = (
 				1ED9A0F91B1F9810000A41B9 /* AssetGeneratorWindowController.swift */,
 				1ED9A1051B1F9810000A41B9 /* ImagesDropViewController.swift */,
+				1E95006B1B44F1F200D7632D /* ImagesDropView.xib */,
 				1ED9A1101B1F9810000A41B9 /* ProjectDropViewController.swift */,
+				1EC4854B1B44DCE300784756 /* ProjectDropView.xib */,
 				1ED9A1141B1F9810000A41B9 /* RoundedDropView.swift */,
 				1ED9A0FE1B1F9810000A41B9 /* DropView.swift */,
 				1ED9A10D1B1F9810000A41B9 /* ProgressViewController.swift */,
@@ -402,6 +408,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1EC4854C1B44DCE300784756 /* ProjectDropView.xib in Resources */,
+				1E95006C1B44F1F200D7632D /* ImagesDropView.xib in Resources */,
 				1E2D9EE31B26620A009A2745 /* Main.storyboard in Resources */,
 				DD09CBEE1989A46C002DD2FB /* Images.xcassets in Resources */,
 				1E17A3A11ACF637700785DB2 /* Localizable.strings in Resources */,

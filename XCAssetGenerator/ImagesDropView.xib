@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7702" systemVersion="14E46" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7702"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="ImagesDropViewController" customModule="Asset_Generator" customModuleProvider="target">
+            <connections>
+                <outlet property="dropImageView" destination="yVk-od-ksS" id="YSq-SE-ZFo"/>
+                <outlet property="dropView" destination="nw1-NX-Xch" id="5qC-oh-0UO"/>
+                <outlet property="label" destination="GY6-Gv-38i" id="7d4-u1-PPU"/>
+                <outlet property="view" destination="qkD-zA-AIz" id="gd0-S5-HWJ"/>
+                <outlet property="well" destination="4wK-8b-tfN" id="GAS-nE-btx"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="qkD-zA-AIz">
+            <rect key="frame" x="0.0" y="0.0" width="225" height="300"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <customView translatesAutoresizingMaskIntoConstraints="NO" id="nw1-NX-Xch" customClass="RoundedDropView" customModule="Asset_Generator" customModuleProvider="target">
+                    <rect key="frame" x="48" y="86" width="128" height="128"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="128" id="bCE-7l-B0c"/>
+                        <constraint firstAttribute="width" constant="128" id="wTA-yf-ueZ"/>
+                    </constraints>
+                </customView>
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="yVk-od-ksS" userLabel="Drop ImageView">
+                    <rect key="frame" x="72" y="110" width="80" height="80"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="80" id="0bD-MP-0lH"/>
+                        <constraint firstAttribute="width" constant="80" id="fc5-vP-udm"/>
+                    </constraints>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="pnR-GI-i7e"/>
+                </imageView>
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="4wK-8b-tfN" userLabel="Well">
+                    <rect key="frame" x="50" y="88" width="125" height="125"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="125" id="Orj-m7-uYf"/>
+                        <constraint firstAttribute="width" constant="125" id="ftJ-Td-Xoy"/>
+                    </constraints>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="uiWell" id="GJA-gb-JaE"/>
+                </imageView>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="GY6-Gv-38i">
+                    <rect key="frame" x="10" y="66" width="204" height="17"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="200" id="2lb-JM-kPw"/>
+                    </constraints>
+                    <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="center" title="Label" id="ftm-83-Ny6">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+            </subviews>
+            <constraints>
+                <constraint firstAttribute="centerX" secondItem="yVk-od-ksS" secondAttribute="centerX" id="C80-1A-eIl"/>
+                <constraint firstItem="GY6-Gv-38i" firstAttribute="top" secondItem="nw1-NX-Xch" secondAttribute="bottom" constant="3" id="Dva-jg-Uae"/>
+                <constraint firstItem="nw1-NX-Xch" firstAttribute="centerX" secondItem="qkD-zA-AIz" secondAttribute="centerX" id="F1J-z8-fG9"/>
+                <constraint firstItem="nw1-NX-Xch" firstAttribute="centerY" secondItem="qkD-zA-AIz" secondAttribute="centerY" id="NbS-X1-GgZ"/>
+                <constraint firstAttribute="centerY" secondItem="4wK-8b-tfN" secondAttribute="centerY" id="abf-e4-sGm"/>
+                <constraint firstItem="GY6-Gv-38i" firstAttribute="centerX" secondItem="yVk-od-ksS" secondAttribute="centerX" id="dWT-uW-VTu"/>
+                <constraint firstAttribute="centerX" secondItem="4wK-8b-tfN" secondAttribute="centerX" id="g7V-z0-otV"/>
+                <constraint firstAttribute="centerY" secondItem="yVk-od-ksS" secondAttribute="centerY" id="xzs-hF-gbf"/>
+            </constraints>
+            <point key="canvasLocation" x="341.5" y="196"/>
+        </customView>
+    </objects>
+    <resources>
+        <image name="uiWell" width="125" height="125"/>
+    </resources>
+</document>

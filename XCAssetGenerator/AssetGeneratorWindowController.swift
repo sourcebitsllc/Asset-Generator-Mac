@@ -75,7 +75,8 @@ class AssetGeneratorWindowController: NSWindowController {
     
     private func createImagesArea() {
         let imagesViewModel = viewModel.viewModelForImagesGroup()
-        imagesViewController = ImagesDropViewController.instantiate(imagesViewModel)
+//        imagesViewController = ImagesDropViewController.instantiate(imagesViewModel)
+        imagesViewController = ImagesDropViewController(viewModel: imagesViewModel)
         imagesViewController.view.translatesAutoresizingMaskIntoConstraints = false
         
         contentViewController?.view.addSubview(imagesViewController.view)
@@ -90,8 +91,8 @@ class AssetGeneratorWindowController: NSWindowController {
     
     private func createProjectArea() {
         let projectViewModel = viewModel.viewModelForSelectedProject()
-        projectViewController = ProjectDropViewController.instantiate(projectViewModel)
-//        projectViewController = ProjectDropViewController(viewModel: projectViewModel)
+//        projectViewController = ProjectDropViewController.instantiate(projectViewModel)
+        projectViewController = ProjectDropViewController(viewModel: projectViewModel)
         projectViewController.view.translatesAutoresizingMaskIntoConstraints = false
         contentViewController?.view.addSubview(projectViewController.view)
         

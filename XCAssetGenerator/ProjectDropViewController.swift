@@ -15,67 +15,34 @@ import ReactiveCocoa
 class ProjectDropViewController: NSViewController, DropViewDelegate {
     
     @IBOutlet var dropView: RoundedDropView!
-    var dropImageView: NSImageView!
-    var well: NSImageView!
-    var label: NSTextField!
-    var viewModel: ProjectSelectionViewModel!
+    @IBOutlet var dropImageView: NSImageView!
+    @IBOutlet var well: NSImageView!
+    @IBOutlet var label: NSTextField!
+    
+    let viewModel: ProjectSelectionViewModel
     
     let borderWidth: CGFloat = 3
     
-    static func instantiate(viewModel: ProjectSelectionViewModel) -> ProjectDropViewController {
-        let controller = NSStoryboard(name: "Main", bundle: nil)!.instantiateControllerWithIdentifier("ProjectDroppa") as! ProjectDropViewController
-        controller.viewModel = viewModel
-        return controller
+    init?(viewModel: ProjectSelectionViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: "ProjectDropView", bundle: nil)
     }
 
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    
     override func viewDidLoad() {
- 
-        self.view.wantsLayer = true
-        self.view.translatesAutoresizingMaskIntoConstraints = false
-        // Intialize RoundedDropView
-        dropView.translatesAutoresizingMaskIntoConstraints = false
+        super.viewDidLoad()
+
         dropView.delegate = self
         dropView.mouse = self
         dropView.layer?.borderWidth = borderWidth
-        dropView.layer?.backgroundColor = NSColor.redColor().CGColor
-        
-        let fillDropView = NSLayoutConstraint.centeringConstraints(dropView, into: view, size: NSSize(width: 125+borderWidth, height: 125 + borderWidth))
-        NSLayoutConstraint.activateConstraints(fillDropView)
 
-        // Initialize ImageView representing the drop item.
-        dropImageView = NSImageView()
-        dropImageView.translatesAutoresizingMaskIntoConstraints = false
         dropImageView.unregisterDraggedTypes() // otherwise, the subview will intercept the dropView calls.
-        view.addSubview(dropImageView)
-        
-        let centerImage = NSLayoutConstraint.centeringConstraints(dropImageView, into: view)
-        NSLayoutConstraint.activateConstraints(centerImage)
-
-        // Initialize well
-        well = NSImageView()
-        well.image = NSImage(named: "uiWell")
-        well.translatesAutoresizingMaskIntoConstraints = false
         well.unregisterDraggedTypes()
-        view.addSubview(well)
-        let centerWell = NSLayoutConstraint.centeringConstraints(well, into: view)
-        NSLayoutConstraint.activateConstraints(centerWell)
 
-       
-        label = NSTextField()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.editable = false
-        label.backgroundColor = NSColor.controlColor()
-        label.bordered = false
-        label.alignment = .CenterTextAlignment
-        label.preferredMaxLayoutWidth = 200 // 24 characters wide.
-        label.lineBreakMode = NSLineBreakMode.ByTruncatingTail
-        label.font = NSFont.systemFontOfSize(13)
-        view.addSubview(label)
-        let labelX  = NSLayoutConstraint(item: label, attribute: NSLayoutAttribute.CenterX, relatedBy: NSLayoutRelation.Equal, toItem: view, attribute: NSLayoutAttribute.CenterX, multiplier: 1, constant: 0)
-        let labelY = NSLayoutConstraint(item: label, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: view, attribute: NSLayoutAttribute.CenterY, multiplier: 1.6, constant: 0)
-        NSLayoutConstraint.activateConstraints([labelX, labelY])
-
-        
         viewModel.label.producer
             |> start(next: { label in
                self.label.stringValue = label
@@ -94,7 +61,6 @@ class ProjectDropViewController: NSViewController, DropViewDelegate {
         well.hidden = set
         dropImageView.image = set ? self.viewModel.systemImageForCurrentPath() : nil
         dropImageView.alphaValue = set ? 1 : 0.5
-    
     }
     
     func dropViewDidDragFileOutOfView(dropView: DropView) {
