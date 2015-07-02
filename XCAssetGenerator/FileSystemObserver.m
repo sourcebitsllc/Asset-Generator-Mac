@@ -1,14 +1,16 @@
 //
 //  FileSystemObserver.m
-//  FSEventSwiftTest
+//  XCAssetGenerator
 //
-//  Created by Bader on 10/10/14.
-//  Copyright (c) 2014 Bader. All rights reserved.
+//  Created by Bader on 7/1/15.
+//  Copyright (c) 2015 Bader Alabdulrazzaq. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
+
 /*
-    <<>><<>><<>><<>><<>> Sunset this whole mess in Swift 2.0 <<>><<>><<>><<>><<>>
-*/
+ <<>><<>><<>><<>><<>> Sunset this whole mess in Swift 2.0 <<>><<>><<>><<>><<>>
+ */
 
 #import "FileSystemObserver.h"
 
@@ -31,7 +33,7 @@ static void fs_callback(ConstFSEventStreamRef ref, void * data, size_t events, v
     if (self == nil)
         return nil;
     
-//    _pathsToObserve = [[NSMutableArray alloc] init];
+    //    _pathsToObserve = [[NSMutableArray alloc] init];
     _observers = [[NSMutableDictionary alloc] init];
     _pathFileDescriptors = [[NSMutableDictionary alloc] init];
     
@@ -63,8 +65,8 @@ static void fs_callback(ConstFSEventStreamRef ref, void * data, size_t events, v
                                        kCFRunLoopDefaultMode);
     FSEventStreamInvalidate(self.contentStream);
     FSEventStreamRelease(self.contentStream);
-
-
+    
+    
 }
 
 #pragma MARK - Observers Management
@@ -75,7 +77,7 @@ static void fs_callback(ConstFSEventStreamRef ref, void * data, size_t events, v
         [self addObserver:observer forFileSystemPath:obj ignoreContents:ignore];
     }];
 }
-     
+
 - (void)addObserver:(id<FileSystemObserverDelegate>)observer forFileSystemPath:(NSString *)path ignoreContents:(BOOL)ignore
 {
     const char *cStringPath = [path cStringUsingEncoding:NSASCIIStringEncoding];
@@ -129,7 +131,7 @@ static void fs_callback(ConstFSEventStreamRef ref, void * data, size_t events, v
     [self.contentsToObserve removeAllObjects];
     [self.observers removeAllObjects];
     [self.pathFileDescriptors removeAllObjects];
-//    [self invalidateStream];
+    //    [self invalidateStream];
 }
 
 #pragma MARK - Stream Managements
@@ -159,12 +161,12 @@ static void fs_callback(ConstFSEventStreamRef ref, void * data, size_t events, v
     FSEventStreamContext context2 = { 0, (__bridge void *)self, NULL, NULL, NULL };
     if (self.contentsToObserve.count) {
         self.contentStream = FSEventStreamCreate(NULL,
-                                              &fs_callback,
-                                              &context2,
-                                              (__bridge CFArrayRef)self.contentsToObserve,
-                                              kFSEventStreamEventIdSinceNow,
-                                              (CFAbsoluteTime)0.2,
-                                              kFSEventStreamCreateFlagFileEvents);
+                                                 &fs_callback,
+                                                 &context2,
+                                                 (__bridge CFArrayRef)self.contentsToObserve,
+                                                 kFSEventStreamEventIdSinceNow,
+                                                 (CFAbsoluteTime)0.2,
+                                                 kFSEventStreamCreateFlagFileEvents);
         
         if (self.contentStream != NULL) {
             // start the stream on the main event loop IFF stream was successfully created.
@@ -177,10 +179,10 @@ static void fs_callback(ConstFSEventStreamRef ref, void * data, size_t events, v
     
 }
 
-         
+
 - (void)restartStream
 {
-
+    
     if (self.rootStream != nil)
         [self invalidateStream];
     if (self.contentStream != nil)
@@ -297,8 +299,8 @@ fs_callback(ConstFSEventStreamRef ref, void * data, size_t events, void * paths,
             // Ignore the TEMP file that we create.
             if (theObserver.ignoreHiddenItems) {
                 // if (!isHidden(path)) // Sometimes .DS_Store eats copy events. So check everything until we find a better way.
-                    contentChanged = YES;
-         
+                contentChanged = YES;
+                
             } else {
                 contentChanged = YES;
             }
@@ -307,7 +309,7 @@ fs_callback(ConstFSEventStreamRef ref, void * data, size_t events, void * paths,
         if (flags[i] & kFSEventStreamEventFlagRootChanged) {
             NSString *thePath = [theObserver parentDirectoryForSubdirectory:path
                                                             fromDirectories:pathsBeingObserved];
-
+            
             int descriptor = ((NSNumber *)theObserver.pathFileDescriptors[thePath]).intValue;
             char filePath[PATH_MAX];
             NSArray *observers = [theObserver.observers objectForKey:thePath];
@@ -325,7 +327,7 @@ fs_callback(ConstFSEventStreamRef ref, void * data, size_t events, void * paths,
                             [observer FileSystemDirectoryDeleted:path];
                         }];
                     }
-      
+                    
                     else {
                         [observers enumerateObjectsUsingBlock:^(id observer, NSUInteger idx, BOOL *stop) {
                             [observer FileSystemDirectory:path renamedTo:newPath];
@@ -356,4 +358,5 @@ fs_callback(ConstFSEventStreamRef ref, void * data, size_t events, void * paths,
     
     
 }
+
 @end

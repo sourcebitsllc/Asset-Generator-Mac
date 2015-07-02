@@ -1,9 +1,9 @@
 //
 //  FileSystemObserver.h
-//  FSEventSwiftTest
+//  XCAssetGenerator
 //
-//  Created by Bader on 10/10/14.
-//  Copyright (c) 2014 Bader. All rights reserved.
+//  Created by Bader on 7/1/15.
+//  Copyright (c) 2015 Bader Alabdulrazzaq. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>

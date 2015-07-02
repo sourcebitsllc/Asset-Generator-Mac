@@ -10,8 +10,8 @@
 		1E17A3A11ACF637700785DB2 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1E17A3A01ACF637700785DB2 /* Localizable.strings */; };
 		1E2D9EE31B26620A009A2745 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1ED9A1461B1F983B000A41B9 /* Main.storyboard */; };
 		1E48EF431B31861E00A63FBF /* AssetAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E48EF421B31861E00A63FBF /* AssetAttribute.swift */; };
-		1E8D12ED1B43634C004A3FCB /* FileSystemObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E8D12EC1B43634C004A3FCB /* FileSystemObserver.m */; };
 		1E8D12F01B4363ED004A3FCB /* FileSystemObserverSignal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E8D12EF1B4363ED004A3FCB /* FileSystemObserverSignal.swift */; };
+		1E946FD51B46007600133459 /* FileSystemObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E946FD41B46007600133459 /* FileSystemObserver.m */; };
 		1E95006C1B44F1F200D7632D /* ImagesDropView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1E95006B1B44F1F200D7632D /* ImagesDropView.xib */; };
 		1EAC3B1F1B3C3EA600B75DD6 /* CABasicAnimation+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EAC3B1E1B3C3EA600B75DD6 /* CABasicAnimation+Extensions.swift */; };
 		1EAC3B211B3CC7D300B75DD6 /* ImageSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EAC3B201B3CC7D300B75DD6 /* ImageSelection.swift */; };
@@ -93,9 +93,9 @@
 		1E17A3A01ACF637700785DB2 /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		1E48EF421B31861E00A63FBF /* AssetAttribute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetAttribute.swift; sourceTree = "<group>"; };
 		1E8D12EB1B436324004A3FCB /* XCAssetGenerator-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "XCAssetGenerator-Bridging-Header.h"; sourceTree = "<group>"; };
-		1E8D12EC1B43634C004A3FCB /* FileSystemObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileSystemObserver.m; sourceTree = "<group>"; };
-		1E8D12EE1B436358004A3FCB /* FileSystemObserver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileSystemObserver.h; sourceTree = "<group>"; };
 		1E8D12EF1B4363ED004A3FCB /* FileSystemObserverSignal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileSystemObserverSignal.swift; sourceTree = "<group>"; };
+		1E946FD31B46007600133459 /* FileSystemObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileSystemObserver.h; sourceTree = "<group>"; };
+		1E946FD41B46007600133459 /* FileSystemObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileSystemObserver.m; sourceTree = "<group>"; };
 		1E95006B1B44F1F200D7632D /* ImagesDropView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ImagesDropView.xib; sourceTree = "<group>"; };
 		1EAC3B1E1B3C3EA600B75DD6 /* CABasicAnimation+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CABasicAnimation+Extensions.swift"; sourceTree = "<group>"; };
 		1EAC3B201B3CC7D300B75DD6 /* ImageSelection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageSelection.swift; sourceTree = "<group>"; };
@@ -284,8 +284,8 @@
 				1ED9A1541B1FA013000A41B9 /* Extensions and Operators */,
 				1ED885CC1B27F3F400197226 /* Helpers */,
 				1ED9A1081B1F9810000A41B9 /* Keyword Constants.swift */,
-				1E8D12EE1B436358004A3FCB /* FileSystemObserver.h */,
-				1E8D12EC1B43634C004A3FCB /* FileSystemObserver.m */,
+				1E946FD31B46007600133459 /* FileSystemObserver.h */,
+				1E946FD41B46007600133459 /* FileSystemObserver.m */,
 				1ED9A1461B1F983B000A41B9 /* Main.storyboard */,
 				DD09CBED1989A46C002DD2FB /* Images.xcassets */,
 				DD09CBE51989A46C002DD2FB /* Supporting Files */,
@@ -442,6 +442,7 @@
 				1ED9A12D1B1F9810000A41B9 /* ImagesGroupViewModel.swift in Sources */,
 				1ED9A1381B1F9810000A41B9 /* ProjectSelector.swift in Sources */,
 				1ED885D01B28F51B00197226 /* ProgressLineView.swift in Sources */,
+				1E946FD51B46007600133459 /* FileSystemObserver.m in Sources */,
 				1E8D12F01B4363ED004A3FCB /* FileSystemObserverSignal.swift in Sources */,
 				1ED9A1271B1F9810000A41B9 /* ErrorType.swift in Sources */,
 				1ED096DC1B2D53D8005337A9 /* AssetDiff.swift in Sources */,
@@ -456,7 +457,6 @@
 				1ED9A1261B1F9810000A41B9 /* DropView.swift in Sources */,
 				1ED9A13E1B1F9810000A41B9 /* StatusCrafter.swift in Sources */,
 				1ED9A1331B1F9810000A41B9 /* PathQuery.swift in Sources */,
-				1E8D12ED1B43634C004A3FCB /* FileSystemObserver.m in Sources */,
 				1ED9A1301B1F9810000A41B9 /* NSImage+Extensions.swift in Sources */,
 				1ED9A12E1B1F9810000A41B9 /* XCAssetsJSON.swift in Sources */,
 				1ED9A0F41B1F97CE000A41B9 /* AppDelegate.swift in Sources */,
