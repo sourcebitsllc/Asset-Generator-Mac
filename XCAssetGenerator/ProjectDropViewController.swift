@@ -57,7 +57,6 @@ class ProjectDropViewController: NSViewController, DropViewDelegate {
     
     private func layoutUI(set: Bool) {
         dropView.layer?.borderColor = (set) ? NSColor.dropViewAcceptedColor().CGColor : NSColor(calibratedRed: 0.652 , green: 0.673, blue: 0.696, alpha: 1).CGColor
-            //NSColor(calibratedRed: 0.652 , green: 0.673, blue: 0.696, alpha: 1).CGColor
         dropView.layer?.backgroundColor = (set) ? NSColor.whiteColor().CGColor : NSColor.clearColor().CGColor
         well.hidden = set
         dropImageView.image = set ? self.viewModel.systemImageForCurrentPath() : nil

@@ -20,10 +20,10 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="5jg-jt-gmt" customClass="RoundedDropView" customModule="Asset_Generator" customModuleProvider="target">
-                    <rect key="frame" x="48" y="86" width="128" height="128"/>
+                    <rect key="frame" x="47" y="85" width="130" height="130"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="128" id="u3o-ig-723"/>
-                        <constraint firstAttribute="width" constant="128" id="wBn-VM-DW7"/>
+                        <constraint firstAttribute="height" constant="130" id="u3o-ig-723"/>
+                        <constraint firstAttribute="width" constant="130" id="wBn-VM-DW7"/>
                     </constraints>
                 </customView>
                 <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="xgo-bF-YhT" userLabel="Drop ImageView">
@@ -43,7 +43,7 @@
                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="uiWell" id="LPc-U8-HSY"/>
                 </imageView>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="EAY-ad-OQ2">
-                    <rect key="frame" x="10" y="66" width="204" height="17"/>
+                    <rect key="frame" x="10" y="65" width="204" height="17"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="200" id="GRX-RU-ZCa"/>
                     </constraints>
@@ -59,9 +59,9 @@
                 <constraint firstItem="5jg-jt-gmt" firstAttribute="centerX" secondItem="c22-O7-iKe" secondAttribute="centerX" id="8bq-Ce-i2E"/>
                 <constraint firstAttribute="centerX" secondItem="xgo-bF-YhT" secondAttribute="centerX" id="9md-7y-8ye"/>
                 <constraint firstAttribute="centerY" secondItem="xgo-bF-YhT" secondAttribute="centerY" id="Gez-ek-cHK"/>
-                <constraint firstAttribute="centerX" secondItem="qgn-YB-v1L" secondAttribute="centerX" id="H8C-ED-PyE"/>
+                <constraint firstItem="qgn-YB-v1L" firstAttribute="centerX" secondItem="c22-O7-iKe" secondAttribute="centerX" id="H8C-ED-PyE"/>
                 <constraint firstItem="5jg-jt-gmt" firstAttribute="centerY" secondItem="c22-O7-iKe" secondAttribute="centerY" id="siN-HQ-O7r"/>
-                <constraint firstAttribute="centerY" secondItem="qgn-YB-v1L" secondAttribute="centerY" id="ucP-hT-XcS"/>
+                <constraint firstItem="qgn-YB-v1L" firstAttribute="centerY" secondItem="c22-O7-iKe" secondAttribute="centerY" id="ucP-hT-XcS"/>
                 <constraint firstItem="EAY-ad-OQ2" firstAttribute="top" secondItem="5jg-jt-gmt" secondAttribute="bottom" constant="3" id="ufy-xW-jZY"/>
             </constraints>
             <point key="canvasLocation" x="341.5" y="196"/>
