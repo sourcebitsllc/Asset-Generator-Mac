@@ -56,7 +56,8 @@ class ProjectDropViewController: NSViewController, DropViewDelegate {
     }
     
     private func layoutUI(set: Bool) {
-        dropView.layer?.borderColor = (set) ? NSColor.dropViewAcceptedColor().CGColor : NSColor(calibratedRed: 0.576 , green: 0.713, blue: 0.940, alpha: 1).CGColor
+        dropView.layer?.borderColor = (set) ? NSColor.dropViewAcceptedColor().CGColor : NSColor(calibratedRed: 0.652 , green: 0.673, blue: 0.696, alpha: 1).CGColor
+            //NSColor(calibratedRed: 0.652 , green: 0.673, blue: 0.696, alpha: 1).CGColor
         dropView.layer?.backgroundColor = (set) ? NSColor.whiteColor().CGColor : NSColor.clearColor().CGColor
         well.hidden = set
         dropImageView.image = set ? self.viewModel.systemImageForCurrentPath() : nil
@@ -67,7 +68,7 @@ class ProjectDropViewController: NSViewController, DropViewDelegate {
         if viewModel.isCurrentSelectionValid() {
             dropView.layer?.borderColor = NSColor.dropViewAcceptedColor().CGColor
         } else {
-            dropView.layer?.borderColor = NSColor(calibratedRed: 0.576 , green: 0.713, blue: 0.940, alpha: 1).CGColor
+            dropView.layer?.borderColor = NSColor(calibratedRed: 0.652 , green: 0.673, blue: 0.696, alpha: 1).CGColor
         }
     }
     
@@ -98,6 +99,7 @@ class ProjectDropViewController: NSViewController, DropViewDelegate {
     }
 }
 
+// MARK:- Right-click Menu setup
 extension ProjectDropViewController: DropViewMouseDelegate {
     func dropViewDidRightClick(dropView: DropView, event: NSEvent) {
         let enabled = viewModel.isCurrentSelectionValid()
@@ -120,7 +122,6 @@ extension ProjectDropViewController: DropViewMouseDelegate {
     }
     
     func revealMenuPressed() {
-        let items = viewModel.urlRepresentation()
         if let item = viewModel.urlRepresentation() {
              NSWorkspace.sharedWorkspace().activateFileViewerSelectingURLs([item])
         }
