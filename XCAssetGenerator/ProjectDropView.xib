@@ -43,7 +43,7 @@
                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="uiWell" id="LPc-U8-HSY"/>
                 </imageView>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="EAY-ad-OQ2">
-                    <rect key="frame" x="10" y="65" width="204" height="17"/>
+                    <rect key="frame" x="10" y="60" width="204" height="17"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="200" id="GRX-RU-ZCa"/>
                     </constraints>
@@ -62,7 +62,7 @@
                 <constraint firstItem="qgn-YB-v1L" firstAttribute="centerX" secondItem="c22-O7-iKe" secondAttribute="centerX" id="H8C-ED-PyE"/>
                 <constraint firstItem="5jg-jt-gmt" firstAttribute="centerY" secondItem="c22-O7-iKe" secondAttribute="centerY" id="siN-HQ-O7r"/>
                 <constraint firstItem="qgn-YB-v1L" firstAttribute="centerY" secondItem="c22-O7-iKe" secondAttribute="centerY" id="ucP-hT-XcS"/>
-                <constraint firstItem="EAY-ad-OQ2" firstAttribute="top" secondItem="5jg-jt-gmt" secondAttribute="bottom" constant="3" id="ufy-xW-jZY"/>
+                <constraint firstItem="EAY-ad-OQ2" firstAttribute="top" secondItem="5jg-jt-gmt" secondAttribute="bottom" constant="8" id="ufy-xW-jZY"/>
             </constraints>
             <point key="canvasLocation" x="341.5" y="196"/>
         </customView>

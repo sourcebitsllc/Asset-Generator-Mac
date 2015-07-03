@@ -43,7 +43,7 @@
                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="uiWell" id="GJA-gb-JaE"/>
                 </imageView>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="GY6-Gv-38i">
-                    <rect key="frame" x="10" y="65" width="204" height="17"/>
+                    <rect key="frame" x="10" y="60" width="204" height="17"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="200" id="2lb-JM-kPw"/>
                     </constraints>
@@ -56,7 +56,7 @@
             </subviews>
             <constraints>
                 <constraint firstAttribute="centerX" secondItem="yVk-od-ksS" secondAttribute="centerX" id="C80-1A-eIl"/>
-                <constraint firstItem="GY6-Gv-38i" firstAttribute="top" secondItem="nw1-NX-Xch" secondAttribute="bottom" constant="3" id="Dva-jg-Uae"/>
+                <constraint firstItem="GY6-Gv-38i" firstAttribute="top" secondItem="nw1-NX-Xch" secondAttribute="bottom" constant="8" id="Dva-jg-Uae"/>
                 <constraint firstItem="nw1-NX-Xch" firstAttribute="centerX" secondItem="qkD-zA-AIz" secondAttribute="centerX" id="F1J-z8-fG9"/>
                 <constraint firstItem="nw1-NX-Xch" firstAttribute="centerY" secondItem="qkD-zA-AIz" secondAttribute="centerY" id="NbS-X1-GgZ"/>
                 <constraint firstItem="4wK-8b-tfN" firstAttribute="centerY" secondItem="qkD-zA-AIz" secondAttribute="centerY" id="abf-e4-sGm"/>
