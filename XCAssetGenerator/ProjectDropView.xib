@@ -2,15 +2,18 @@
 <document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7702" systemVersion="14E46" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7702"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="ProjectDropViewController" customModule="Asset_Generator" customModuleProvider="target">
             <connections>
                 <outlet property="dropImageView" destination="xgo-bF-YhT" id="js5-vG-nTk"/>
                 <outlet property="dropView" destination="5jg-jt-gmt" id="uaH-pT-6dW"/>
+                <outlet property="heightConstraint" destination="u3o-ig-723" id="hdr-EV-Feh"/>
                 <outlet property="label" destination="EAY-ad-OQ2" id="Zwv-kR-0Ef"/>
                 <outlet property="view" destination="c22-O7-iKe" id="AMH-bt-nbU"/>
                 <outlet property="well" destination="qgn-YB-v1L" id="gcF-Yy-7RM"/>
+                <outlet property="widthConstraint" destination="wBn-VM-DW7" id="k98-M1-LEc"/>
             </connections>
         </customObject>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
@@ -20,10 +23,10 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="5jg-jt-gmt" customClass="RoundedDropView" customModule="Asset_Generator" customModuleProvider="target">
-                    <rect key="frame" x="47" y="85" width="130" height="130"/>
+                    <rect key="frame" x="50" y="88" width="125" height="125"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="130" id="u3o-ig-723"/>
-                        <constraint firstAttribute="width" constant="130" id="wBn-VM-DW7"/>
+                        <constraint firstAttribute="height" constant="125" id="u3o-ig-723"/>
+                        <constraint firstAttribute="width" constant="125" id="wBn-VM-DW7"/>
                     </constraints>
                 </customView>
                 <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="xgo-bF-YhT" userLabel="Drop ImageView">
@@ -43,7 +46,7 @@
                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="uiWell" id="LPc-U8-HSY"/>
                 </imageView>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="EAY-ad-OQ2">
-                    <rect key="frame" x="10" y="60" width="204" height="17"/>
+                    <rect key="frame" x="10" y="51" width="204" height="17"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="200" id="GRX-RU-ZCa"/>
                     </constraints>
@@ -62,7 +65,7 @@
                 <constraint firstItem="qgn-YB-v1L" firstAttribute="centerX" secondItem="c22-O7-iKe" secondAttribute="centerX" id="H8C-ED-PyE"/>
                 <constraint firstItem="5jg-jt-gmt" firstAttribute="centerY" secondItem="c22-O7-iKe" secondAttribute="centerY" id="siN-HQ-O7r"/>
                 <constraint firstItem="qgn-YB-v1L" firstAttribute="centerY" secondItem="c22-O7-iKe" secondAttribute="centerY" id="ucP-hT-XcS"/>
-                <constraint firstItem="EAY-ad-OQ2" firstAttribute="top" secondItem="5jg-jt-gmt" secondAttribute="bottom" constant="8" id="ufy-xW-jZY"/>
+                <constraint firstItem="EAY-ad-OQ2" firstAttribute="top" secondItem="5jg-jt-gmt" secondAttribute="centerY" multiplier="1.55" id="ufy-xW-jZY"/>
             </constraints>
             <point key="canvasLocation" x="341.5" y="196"/>
         </customView>

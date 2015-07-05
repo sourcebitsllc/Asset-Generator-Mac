@@ -6,22 +6,18 @@
 //  Copyright (c) 2015 Bader Alabdulrazzaq. All rights reserved.
 //
 
-import Foundation
-import Cocoa
 import ReactiveCocoa
 
-// TODO: Find better way to incorporate VCs and VMs. Current workaround is making all properties mutable and unwrapped. Ew.
-
-class ProjectDropViewController: NSViewController, DropViewDelegate {
+class ProjectDropViewController: NSViewController {
     
     @IBOutlet var dropView: RoundedDropView!
     @IBOutlet var dropImageView: NSImageView!
     @IBOutlet var well: NSImageView!
     @IBOutlet var label: NSTextField!
+    @IBOutlet var heightConstraint: NSLayoutConstraint!
+    @IBOutlet var widthConstraint: NSLayoutConstraint!
     
     let viewModel: ProjectSelectionViewModel
-    
-    let borderWidth: CGFloat = 3
     
     init?(viewModel: ProjectSelectionViewModel) {
         self.viewModel = viewModel
@@ -38,9 +34,8 @@ class ProjectDropViewController: NSViewController, DropViewDelegate {
 
         dropView.delegate = self
         dropView.mouse = self
-        dropView.layer?.borderWidth = borderWidth
 
-        dropImageView.unregisterDraggedTypes() // otherwise, the subview will intercept the dropView calls.
+        dropImageView.unregisterDraggedTypes()
         well.unregisterDraggedTypes()
 
         viewModel.label.producer
@@ -50,47 +45,65 @@ class ProjectDropViewController: NSViewController, DropViewDelegate {
 
         viewModel.currentSelectionValid.producer
             |> on(next: { valid in
-                self.layoutUI(valid) })
+                self.layoutUI(valid ? .Accepted : .None) })
             |> start()
         
     }
     
-    private func layoutUI(set: Bool) {
-        dropView.layer?.borderColor = (set) ? NSColor.dropViewAcceptedColor().CGColor : NSColor(calibratedRed: 0.652 , green: 0.673, blue: 0.696, alpha: 1).CGColor
-        dropView.layer?.backgroundColor = (set) ? NSColor.whiteColor().CGColor : NSColor.clearColor().CGColor
-        well.hidden = set
-        dropImageView.image = set ? self.viewModel.systemImageForCurrentPath() : nil
-        dropImageView.alphaValue = set ? 1 : 0.5
-    }
-    
-    func dropViewDidDragFileOutOfView(dropView: DropView) {
-        if viewModel.isCurrentSelectionValid() {
+    private func layoutUI(state: DropState) {
+        switch state {
+        case .Hovering:
+            dropView.animator().layer?.borderWidth = fat.border
+            heightConstraint.constant = fat.width
+            widthConstraint.constant = fat.width
+            dropView.layer?.borderColor = NSColor.dropViewHoveringColor().CGColor
+        case .Accepted:
+            dropView.layer?.borderWidth = fat.border
+            heightConstraint.constant = fat.width
+            widthConstraint.constant = fat.width
             dropView.layer?.borderColor = NSColor.dropViewAcceptedColor().CGColor
-        } else {
+            dropView.layer?.backgroundColor = NSColor.whiteColor().CGColor
+            well.hidden = true
+            dropImageView.image = self.viewModel.systemImageForCurrentPath()
+        case .None:
+            dropView.layer?.borderWidth = thin.border
+            heightConstraint.constant = thin.width
+            widthConstraint.constant = thin.width
             dropView.layer?.borderColor = NSColor(calibratedRed: 0.652 , green: 0.673, blue: 0.696, alpha: 1).CGColor
+            dropView.layer?.backgroundColor = NSColor.clearColor().CGColor
+            well.hidden = false
+            dropImageView.image = nil
+        case .Rejected:
+            dropView.layer?.borderWidth = fat.border
+            heightConstraint.constant = fat.width
+            widthConstraint.constant = fat.width
+            dropView.layer?.borderColor = NSColor.dropViewRejectedColor().CGColor
         }
+    }
+}
+
+// MARK:- DropView drag delegate
+extension ProjectDropViewController: DropViewDelegate {
+    func dropViewDidDragFileOutOfView(dropView: DropView) {
+        viewModel.isCurrentSelectionValid() ? layoutUI(.Accepted) : layoutUI(.None)
     }
     
     func dropViewDidDragInvalidFileIntoView(dropView: DropView) {
-        dropView.layer?.borderColor = NSColor.dropViewRejectedColor().CGColor
+        layoutUI(.Rejected)
+        let anim = CABasicAnimation.shakeAnimation(magnitude: 10)
+        view.layer?.addAnimation(anim, forKey: "x")
     }
     
     func dropViewDidDragValidFileIntoView(dropView: DropView) {
-        dropView.layer?.borderColor = NSColor.dropViewHoveringColor().CGColor
+        layoutUI(.Hovering)
     }
     
     func dropViewDidDropFileToView(dropView: DropView, paths: [Path]) {
         viewModel.newPathSelected(paths[0])
     }
-
+    
     func dropViewShouldAcceptDraggedPath(dropView: DropView, paths: [String]) -> Bool {
-        let valid = viewModel.shouldAcceptPath(paths)
-        
-        if !valid {
-            let anim = CABasicAnimation.shakeAnimation(magnitude: 10)
-            view.layer?.addAnimation(anim, forKey: "x")
-        }
-        return valid
+        return viewModel.shouldAcceptPath(paths)
     }
     
     func dropViewNumberOfAcceptableItems(dropView: DropView, items: [Path]) -> Int {
@@ -98,7 +111,7 @@ class ProjectDropViewController: NSViewController, DropViewDelegate {
     }
 }
 
-// MARK:- Right-click Menu setup
+// MARK:- DropView mouse delegate
 extension ProjectDropViewController: DropViewMouseDelegate {
     func dropViewDidRightClick(dropView: DropView, event: NSEvent) {
         let enabled = viewModel.isCurrentSelectionValid()
