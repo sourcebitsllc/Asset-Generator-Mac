@@ -8,11 +8,25 @@
 
 import Cocoa
 
-typealias SerializedAssetAttribute = [String: String]
+/// A JSON representation of the values in an individual Asset Catalog JSON.
+/// Will always contains a minimum of the following keys: .Scale and .Idiom
+/// Other available keys as specified in XCAssetsJSONKeys.
+typealias XCAssetsJSON = [String: AnyObject]
 
-/// A JSON representations which will always contains atleast .Scale and .Idiom keys available.
-/// Other available keys as specified in SerializedAssetAttributeKeys.
-typealias XCAssetsJSONDictionary = NSDictionary
+/// Represents the outer JSON of the XCAssetsJSON values.
+/// Will always contain the following keys: "info", "images".
+typealias XCAssetsJSONWrapper = [String: AnyObject]
+
+
+func sanitizeJSON(json: [XCAssetsJSON]) -> [XCAssetsJSON] {
+    func removeUnwanted(dict: [String: AnyObject]) -> XCAssetsJSON {
+        var clean = dict
+        clean.removeValueForKey(XCAssetsJSONKeys.Unassigned)
+        return clean
+    }
+    
+    return json.map(removeUnwanted)
+}
 
 struct AssetAttribute: Serializable {
     var filename: String?
@@ -37,41 +51,28 @@ struct AssetAttribute: Serializable {
         self.minimumSystemVersion = minimumSystemVersion
     }
     
-    static func sanitizeJSON(json: [XCAssetsJSONDictionary]) -> [SerializedAssetAttribute] {
-        return json.map {
-            return AssetAttribute(filename: $0[SerializedAssetAttributeKeys.Filename] as! String? ,
-                scale: $0[SerializedAssetAttributeKeys.Scale]! as! String,
-                idiom: $0[SerializedAssetAttributeKeys.Idiom] as! String,
-                size: $0[SerializedAssetAttributeKeys.Size] as! String?,
-                subtype: $0[SerializedAssetAttributeKeys.Subtype] as! String?,
-                orientation: $0[SerializedAssetAttributeKeys.Orientation] as! String?,
-                minimumSystemVersion: $0[SerializedAssetAttributeKeys.MinimumSystemVersion] as! String?,
-                extent: $0[SerializedAssetAttributeKeys.Extent] as! String?).serialized
-        }
-    }
-    
     // MARK: - Serializable
     
-    typealias Serialized = SerializedAssetAttribute
+    typealias Serialized = XCAssetsJSON
     var serialized: Serialized {
-        var s = [SerializedAssetAttributeKeys.Scale: scale, SerializedAssetAttributeKeys.Idiom: idiom]
+        var s = [XCAssetsJSONKeys.Scale: scale, XCAssetsJSONKeys.Idiom: idiom]
         if let filename = filename {
-            s[SerializedAssetAttributeKeys.Filename] = filename
+            s[XCAssetsJSONKeys.Filename] = filename
         }
         if let size = size {
-            s[SerializedAssetAttributeKeys.Size] = size
+            s[XCAssetsJSONKeys.Size] = size
         }
         if let extent = extent {
-            s[SerializedAssetAttributeKeys.Extent] = extent
+            s[XCAssetsJSONKeys.Extent] = extent
         }
         if let subtype = subtype {
-            s[SerializedAssetAttributeKeys.Subtype] = subtype
+            s[XCAssetsJSONKeys.Subtype] = subtype
         }
         if let orientation = orientation {
-            s[SerializedAssetAttributeKeys.Orientation] = orientation
+            s[XCAssetsJSONKeys.Orientation] = orientation
         }
         if let minimumSystemVersion = minimumSystemVersion {
-            s[SerializedAssetAttributeKeys.MinimumSystemVersion] = minimumSystemVersion
+            s[XCAssetsJSONKeys.MinimumSystemVersion] = minimumSystemVersion
         }
         return s
     }

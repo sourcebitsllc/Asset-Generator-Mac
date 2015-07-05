@@ -26,7 +26,7 @@ class AssetGenerator {
         }
     }
 
-    /// :param: key: Path the asset `AssetSet` destination.
+    /// :param: key: Path the assets' `AssetSet` destination.
     /// :param: value: [Asset] The assets belonging to the said deestination.
     private typealias AssetsReport = [Path: [Asset]]
     
@@ -35,16 +35,16 @@ class AssetGenerator {
             let destinationJSON = path + "Contents.json"
             
             if NSFileManager.defaultManager().fileExistsAtPath(destinationJSON) {
-                var json = JSON.readJSON(destinationJSON) as! NSMutableDictionary
-                let existingJSONImages = AssetAttribute.sanitizeJSON(json["images"] as! [JSONDictionary])
+                var json = JSON.readJSON(destinationJSON) as! XCAssetsJSONWrapper
+                let existingJSONImages = sanitizeJSON(json["images"] as! [XCAssetsJSON])
 
                 updateAttributesWithAssets(existingJSONImages, assets: assets)
-                    |> XCAssetsJSON.updateImagesValue(json)
+                    |> XCAssetsJSONHelper.updateImagesValue(json)
                     |> JSON.writeJSON(to: destinationJSON)
                 
             } else {
                 assets.map { AssetMetaData.create($0).attributes.serialized }
-                    |> XCAssetsJSON.createJSONDefaultWrapper
+                    |> XCAssetsJSONHelper.createJSONDefaultWrapper
                     |> JSON.writeJSON(to: destinationJSON)
             }
         }
@@ -81,7 +81,7 @@ class AssetGenerator {
     }
     
     
-    private func updateAttributesWithAssets(list: [SerializedAssetAttribute], assets: [Asset]) -> [SerializedAssetAttribute] {
+    private func updateAttributesWithAssets(list: [XCAssetsJSON], assets: [Asset]) -> [XCAssetsJSON] {
         var newJSON = list
         for i in assets {
             let image = AssetMetaData.create(i)
@@ -89,9 +89,9 @@ class AssetGenerator {
             let comparator = image.comparator
             
             // If we find a "matching" entry for image, update its name to new image. If not, add new image to json.
-            if var entry = list.filter(comparator).first, let index = find(newJSON as [XCAssetsJSONDictionary], entry) {
+            if var entry = list.filter(comparator).first, let index = find(newJSON as [NSDictionary], entry) {
                 newJSON.removeAtIndex(index)
-                entry[SerializedAssetAttributeKeys.Filename] = attributes.filename
+                entry[XCAssetsJSONKeys.Filename] = attributes.filename
                 newJSON.insert(entry, atIndex: index)
             } else {
                 newJSON.append(attributes.serialized)

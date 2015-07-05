@@ -19,7 +19,7 @@ struct GenerationKeywords {
     static let Watch = "~watch"
 }
 
-struct SerializedAssetAttributeKeys {
+struct XCAssetsJSONKeys {
     static let Filename = "filename"
     static let Scale = "scale"
     static let Idiom = "idiom"

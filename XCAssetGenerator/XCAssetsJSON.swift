@@ -13,14 +13,14 @@ import Foundation
 typealias JSONDictionary = NSDictionary
 typealias MutableJSONDictionary = NSMutableDictionary
 
-struct XCAssetsJSON {
-    static func createJSONDefaultWrapper(images: [SerializedAssetAttribute]) -> JSONDictionary {
+struct XCAssetsJSONHelper {
+    static func createJSONDefaultWrapper(images: [XCAssetsJSON]) -> JSONDictionary {
         let info = ["version": "1", "author": "xcode"]
-        let json = ["images": images, "info": info]
+        let json: JSONDictionary = ["images": images, "info": info]
         return json
     }
     
-    static func updateImagesValue(json: MutableJSONDictionary)(value: [SerializedAssetAttribute]) -> JSONDictionary {
+    static func updateImagesValue(json: XCAssetsJSONWrapper)(value: [XCAssetsJSON]) -> JSONDictionary {
         var copy = json
         copy["images"] = value
         return copy

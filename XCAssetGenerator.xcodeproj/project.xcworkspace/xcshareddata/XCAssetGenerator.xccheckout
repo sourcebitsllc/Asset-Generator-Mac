@@ -7,14 +7,14 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>D4A41BE2-5C29-46AD-B49E-14B8259EB7A9</string>
 	<key>IDESourceControlProjectName</key>
-	<string>project</string>
+	<string>XCAssetGenerator</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>A6FD430031B564906AE889503C9BFEEA3B9C193C</key>
 		<string>https://github.com/sourcebitsllc/Asset-Generator-Mac</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>XCAssetGenerator.xcodeproj/project.xcworkspace</string>
+	<string>XCAssetGenerator.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>A6FD430031B564906AE889503C9BFEEA3B9C193C</key>

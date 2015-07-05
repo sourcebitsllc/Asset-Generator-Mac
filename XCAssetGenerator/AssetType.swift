@@ -8,15 +8,6 @@
 
 import Foundation
 
-enum Device {
-    case iPhone
-    case iPad
-    case Universal
-    case Mac
-    case Watch
-    case NotYetKnownLol
-}
-
 enum AssetType {
     case Image
     case Icon
@@ -73,30 +64,30 @@ struct AssetMetaData {
         return create(asset.fullPath)
     }
     
-    typealias AssetComparator = (SerializedAssetAttribute -> Bool)
+    typealias AssetComparator = (XCAssetsJSON -> Bool)
     var comparator: AssetComparator {
         let attribute = attributes
         
         switch type {
         case .Image:
             return { dict in
-                let sameIdiom = dict[SerializedAssetAttributeKeys.Idiom] as String? == attribute.idiom
-                let sameScale = dict[SerializedAssetAttributeKeys.Scale] as String? == attribute.scale
+                let sameIdiom = dict[XCAssetsJSONKeys.Idiom] as! String? == attribute.idiom
+                let sameScale = dict[XCAssetsJSONKeys.Scale] as! String? == attribute.scale
                 return sameIdiom && sameScale
             }
         case .Icon:
             return { dict in
-                let sameIdiom = dict[SerializedAssetAttributeKeys.Idiom] as String? == attribute.idiom
-                let sameScale = dict[SerializedAssetAttributeKeys.Scale] as String? == attribute.scale
-                let sameSize  = dict[SerializedAssetAttributeKeys.Size]  as String? == attribute.size
+                let sameIdiom = dict[XCAssetsJSONKeys.Idiom] as! String? == attribute.idiom
+                let sameScale = dict[XCAssetsJSONKeys.Scale] as! String? == attribute.scale
+                let sameSize  = dict[XCAssetsJSONKeys.Size]  as! String? == attribute.size
                 return sameIdiom && sameScale && sameSize
             }
         case .LaunchImage:
             return { dict in
-                let sameIdiom = dict[SerializedAssetAttributeKeys.Idiom] as String? == attribute.idiom
-                let sameScale = dict[SerializedAssetAttributeKeys.Scale] as String? == attribute.scale
-                let sameSubtype = dict[SerializedAssetAttributeKeys.Subtype] as String? == attribute.subtype
-                let sameOrientation = dict[SerializedAssetAttributeKeys.Orientation] as String? == attribute.orientation
+                let sameIdiom = dict[XCAssetsJSONKeys.Idiom] as! String? == attribute.idiom
+                let sameScale = dict[XCAssetsJSONKeys.Scale] as! String? == attribute.scale
+                let sameSubtype = dict[XCAssetsJSONKeys.Subtype] as! String? == attribute.subtype
+                let sameOrientation = dict[XCAssetsJSONKeys.Orientation] as! String? == attribute.orientation
                 return sameIdiom && sameScale && sameOrientation && sameSubtype
             }
         }
@@ -162,6 +153,13 @@ struct Asset: Printable {
                                                                                 GenerationKeywords.Mac ])
         return name
     }
-    
 }
 
+enum Device {
+    case iPhone
+    case iPad
+    case Universal
+    case Mac
+    case Watch
+    case NotYetKnownLol
+}
