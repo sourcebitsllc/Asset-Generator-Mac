@@ -93,7 +93,7 @@ class ProjectSelectionViewModel {
             |> startOn(QueueScheduler(priority: DISPATCH_QUEUE_PRIORITY_DEFAULT, name: "StoreAndObserveQueue"))
             |> observeOn(QueueScheduler.mainQueueScheduler)
             |> start(error: { error in
-                setupError(error.message).runModal()
+                setupError(error.nsError.localizedDescription).runModal()
                 self.forceSyncSelectionValidity()
             }, next: { project in
                 self.project.put(project)

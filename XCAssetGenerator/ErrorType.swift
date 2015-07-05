@@ -13,19 +13,15 @@ enum ProjectSelectionError: ErrorType, Printable {
     case AssetNotFound(String)
     case ProjectNotFound
     
-    var message: String {
-        get {
-            switch self {
-            case .AssetNotFound(let project):
-                return "The selected project (\(project)) does not contain a valid xcassets folder."
-            case .ProjectNotFound:
-                return NSLocalizedString("The selected folder does not contain an Xcode Project.",comment: "")
-            }
-        }
-    }
-    
     var nsError: NSError {
-        return NSError(domain: message, code: 0, userInfo: nil)
+        let message: String
+        switch self {
+        case .AssetNotFound(let project):
+            message = "The selected project (\(project)) does not contain a valid xcassets folder."
+        case .ProjectNotFound:
+            message = NSLocalizedString("The selected folder does not contain an Xcode Project.",comment: "")
+        }
+        return NSError(domain: "com.sourcebits.assetgenerator", code: 0, userInfo: [NSLocalizedDescriptionKey: message])
     }
     
     var description: String {
@@ -35,7 +31,5 @@ enum ProjectSelectionError: ErrorType, Printable {
         case .ProjectNotFound:
             return "ProjectNotFound Error:"
         }
-        
     }
-   
 }
