@@ -10,13 +10,15 @@ import Foundation
 
 struct FileSystem {
     
-    ///
-    /// 
     static func copy(#file: Path, toLocation location: Path) -> Bool {
         if NSFileManager.defaultManager().fileExistsAtPath(location) {
+            // TODO: Swift 2.0
+            if equal(file, location) {
+                return false
+            }
+            
             NSFileManager.defaultManager().removeItemAtPath(location, error: nil)
         }
-    
         let success = NSFileManager.defaultManager().copyItemAtPath(file, toPath: location, error: nil)
         return success
     }
@@ -37,6 +39,10 @@ struct FileSystem {
             return status
         }
         return false
+    }
+    
+    static func equal(first: Path, _ second: Path) -> Bool {
+        return NSFileManager.defaultManager().contentsEqualAtPath(first, andPath: second)
     }
 
 }
