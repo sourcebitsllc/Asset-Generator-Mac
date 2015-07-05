@@ -29,7 +29,7 @@ extension String: XcodeFileValidator {
     }
     
     func isAssetSet() -> Bool {
-        return self.hasSuffix(".imageset") || self.hasSuffix(".appiconset") || self.hasSuffix(".launchimage")
+        return PathValidator.isAssetSet(self)
     }
 }
 
@@ -38,8 +38,3 @@ extension PathValidator {
         return path.hasSuffix(".imageset") || path.hasSuffix(".appiconset") || path.hasSuffix(".launchimage")
     }
 }
-
-func isAssetSet(path: Path) -> Bool {
-    return path.hasSuffix(".imageset") || path.hasSuffix(".appiconset") || path.hasSuffix(".launchimage")
-}
-
