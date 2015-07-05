@@ -10,7 +10,7 @@ import Foundation
 
 extension BookmarkResolver {
     
-    class func isBookmarkValid(bookmark: Bookmark?) -> Bool {
+    static func isBookmarkValid(bookmark: Bookmark?) -> Bool {
         if let b = bookmark, let path = resolvePathFromBookmark(b) {
             return PathValidator.directoryExists(path: path)
         } else {
@@ -19,23 +19,23 @@ extension BookmarkResolver {
     }
 }
 
-class ProjectValidator {
-    class func isProjectValid(project: XCProject) -> Bool {
+struct ProjectValidator {
+    static func isProjectValid(project: XCProject) -> Bool {
         return PathValidator.directoryExists(path: project.path)
     }
 }
 
 
-class PathValidator {
+struct PathValidator {
     
-    class func directoryContainsInvalidCharacters(#path: Path, options: AnyObject?) -> Bool {
+    static func directoryContainsInvalidCharacters(#path: Path, options: AnyObject?) -> Bool {
         return directoryWith(path, searchOption: NSDirectoryEnumerationOptions.SkipsHiddenFiles) { (url, isDirectory) -> Bool? in
             if isDirectory && (contains(url.path!, ".") || contains(url.path!, ":")) { return true }
             return nil
         } ?? false
     }
     
-    class func directoryContainsXCAsset(#directory: Path) -> Bool {
+    static func directoryContainsXCAsset(#directory: Path) -> Bool {
         return directoryWith(directory, searchOption: NSDirectoryEnumerationOptions.SkipsHiddenFiles) { (url, isDirectory) -> Bool? in
             if isDirectory && url.path!.isAssetCatalog() { return true }
             return nil
@@ -43,7 +43,7 @@ class PathValidator {
     }
 
     
-    class func retreiveProject(path: Path) -> Path? {
+    static func retreiveProject(path: Path) -> Path? {
         return directoryWith(path, searchOption: NSDirectoryEnumerationOptions.SkipsSubdirectoryDescendants) { (url, isDirectory) -> Path? in
             if isDirectory && url.path!.isXCProject() { return url.path }
             return nil
@@ -51,7 +51,7 @@ class PathValidator {
     }
     
 
-    class func directoryContainsImages(#path: Path) -> Bool {
+    static func directoryContainsImages(#path: Path) -> Bool {
         return directoryWith(path, searchOption: NSDirectoryEnumerationOptions.SkipsHiddenFiles) { (url, isDirectory) -> Bool? in
             let isImage = url.path!.hasSuffix(".png") || url.path!.hasSuffix(".jpg") || url.path!.hasSuffix(".jpeg")
             if !isDirectory && isImage { return true }
@@ -60,7 +60,7 @@ class PathValidator {
     }
     
 
-    private class func directoryWith<T>(path: Path, searchOption: NSDirectoryEnumerationOptions,  f: (NSURL, Bool) -> T?) -> T? {
+    private static func directoryWith<T>(path: Path, searchOption: NSDirectoryEnumerationOptions,  f: (NSURL, Bool) -> T?) -> T? {
         let url = NSURL(fileURLWithPath: path, isDirectory: true)
         
         let generator = NSFileManager.defaultManager().enumeratorAtURL(url!, includingPropertiesForKeys: [NSURLIsDirectoryKey], options: searchOption, errorHandler: nil)
@@ -81,7 +81,7 @@ class PathValidator {
     }
     
     
-    class func directoryExists(#path: Path) -> Bool {
+    static func directoryExists(#path: Path) -> Bool {
         var isDirectory: ObjCBool = ObjCBool(false)
         if path.rangeOfString("/.Trash") == nil && !path.isEmpty {
             NSFileManager.defaultManager().fileExistsAtPath(path, isDirectory: &isDirectory)
