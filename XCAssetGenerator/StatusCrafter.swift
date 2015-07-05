@@ -23,7 +23,7 @@ struct StatusCrafter {
             return "Drop a folder with slices you'd like to add to your Xcode project."
         case (.Some(let a), .None):
             let end = (a.count > 0) ? "\(a.count) assets" : "assets"
-            return "Choose an Xcode project to add " + end
+            return "Choose an Xcode project to add " + end + "."
         case (.Some(let a), .Some(let catalog)) where a.count == 0:
             return "Add slices to the folder in order to build assets."
         case (.Some(let a), .Some(let catalog)):
