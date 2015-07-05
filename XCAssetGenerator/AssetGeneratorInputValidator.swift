@@ -15,6 +15,6 @@ struct AssetGeneratorInputValidator {
     }
     
     static func validateTarget(catalog: AssetCatalog?) -> Bool {
-        return catalog != nil ? PathValidator.directoryExists(path: catalog!.path) : false
+        return catalog.map { PathValidator.directoryExists(path: $0.path) } ?? false
     }
 }

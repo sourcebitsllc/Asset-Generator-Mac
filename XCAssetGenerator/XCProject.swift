@@ -82,10 +82,7 @@ extension XCProject {
     
     // A project will have a valid assets path if it contains an asset and if the asset path is not empty.
     func hasValidAssetsPath() -> Bool {
-        if let folder = xcassets {
-            return PathValidator.directoryExists(path: folder.path)
-        }
-        return false
+        return xcassets.map { PathValidator.directoryExists(path: $0.path) } ?? false
     }
     
     func ownsCatalog(catalog: AssetCatalog) -> Bool {

@@ -16,15 +16,9 @@ extension String {
         }
         return v
     }
-    
+    // TODO: Swift 2.0
     func replace(characters: [Character], withCharacter character: Character) -> String {
-        return String(map(self) {
-            if find(characters, $0) == nil {
-                return $0
-            } else {
-                return character
-            }
-        })
+        return String(map(self) { find(characters, $0) == nil ? $0 : character })
     }
     
     func contains(substring: String) -> Bool {

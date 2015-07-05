@@ -73,15 +73,11 @@ class ProjectSelectionViewModel {
     }
     
     func isCurrentSelectionValid() -> Bool {
-        if let project = project.value {
-            return isValidSelection(project)
-        } else {
-            return false
-        }
+        return project.value.map(isValidSelection) ?? false
     }
     
     func systemImageForCurrentPath() -> NSImage? {
-        return project.value != nil ? NSImage.systemImage(project.value!.path) : nil
+        return project.value.flatMap { NSImage.systemImage($0.path) }
     }
     
     private func forceSyncSelectionValidity() {
@@ -106,11 +102,7 @@ class ProjectSelectionViewModel {
     }
     
     func urlRepresentation() -> NSURL? {
-        if let project = project.value {
-            return NSURL(fileURLWithPath: project.path)
-        }
-        
-        return nil
+        return project.value.flatMap { NSURL(fileURLWithPath: $0.path) }
     }
 }
 
@@ -149,7 +141,7 @@ struct ProjectStorage {
         if let dict = projectDict where validProject(dict) {
             project = dict |> XCProject.projectFromDictionary
         }
-        
+                
         storeRecentProject(project)
         // Make sure the current selected project is valid and adjust the selection state accordingly.
         // Filter out invalid/corrupted projects
