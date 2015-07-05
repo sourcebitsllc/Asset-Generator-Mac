@@ -35,8 +35,11 @@ struct SerializedAssetAttributeKeys {
     static let HeightClass = "heightClass"
     
     static let Alignment = "alignment-insets"
+    static let Slicing = "resizing"
     
     // watch
     static let ScreenWidth = "screenWidth"
     static let Role = "role"
+    
+    static let Unassigned = "unassigned"
 }
