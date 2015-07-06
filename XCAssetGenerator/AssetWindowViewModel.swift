@@ -10,7 +10,7 @@ import Foundation
 import ReactiveCocoa
 
 
-struct AssetWindowViewModel {
+class AssetWindowViewModel {
     let statusLabel: MutableProperty<String>
     let canGenerate = MutableProperty<Bool>(false)
     let generateTitle = MutableProperty<String>("Build")
@@ -26,44 +26,38 @@ struct AssetWindowViewModel {
         projectViewModel = ProjectSelectionViewModel()
         progressViewModel = ProgressIndicationViewModel()
         assetGenerator  = AssetGenerationController()
-      
+        
         statusLabel = MutableProperty<String>("")
         
-        statusLabel <~ combineLatest(imagesViewModel.selectionSignal, projectViewModel.selectionSignal)
+        let notCurrentlyGenerating: () -> Bool = {
+            return self.progressViewModel.animating.value == false
+        }
+        
+        let inputsSignal = combineLatest(imagesViewModel.selectionSignal, projectViewModel.selectionSignal)
+        let inputsContentSignal = combineLatest(imagesViewModel.contentSignal, projectViewModel.contentSignal)
+
+        statusLabel <~ inputsSignal
             |> map { assets, project in
                 return StatusCrafter.status(assets: assets, target: project)
         }
         
-        statusLabel <~ combineLatest(imagesViewModel.contentSignal, projectViewModel.contentSignal)
-            |> filter { _ in
-                let stable = self.progressViewModel.animating.value == false
-                return stable }
+        statusLabel <~ inputsContentSignal
+            |> filter { _ in notCurrentlyGenerating() }
             |> map { _ in
                 let assets = self.imagesViewModel.assetRepresentation()
                 let catalog = self.projectViewModel.currentCatalog
                 return StatusCrafter.status(assets: assets, target: catalog)
         }
     
-        
-//        statusLabel <~ assetGenerator.generatedSignal |> map { generated in
-//            let catalog = self.projectViewModel.currentCatalog!
-//            return StatusCrafter.postGeneration(catalog, amount: generated)
-//        }
-        
-        //
         // RAC3 TODO:
-        canGenerate <~ combineLatest(imagesViewModel.selectionSignal, projectViewModel.selectionSignal, assetGenerator.running.producer)
+        canGenerate <~ combineLatest(inputsSignal, assetGenerator.running.producer)
 //            |> throttle(0.5, onScheduler: QueueScheduler.mainQueueScheduler)
-            |> map { assets, project, running in
-                        let validSource = AssetGeneratorInputValidator.validateSource(assets)
-                        let validTarget = AssetGeneratorInputValidator.validateTarget(project)
+            |> map { input, running in
+                        let validSource = AssetGeneratorInputValidator.validateSource(input.0)
+                        let validTarget = AssetGeneratorInputValidator.validateTarget(input.1)
                         let notRunning  = running == false
                         return validSource && validTarget && notRunning
             }
-//        generateTitle <~ assetGenerator.generatedSignal
-////            |> throttle(0.5, onScheduler: QueueScheduler.mainQueueScheduler)
-//            |> map { _ in return "Build Again" }
-        
     }
     
     func viewModelForImagesGroup() -> ImagesGroupViewModel {
@@ -95,7 +89,6 @@ struct AssetWindowViewModel {
                     case .Progress(let p):
                         self.progressViewModel.updateProgress(p)
                     case .Assets(let a):
-//                        let catalog = self.projectViewModel.currentCatalog!
                         StatusCrafter.postGeneration(catalog!.title, amount: a) |> self.statusLabel.put
                     }
             })
