@@ -74,9 +74,9 @@ class AssetGenerator {
         case .Image:
             let subddirectory = asset.relativePath.stringByDeletingLastPathComponent
             let cleanSubDirectory = subddirectory.replace([".", ":"], withCharacter: "_")
-            return target + cleanSubDirectory + "/" + asset.enclosingSet + "/"
+            return String.pathWithComponents([target, cleanSubDirectory, asset.enclosingSet]) + "/"
         case .LaunchImage, .Icon:
-            return target.removeTrailingSlash() + "/" + asset.enclosingSet + "/"
+            return String.pathWithComponents([target, asset.enclosingSet]) + "/"
         }
     }
     
