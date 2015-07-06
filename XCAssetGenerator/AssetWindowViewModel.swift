@@ -6,9 +6,7 @@
 //  Copyright (c) 2015 Bader Alabdulrazzaq. All rights reserved.
 //
 
-import Foundation
 import ReactiveCocoa
-
 
 class AssetWindowViewModel {
     let statusLabel: MutableProperty<String>
@@ -58,6 +56,10 @@ class AssetWindowViewModel {
                         let notRunning  = running == false
                         return validSource && validTarget && notRunning
             }
+        
+        generateTitle <~ combineLatest(inputsSignal, inputsContentSignal)
+            |> filter { _ in notCurrentlyGenerating() }
+            |> map { _ in "Build" }
     }
     
     func viewModelForImagesGroup() -> ImagesGroupViewModel {
