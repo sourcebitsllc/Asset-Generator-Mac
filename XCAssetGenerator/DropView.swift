@@ -46,6 +46,8 @@ class DropView: NSView {
     func setup() {
         registerForDraggedTypes([NSFilenamesPboardType])
         self.wantsLayer = true
+        
+        println(mouseDownCanMoveWindow)
     }
     
     
@@ -91,4 +93,12 @@ extension DropView {
     override func rightMouseDown(theEvent: NSEvent) {
         mouse?.dropViewDidRightClick(self, event: theEvent)
     }
+    
+    // HACK: `MenuForEvent` for some reason does not propogate properly on CTRL+Click (but does on right click...) so work around it.
+    override func mouseDown(theEvent: NSEvent) {
+        if (theEvent.type == NSEventType.LeftMouseDown) && (theEvent.modifierFlags.rawValue & NSEventModifierFlags.ControlKeyMask.rawValue != 0) {
+            mouse?.dropViewDidRightClick(self, event: theEvent)
+        }
+    }
+
 }
