@@ -15,7 +15,7 @@ typealias MutableJSONDictionary = NSMutableDictionary
 
 struct XCAssetsJSONHelper {
     static func createJSONDefaultWrapper(images: [XCAssetsJSON]) -> JSONDictionary {
-        let info = ["version": "1", "author": "xcode"]
+        let info = ["version": "1", "author": "Asset Generator"]
         let json: JSONDictionary = ["images": images, "info": info]
         return json
     }
@@ -44,7 +44,7 @@ struct JSON {
         outputStream?.close()
     }
 
-    static func readJSON(path: Path) -> JSONDictionary {
+    static func readJSON(path: Path) -> JSONDictionary? {
         var error: NSError?
         let d = NSData(contentsOfFile: path, options: NSDataReadingOptions.DataReadingMappedIfSafe, error: &error)
         let data = NSData(contentsOfFile: path)!
