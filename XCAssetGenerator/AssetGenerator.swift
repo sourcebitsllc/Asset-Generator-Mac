@@ -6,9 +6,7 @@
 //  Copyright (c) 2015 Bader Alabdulrazzaq. All rights reserved.
 //
 
-import Foundation
 import ReactiveCocoa
-
 
 class AssetGenerator {
     typealias AssetGeneratorObserver = Signal<GenerationState, AssetGeneratorError>.Observer
@@ -34,13 +32,12 @@ class AssetGenerator {
         for (path, assets) in rep {
             let destinationJSON = path + "Contents.json"
             
-            if NSFileManager.defaultManager().fileExistsAtPath(destinationJSON) {
-                var json = JSON.readJSON(destinationJSON) as! XCAssetsJSONWrapper
-                let existingJSONImages = sanitizeJSON(json["images"] as! [XCAssetsJSON])
-
-                updateAttributesWithAssets(existingJSONImages, assets: assets)
-                    |> XCAssetsJSONHelper.updateImagesValue(json)
-                    |> JSON.writeJSON(to: destinationJSON)
+            if var json = JSON.readJSON(destinationJSON) as? XCAssetsJSONWrapper,
+                let imagesJSON = json["images"] as? [XCAssetsJSON] {
+                    sanitizeJSON(imagesJSON)
+                        |> updateAttributesWithAssets(assets)
+                        |> XCAssetsJSONHelper.updateImagesValue(json)
+                        |> JSON.writeJSON(to: destinationJSON)
                 
             } else {
                 assets.map { AssetMetaData.create($0).attributes.serialized }
@@ -81,18 +78,19 @@ class AssetGenerator {
     }
     
     
-    private func updateAttributesWithAssets(list: [XCAssetsJSON], assets: [Asset]) -> [XCAssetsJSON] {
-        var newJSON = list
+    private func updateAttributesWithAssets(assets: [Asset])(assetsJSON: [XCAssetsJSON]) -> [XCAssetsJSON] {
+        var newJSON = assetsJSON
         for i in assets {
             let image = AssetMetaData.create(i)
             let attributes = image.attributes
             let comparator = image.comparator
             
             // If we find a "matching" entry for image, update its name to new image. If not, add new image to json.
-            if var entry = list.filter(comparator).first, let index = find(newJSON as [NSDictionary], entry) {
-                newJSON.removeAtIndex(index)
-                entry[XCAssetsJSONKeys.Filename] = attributes.filename
-                newJSON.insert(entry, atIndex: index)
+            if var entry = assetsJSON.filter(comparator).first,
+                let index = find(newJSON as [NSDictionary], entry) {
+                    newJSON.removeAtIndex(index)
+                    entry[XCAssetsJSONKeys.Filename] = attributes.filename
+                    newJSON.insert(entry, atIndex: index)
             } else {
                 newJSON.append(attributes.serialized)
             }
