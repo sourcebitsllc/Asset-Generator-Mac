@@ -45,11 +45,7 @@ struct JSON {
     }
 
     static func readJSON(path: Path) -> JSONDictionary? {
-        var error: NSError?
-        let d = NSData(contentsOfFile: path, options: NSDataReadingOptions.DataReadingMappedIfSafe, error: &error)
-        let data = NSData(contentsOfFile: path)!
-        let json: JSONDictionary = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: nil)! as! JSONDictionary
-        return json
+        return NSData(contentsOfFile: path).flatMap { NSJSONSerialization.JSONObjectWithData($0, options: NSJSONReadingOptions.MutableContainers, error: nil) as? JSONDictionary }
     }
 }
 
