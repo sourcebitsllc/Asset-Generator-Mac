@@ -1,0 +1,36 @@
+//
+//  Localizable.strings
+//  XCAssetGenerator
+//
+//  Created by Bader on 4/4/15.
+//  Copyright (c) 2015 Bader Alabdulrazzaq. All rights reserved.
+//
+
+/* Generate button. */
+"Generate" = "Create";
+
+/* File Drop Initial State. */
+"Drop a folder with slices here." = "Drop a folder with slices here.";
+
+/* File Drop Successful Drop State. */
+"Hit Create button to add your slices to the project." = "Hit Create button to add your slices to the project.";
+
+/* File Drop Does Not Contains Images State. */
+"Drop a folder that contains slice-able images." = "Drop a folder that contains slice-able images.";
+
+/* File Drop Invalid State. */
+"Drop a folder that contains slice-able images." = "Drop a folder that contains slice-able images.";
+
+/* File Drop Deleted State. */
+"Seems like your folder has disappeared! Select it again." = "Seems like your folder has disappeared! Select it again.";
+
+/* Recent project list. */
+"Select a project…" = "Select a project…";
+"Recent Projects" = "Recent Projects";
+
+/* Project selection errors */
+"The selected folder does not contain an Xcode Project." = "The selected folder does not contain an Xcode Project.";
+"The selected project does not contain a valid xcassets folder." = "The selected project (\(project)) does not contain a valid xcassets folder.";
+
+/* Assets folder */
+"Invalid Asset Title" = "";
