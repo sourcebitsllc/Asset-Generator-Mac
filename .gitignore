@@ -2,11 +2,16 @@
 #########
 *.xcuserdata
 *.xcuserdatad/
+*.xcworkspace
+!default.xcworkspace
 *.pbxuser
 DerivedData
 build/
 *.ipa
 *.moved-aside
+*.mode1v3
+*.mode2v3
+*.perspectivev3
 
 # OS generated files #
 ######################
@@ -16,5 +21,3 @@ build/
 .Trashes
 thumbs.db
 Thumbs.db
-
-.com.apple.timemachine.supported
