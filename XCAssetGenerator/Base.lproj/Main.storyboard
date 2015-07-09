@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="7702" systemVersion="14E46" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7702"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7706"/>
     </dependencies>
     <scenes>
         <!--Application-->
@@ -75,7 +75,7 @@
                 <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="Asset_Generator" customModuleProvider="target"/>
                 <customObject id="Ady-hI-5gd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="49.5" y="-124"/>
+            <point key="canvasLocation" x="87.5" y="118"/>
         </scene>
         <!--Window Controller-->
         <scene sceneID="R2V-B0-nI4">
@@ -130,50 +130,6 @@
             </objects>
             <point key="canvasLocation" x="106" y="469"/>
         </scene>
-        <!--File Drop View Controller-->
-        <scene sceneID="drA-8E-bVf">
-            <objects>
-                <viewController storyboardIdentifier="FileDroppa" id="PAg-JE-4JN" customClass="FileDropViewController" customModule="Asset_Generator" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" id="p1N-nd-hFw">
-                        <rect key="frame" x="0.0" y="0.0" width="150" height="175"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                        <subviews>
-                            <customView autoresizesSubviews="NO" id="alU-uq-lqS" customClass="DropView" customModule="Asset_Generator" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="150" height="175"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                            </customView>
-                        </subviews>
-                    </view>
-                    <connections>
-                        <outlet property="dropView" destination="alU-uq-lqS" id="380-0y-Dw6"/>
-                    </connections>
-                </viewController>
-                <customObject id="dXT-s7-aE9" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-547" y="612.5"/>
-        </scene>
-        <!--Images Drop View Controller-->
-        <scene sceneID="O2h-GP-iqs">
-            <objects>
-                <viewController storyboardIdentifier="ImagesDroppa" id="Gkg-28-KKI" customClass="ImagesDropViewController" customModule="Asset_Generator" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" autoresizesSubviews="NO" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="250" id="zqC-ez-Urf">
-                        <rect key="frame" x="0.0" y="0.0" width="150" height="150"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                        <subviews>
-                            <customView autoresizesSubviews="NO" id="wUM-qq-5u3" customClass="RoundedDropView" customModule="Asset_Generator" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="150" height="150"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                            </customView>
-                        </subviews>
-                    </view>
-                    <connections>
-                        <outlet property="dropView" destination="wUM-qq-5u3" id="VwJ-pS-BUm"/>
-                    </connections>
-                </viewController>
-                <customObject id="hiV-VO-6jh" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-527" y="913"/>
-        </scene>
         <!--View Controller-->
         <scene sceneID="4vy-hv-SPx">
             <objects>
@@ -186,28 +142,6 @@
                 <customObject id="RWE-z8-LQr" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="106" y="986.5"/>
-        </scene>
-        <!--Project Drop View Controller-->
-        <scene sceneID="xmg-PV-Dbz">
-            <objects>
-                <customObject id="1oC-CS-VQZ" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
-                <viewController storyboardIdentifier="ProjectDroppa" id="eLI-Ni-zv4" customClass="ProjectDropViewController" customModule="Asset_Generator" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" horizontalCompressionResistancePriority="1000" id="roB-xS-oMs">
-                        <rect key="frame" x="0.0" y="0.0" width="150" height="150"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                        <subviews>
-                            <customView autoresizesSubviews="NO" id="DSQ-gO-8E1" customClass="RoundedDropView" customModule="Asset_Generator" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="150" height="150"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                            </customView>
-                        </subviews>
-                    </view>
-                    <connections>
-                        <outlet property="dropView" destination="DSQ-gO-8E1" id="CIM-UG-pSB"/>
-                    </connections>
-                </viewController>
-            </objects>
-            <point key="canvasLocation" x="-732" y="913"/>
         </scene>
     </scenes>
 </document>
