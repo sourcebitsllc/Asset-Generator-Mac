@@ -32,7 +32,7 @@ class ProjectSelectionViewModel {
     
     init() {
         storage = ProjectStorage()
-        project = MutableProperty(storage.loadRecentProject())
+        project = MutableProperty(storage.load())
         currentSelectionValid = MutableProperty(false)
         label = MutableProperty("Xcode Project")
         
@@ -54,7 +54,7 @@ class ProjectSelectionViewModel {
         project.producer
             |> throttle(0.5, onScheduler: QueueScheduler.mainQueueScheduler)
             |> on(next: { project in
-                self.storage.storeRecentProject(project)
+                self.storage.store(project)
                 self.observer.observe(project)
             })
             |> start()
@@ -102,48 +102,5 @@ class ProjectSelectionViewModel {
     
     func urlRepresentation() -> NSURL? {
         return project.value.flatMap { NSURL(fileURLWithPath: $0.path) }
-    }
-}
-
-
-// TODO: Find new home for this.
-func setupError(message: String) -> NSAlert {
-    let alert = NSAlert()
-    alert.messageText = message
-    alert.addButtonWithTitle("OK")
-    alert.alertStyle = NSAlertStyle.CriticalAlertStyle
-    return alert
-}
-
-//// Refactor. TODO:
-struct ProjectStorage {
-    private let ProjectKey = "RecentlySelectedProject"
-    
-    private func storeRecentProject(project: XCProject?) {
-        if let project = project {
-            NSUserDefaults.standardUserDefaults().setObject(project.serialized, forKey: ProjectKey)
-        } else {
-            NSUserDefaults.standardUserDefaults().removeObjectForKey(ProjectKey)
-        }
-    }
-    
-    
-    ///
-    private func loadRecentProject() -> XCProject? {
-        let projectDict = NSUserDefaults.standardUserDefaults().objectForKey(ProjectKey) as? [String: NSData]
-        var project: XCProject? = nil
-        func validProject(dict: [String: NSData]) -> Bool {
-            let validPath =  BookmarkResolver.isBookmarkValid(dict[PathKey])
-            let validAsset = BookmarkResolver.isBookmarkValid(dict[AssetPathsKey])
-            return validPath && validAsset
-        }
-        if let dict = projectDict where validProject(dict) {
-            project = dict |> XCProject.projectFromDictionary
-        }
-                
-        storeRecentProject(project)
-        // Make sure the current selected project is valid and adjust the selection state accordingly.
-        // Filter out invalid/corrupted projects
-        return project
     }
 }

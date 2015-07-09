@@ -10,6 +10,7 @@
 		1E17A3A11ACF637700785DB2 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1E17A3A01ACF637700785DB2 /* Localizable.strings */; };
 		1E2D9EE31B26620A009A2745 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1ED9A1461B1F983B000A41B9 /* Main.storyboard */; };
 		1E48EF431B31861E00A63FBF /* AssetAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E48EF421B31861E00A63FBF /* AssetAttribute.swift */; };
+		1E7602D21B4E47140096DEF3 /* Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E7602D11B4E47140096DEF3 /* Storage.swift */; };
 		1E8D12F01B4363ED004A3FCB /* FileSystemObserverSignal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E8D12EF1B4363ED004A3FCB /* FileSystemObserverSignal.swift */; };
 		1E946FD51B46007600133459 /* FileSystemObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E946FD41B46007600133459 /* FileSystemObserver.m */; };
 		1E95006C1B44F1F200D7632D /* ImagesDropView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1E95006B1B44F1F200D7632D /* ImagesDropView.xib */; };
@@ -91,6 +92,7 @@
 /* Begin PBXFileReference section */
 		1E17A3A01ACF637700785DB2 /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		1E48EF421B31861E00A63FBF /* AssetAttribute.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetAttribute.swift; sourceTree = "<group>"; };
+		1E7602D11B4E47140096DEF3 /* Storage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Storage.swift; sourceTree = "<group>"; };
 		1E8D12EB1B436324004A3FCB /* XCAssetGenerator-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "XCAssetGenerator-Bridging-Header.h"; sourceTree = "<group>"; };
 		1E8D12EF1B4363ED004A3FCB /* FileSystemObserverSignal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileSystemObserverSignal.swift; sourceTree = "<group>"; };
 		1E946FD31B46007600133459 /* FileSystemObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileSystemObserver.h; sourceTree = "<group>"; };
@@ -171,6 +173,7 @@
 		1EAC3B221B3CC92E00B75DD6 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				1E7602D11B4E47140096DEF3 /* Storage.swift */,
 				1ED9A0F61B1F9810000A41B9 /* AssetGenerationController.swift */,
 				1ED9A0F71B1F9810000A41B9 /* AssetGenerator.swift */,
 				1ED096DB1B2D53D8005337A9 /* AssetDiff.swift */,
@@ -456,6 +459,7 @@
 				1ED9A1301B1F9810000A41B9 /* NSImage+Extensions.swift in Sources */,
 				1ED9A12E1B1F9810000A41B9 /* XCAssetsJSON.swift in Sources */,
 				1ED9A0F41B1F97CE000A41B9 /* AppDelegate.swift in Sources */,
+				1E7602D21B4E47140096DEF3 /* Storage.swift in Sources */,
 				1ED9A13D1B1F9810000A41B9 /* Serializable.swift in Sources */,
 				DD09CBE81989A46C002DD2FB /* main.swift in Sources */,
 				1ED9A1341B1F9810000A41B9 /* ProgressViewController.swift in Sources */,

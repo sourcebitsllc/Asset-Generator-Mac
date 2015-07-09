@@ -12,7 +12,7 @@ import ReactiveCocoa
 class ImagesGroupViewModel {
     private let selection: MutableProperty<ImageSelection>
     private let contentChanged: MutableProperty<Void>
-    private let storage: PathStorage = PathStorage()
+    private let storage: ImagesStorage
     private let observer: FileSystemImagesObserver
 
     let label: MutableProperty<String>
@@ -28,7 +28,7 @@ class ImagesGroupViewModel {
     }
     
     init() {
-        
+        self.storage = ImagesStorage()
         self.selection = MutableProperty(storage.load())
         self.label = MutableProperty<String>("Xcode Slices")
         self.currentSelectionValid = MutableProperty(false)
@@ -111,22 +111,4 @@ class ImagesGroupViewModel {
             ifFolder: { [NSURL(fileURLWithPath: $0)!] })
     }
     
-}
-
-struct PathStorage {
-    private let SelectionKey = "RecentlySelectedAssets"
-    func store(selection: ImageSelection) {
-        if let serialized = selection.serialized {
-            NSUserDefaults.standardUserDefaults().setObject(serialized, forKey: SelectionKey)
-        } else {
-            NSUserDefaults.standardUserDefaults().removeObjectForKey(SelectionKey)
-        }
-    }
-    
-    func load() -> ImageSelection {
-        let srlz = NSUserDefaults.standardUserDefaults().objectForKey(SelectionKey) as? [Bookmark]
-        let selection = ImageSelection.deserialize(srlz)
-        store(selection)
-        return selection
-    }
 }
