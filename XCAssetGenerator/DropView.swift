@@ -46,8 +46,6 @@ class DropView: NSView {
     func setup() {
         registerForDraggedTypes([NSFilenamesPboardType])
         self.wantsLayer = true
-        
-        println(mouseDownCanMoveWindow)
     }
     
     

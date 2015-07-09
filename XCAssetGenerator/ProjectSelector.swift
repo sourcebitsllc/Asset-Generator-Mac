@@ -6,26 +6,35 @@
 //  Copyright (c) 2015 Bader Alabdulrazzaq. All rights reserved.
 //
 
-import Foundation
 import Result
 import ReactiveCocoa
 
+enum ProjectSelectionError: ErrorType {
+    
+    case AssetNotFound(String)
+    case ProjectNotFound
+    
+    var nsError: NSError {
+        let message: String
+        switch self {
+        case .AssetNotFound(let project):
+            message = "The selected project (\(project)) does not contain a valid xcassets folder."
+        case .ProjectNotFound:
+            message = NSLocalizedString("The selected folder does not contain an Xcode Project.",comment: "")
+        }
+        return NSError(domain: "com.sourcebits.assetgenerator", code: 0, userInfo: [NSLocalizedDescriptionKey: message])
+    }
+}
 
 struct ProjectSelector {
         
     /// Given a URL, find a project with an AssetCatalog. Return ProjectSelectionError if none.
     static func excavateProject(url: Path) -> Result<XCProject, ProjectSelectionError> {
-        let fromProject = assetFromProject <^> asProject(url)
-        return fromProject ?? assetFromDirectory(url)
+        return projectFromPath(url) >>- assetFromProject
     }
-    
-    static func inspectProject(url: Path) -> Result<XCProject, ProjectSelectionError> {
-        let fromProject = assetFromProject <^> asProject(url)
-        return fromProject!
-    }
-    
-    private static func assetFromDirectory(url: Path) -> Result<XCProject, ProjectSelectionError> {
-        return retrieveProject(url) >>- assetFromProject
+
+    private static func projectFromPath(path: Path) -> Result<Path, ProjectSelectionError> {
+        return asProject(path).map { Result.success($0) } ?? retrieveProject(path)
     }
     
     private static func asProject(url: Path) -> Path? {
@@ -34,7 +43,7 @@ struct ProjectSelector {
     
     private static func retrieveProject(directory: Path) -> Result<Path, ProjectSelectionError> {
         let project = PathValidator.retreiveProject(directory)
-        return (Result.success <^>  project) ?? Result.failure(ProjectSelectionError.ProjectNotFound)
+        return project.map(Result.success) ?? Result.failure(ProjectSelectionError.ProjectNotFound)
     }
     
     private static func assetFromProject(url: Path) -> Result<XCProject, ProjectSelectionError> {

@@ -30,7 +30,6 @@
 		1ED9A1231B1F9810000A41B9 /* AssetWindowViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A0FB1B1F9810000A41B9 /* AssetWindowViewModel.swift */; };
 		1ED9A1241B1F9810000A41B9 /* BookmarkResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A0FC1B1F9810000A41B9 /* BookmarkResolver.swift */; };
 		1ED9A1261B1F9810000A41B9 /* DropView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A0FE1B1F9810000A41B9 /* DropView.swift */; };
-		1ED9A1271B1F9810000A41B9 /* ErrorType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A0FF1B1F9810000A41B9 /* ErrorType.swift */; };
 		1ED9A1291B1F9810000A41B9 /* FileSystemHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A1011B1F9810000A41B9 /* FileSystemHelper.swift */; };
 		1ED9A12C1B1F9810000A41B9 /* ImagesDropViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A1051B1F9810000A41B9 /* ImagesDropViewController.swift */; };
 		1ED9A12D1B1F9810000A41B9 /* ImagesGroupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED9A1061B1F9810000A41B9 /* ImagesGroupViewModel.swift */; };
@@ -114,7 +113,6 @@
 		1ED9A0FB1B1F9810000A41B9 /* AssetWindowViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AssetWindowViewModel.swift; sourceTree = "<group>"; };
 		1ED9A0FC1B1F9810000A41B9 /* BookmarkResolver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BookmarkResolver.swift; sourceTree = "<group>"; };
 		1ED9A0FE1B1F9810000A41B9 /* DropView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DropView.swift; sourceTree = "<group>"; };
-		1ED9A0FF1B1F9810000A41B9 /* ErrorType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorType.swift; sourceTree = "<group>"; };
 		1ED9A1011B1F9810000A41B9 /* FileSystemHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileSystemHelper.swift; sourceTree = "<group>"; };
 		1ED9A1051B1F9810000A41B9 /* ImagesDropViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagesDropViewController.swift; sourceTree = "<group>"; };
 		1ED9A1061B1F9810000A41B9 /* ImagesGroupViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagesGroupViewModel.swift; sourceTree = "<group>"; };
@@ -231,7 +229,6 @@
 				1ED9A11C1B1F9810000A41B9 /* XCProject.swift */,
 				1ED9A0F51B1F9810000A41B9 /* AssetCatalog.swift */,
 				1EAC3B201B3CC7D300B75DD6 /* ImageSelection.swift */,
-				1ED9A0FF1B1F9810000A41B9 /* ErrorType.swift */,
 				1ED9A0FA1B1F9810000A41B9 /* AssetType.swift */,
 				1E48EF421B31861E00A63FBF /* AssetAttribute.swift */,
 				1ED9A1161B1F9810000A41B9 /* Serializable.swift */,
@@ -444,7 +441,6 @@
 				1ED885D01B28F51B00197226 /* ProgressLineView.swift in Sources */,
 				1E946FD51B46007600133459 /* FileSystemObserver.m in Sources */,
 				1E8D12F01B4363ED004A3FCB /* FileSystemObserverSignal.swift in Sources */,
-				1ED9A1271B1F9810000A41B9 /* ErrorType.swift in Sources */,
 				1ED096DC1B2D53D8005337A9 /* AssetDiff.swift in Sources */,
 				1E48EF431B31861E00A63FBF /* AssetAttribute.swift in Sources */,
 				1EAC3B1F1B3C3EA600B75DD6 /* CABasicAnimation+Extensions.swift in Sources */,
