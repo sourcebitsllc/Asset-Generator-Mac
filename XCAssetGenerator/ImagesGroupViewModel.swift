@@ -114,7 +114,7 @@ class ImagesGroupViewModel {
 }
 
 struct PathStorage {
-    private let SelectionKey = "com.sourcebits.AssetGenerator.ImagesStorageKey"
+    private let SelectionKey = "RecentlySelectedAssets"
     func store(selection: ImageSelection) {
         if let serialized = selection.serialized {
             NSUserDefaults.standardUserDefaults().setObject(serialized, forKey: SelectionKey)

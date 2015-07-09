@@ -48,7 +48,7 @@ class ProjectSelectionViewModel {
                 return XCProject(path: project.path)
             } else { return nil }
         }
-        
+ 
         contentChanged <~ observer.catalogContentSignal
         
         project.producer
@@ -89,7 +89,6 @@ class ProjectSelectionViewModel {
             |> startOn(QueueScheduler(priority: DISPATCH_QUEUE_PRIORITY_DEFAULT, name: "StoreAndObserveQueue"))
             |> observeOn(QueueScheduler.mainQueueScheduler)
             |> start(error: { error in
-                setupError(error.nsError.localizedDescription).runModal()
                 self.forceSyncSelectionValidity()
             }, next: { project in
                 self.project.put(project)
@@ -118,7 +117,7 @@ func setupError(message: String) -> NSAlert {
 
 //// Refactor. TODO:
 struct ProjectStorage {
-    private let ProjectKey = "com.sourcebits.AssetGenerator.ProjectStorageKey"
+    private let ProjectKey = "RecentlySelectedProject"
     
     private func storeRecentProject(project: XCProject?) {
         if let project = project {
