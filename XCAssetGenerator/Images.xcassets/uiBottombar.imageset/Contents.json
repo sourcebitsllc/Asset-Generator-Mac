@@ -3,12 +3,12 @@
     {
       "idiom" : "universal",
       "scale" : "1x",
-      "filename" : "uiWell.png"
+      "filename" : "uiBottomBar.png"
     },
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "uiWell@2x.png"
+      "filename" : "uiBottomBar@2x.png"
     },
     {
       "idiom" : "universal",
