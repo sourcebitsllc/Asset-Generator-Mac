@@ -67,7 +67,7 @@ For all other assets, you need to provide all the keywords mentioned above and t
 
 Asset Generator is a collaboration between [Bader Alabdulrazzaq](https://twitter.com/BHAlRezzaga), iOS and Mac OS engineer who graciously greeted Sourcebits for an internship in late 2014, and Sourcebits' Chief Innovation Officer [Piotr Gajos](https://twitter.com/Pe8er). App icon was designed by Sourcebits' senior interaction designer, Rick Patrick.
 
-The app was designed in Sketch, written in Swift.
+The app was designed in Sketch and coded in Swift.
 
 We would like to thank all Sourcebits developers and designers who helped us with feature ideas and relentless bug reports.
 
